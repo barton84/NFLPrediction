@@ -14,6 +14,9 @@ The Odds API (DraftKings spreads and totals)        ─┤─> pipeline/run.py �
 - `pipeline/ratings.py` computes point-in-time team ratings. They are opponent-adjusted, blended with last season early in the year, and use only games played before each week.
 - `pipeline/qb.py` rates every QB by career EPA per dropback and measures each game's QB change against the team's recent starters.
 - `pipeline/backtest.py` runs the leave-one-season-out testing.
+- `pipeline/probability.py` turns lines into cover and over/under chances, using a margin curve shaped by NFL key numbers.
+- `pipeline/injuries.py` reads the official injury report and depth charts. When a projected starting QB is out, his backup is rated instead.
+- `pipeline/weather.py` pulls kickoff forecasts for outdoor stadiums from Open-Meteo (free, no key).
 - `pipeline/fetch_odds.py` pulls DraftKings lines. It needs `ODDS_API_KEY`. Without the key, the site falls back to consensus lines.
 - `pipeline/run.py` runs everything and writes `site/data/model.json`.
 - `site/app.html` is the page. `pipeline/make_index.py` wraps it into `site/index.html`.
@@ -46,5 +49,7 @@ The workflow runs every morning, commits the refreshed data, and Netlify redeplo
 | Success rate rating | 36 per 1.0 net SR | 32 to 41 |
 | QB change (EPA/dropback) | 25.1 | 22.7 to 28.0 |
 | Rest days | 0.15 per day | 0.12 to 0.19 |
+
+Totals model: 13.54 RMSE against 13.22 for the market total, so totals are view only.
 
 The model's error is 12.99 RMSE, against 12.70 for the closing line. Against the spread it lands near 49% overall. Treat flags as a reason to look closer, not as bets.

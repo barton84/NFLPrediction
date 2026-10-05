@@ -13,13 +13,28 @@ ROOT = os.path.join(HERE, "..")
 RAW = os.path.join(ROOT, "raw")
 OUT = os.path.join(ROOT, "site", "data")
 
-import fetch_data, build_games, fetch_odds
+import fetch_data, build_games, fetch_odds, injuries, weather
+import probability as P
 from ratings import build
-from qb import add_qb_features, load_dropbacks, REPLACEMENT, N0, DECAY
+from qb import add_qb_features, load_dropbacks, qb_rating_before, REPLACEMENT, N0, DECAY
 from backtest import prep, loso, report, ats
 
 CARRY, K = 0.5, 8          # prior carryover from last season, prior weight in games
 FEATURES = ["home", "d_margin", "d_sr", "d_qb_delta", "rest_diff"]
+T_FEATURES = ["proj", "dome", "wind10", "cold32", "qbsum"]
+PRECIP_PRIOR = {"rain": -2.0, "snow": -3.0}   # untested, applied only when the forecast says rain or snow is likely
+
+
+def total_features(x, wx=None):
+    """Totals model inputs. wx = forecast dict (this week) or None to use recorded game weather."""
+    x = x.copy()
+    x["proj"] = x.proj_home_pts + x.proj_away_pts
+    indoor = x.roof.isin(["dome", "closed"])
+    x["dome"] = indoor.astype(int)
+    x["wind10"] = np.where(indoor, 0, (x.wind.fillna(0).clip(upper=22) - 10).clip(lower=0))
+    x["cold32"] = np.where(indoor, 0, (32 - x.temp.fillna(60)).clip(lower=0))
+    x["qbsum"] = x.home_qb_delta.fillna(0) + x.away_qb_delta.fillna(0)
+    return x
 TEAM_NAMES = {v: k for k, v in fetch_odds.NAME_TO_ABBR.items()}
 
 
@@ -47,6 +62,8 @@ def main(fetch=True):
     done_frac = cur.groupby("week").apply(lambda x: x.result.notna().mean(), include_groups=False)
     last_week = int(done_frac[done_frac >= 0.5].index.max()) if (done_frac >= 0.5).any() else 0
     this_week = last_week + 1
+    if os.environ.get("FORCE_WEEK"):   # testing only: rebuild as if an earlier week were upcoming
+        this_week = int(os.environ["FORCE_WEEK"]); last_week = this_week - 1
 
     # ---------- backtest (leave one season out) ----------
     test_seasons = [s for s in range(2016, season) if s in df.season.unique()]
@@ -83,6 +100,84 @@ def main(fetch=True):
     W = dict(zip(FEATURES, [float(v) for v in m.coef_]))
     weights = {"hfa": W["home"], "margin": W["d_margin"], "sr": W["d_sr"], "qb": W["d_qb_delta"], "rest": W["rest_diff"],
                "ranges": {f: [nz(fold_coefs[f].min(), 3), nz(fold_coefs[f].max(), 3)] for f in FEATURES}}
+
+    # ---------- cover probability: key-number distribution, lean factor fitted per holdout ----------
+    d["edge"] = d.pred - d.spread_line
+    kw = P.key_weights(d.result)
+    grid = np.round(np.arange(0, 0.41, 0.05), 2)
+    k_folds, calib_rows = {}, []
+    for s_ in test_seasons:
+        tr, te = d[d.season != s_], d[d.season == s_]
+        kwf = P.key_weights(tr.result)
+        Kf = P.fit_k(tr.edge.values, tr.spread_line.values, tr.result.values, kwf, grid=grid)
+        k_folds[int(s_)] = Kf
+        for r in te.itertuples():
+            if r.result == r.spread_line:
+                continue
+            a, pp = P.home_cover(r.spread_line, P.market_center(r.spread_line, kwf) + Kf * r.edge, kwf)
+            home_side = r.edge > 0
+            calib_rows.append((a if home_side else 1 - a - pp, (r.result > r.spread_line) == home_side))
+    K_SPREAD = P.fit_k(d.edge.values, d.spread_line.values, d.result.values, kw, grid=grid)
+    cr = pd.DataFrame(calib_rows, columns=["p", "won"])
+    cr["b"] = pd.cut(cr.p, [0, 0.49, 0.51, 0.53, 1], labels=["Under 49%", "49 to 51%", "51 to 53%", "53%+"])
+    calib = [{"bucket": str(b), "n": int(len(x)), "said": nz(x.p.mean(), 3), "hit": nz(x.won.mean(), 3)}
+             for b, x in cr.groupby("b", observed=True)]
+    key_freq = {int(k): nz((d.result.abs() == k).mean(), 4) for k in range(1, 18)}
+
+    # ---------- totals model ----------
+    dt = total_features(d[d.total_line.notna()])
+    tpred = pd.Series(index=dt.index, dtype=float); tco = []
+    for s_ in test_seasons:
+        tr, te = dt[dt.season != s_], dt[dt.season == s_]
+        mt = LinearRegression().fit(tr[T_FEATURES], tr.total)
+        tpred[te.index] = mt.predict(te[T_FEATURES]); tco.append(dict(zip(T_FEATURES, mt.coef_)))
+    tco = pd.DataFrame(tco)
+    te_ = tpred - dt.total_line; tr_ = dt.total - dt.total_line; dec = tr_ != 0
+    t_hit = float((np.sign(te_) == np.sign(tr_))[dec].mean()); big = dec & (te_.abs() >= 5)
+    MT = LinearRegression().fit(dt[T_FEATURES], dt.total)
+    TC = dict(zip(T_FEATURES, [float(v) for v in MT.coef_])); TC["intercept"] = float(MT.intercept_)
+    K_TOTAL = P.fit_k(te_.values, dt.total_line.values, dt.total.values, None, grid=grid, total=True)
+    totals_info = {"coef": TC, "ranges": {f: [nz(tco[f].min(), 3), nz(tco[f].max(), 3)] for f in T_FEATURES},
+                   "rmse": nz(np.sqrt(((tpred - dt.total) ** 2).mean()), 2),
+                   "market_rmse": nz(np.sqrt(((dt.total_line - dt.total) ** 2).mean()), 2),
+                   "ou_hit": nz(t_hit, 3), "hit5": nz(float((np.sign(te_) == np.sign(tr_))[big].mean()), 3), "n5": int(big.sum()),
+                   "K": K_TOTAL, "sd": P.TOTAL_SD, "precip_prior": PRECIP_PRIOR}
+    print("cover K folds", k_folds, "pooled", K_SPREAD, "| totals rmse", totals_info["rmse"], "K", K_TOTAL)
+
+    def total_model(x, wx_list=None):
+        f = total_features(x)
+        if wx_list is not None:  # forecast overrides recorded weather for upcoming games
+            for i, wx in zip(f.index, wx_list):
+                if wx and not wx.get("indoor"):
+                    f.loc[i, "wind10"] = max(0, min(wx["wind"], 22) - 10)
+                    f.loc[i, "cold32"] = max(0, 32 - wx["temp"])
+                    f.loc[i, "dome"] = 0
+                elif wx and wx.get("indoor"):
+                    f.loc[i, ["wind10", "cold32"]] = 0; f.loc[i, "dome"] = 1
+        base = f[T_FEATURES].values @ np.array([TC[k] for k in T_FEATURES]) + TC["intercept"]
+        return base, f
+
+    def precip_adj(wx):
+        if not wx or wx.get("indoor"):
+            return 0.0, None
+        if wx.get("snow_in", 0) >= 0.5:
+            return PRECIP_PRIOR["snow"], "snow"
+        if wx.get("precip_prob", 0) >= 60 and wx.get("precip_in", 0) >= 0.1:
+            return PRECIP_PRIOR["rain"], "rain"
+        return 0.0, None
+
+    def cover_probs(line, model, total, tmodel):
+        out = {}
+        if line is not None and not pd.isna(line):
+            c = P.market_center(line, kw) + K_SPREAD * (model - line)
+            a, pp = P.home_cover(line, c, kw)
+            home_side = model > line
+            out.update(cover=nz(a if home_side else 1 - a - pp, 3), push=nz(pp, 3), side_home=bool(home_side))
+        if total is not None and not pd.isna(total):
+            o, pp = P.over_prob(total, total + K_TOTAL * (tmodel - total))
+            over_side = tmodel > total
+            out.update(t_prob=nz(o if over_side else 1 - o - pp, 3), t_push=nz(pp, 3), t_side="Over" if over_side else "Under")
+        return out
 
     def predict(rows):
         x = prep_any(rows)
@@ -124,31 +219,13 @@ def main(fetch=True):
             return -dk["home_spread"], dk.get("total", r.total_line), "DK"
         return r.spread_line, r.total_line, "Consensus"
 
-    # ---------- this week ----------
-    tw = df[(df.season == season) & (df.week == this_week)].copy()
-    tw["model"] = predict(tw)
-    games = []
-    for r in tw.sort_values(["gameday", "gametime"]).itertuples():
-        line, total, src = line_info(r, this_week)
-        proj_total = r.proj_home_pts + r.proj_away_pts
-        games.append({
-            "id": r.game_id, "away": r.away_team, "home": r.home_team, "date": r.gameday, "time": r.gametime,
-            "weekday": r.weekday, "roof": r.roof if isinstance(r.roof, str) else None, "stadium": r.stadium,
-            "neutral": int(r.neutral), "rest_home": nz(r.home_rest, 0), "rest_away": nz(r.away_rest, 0),
-            "home_qb": r.home_qb_name, "away_qb": r.away_qb_name,
-            "home_qb_delta": nz(r.home_qb_delta, 3) or 0, "away_qb_delta": nz(r.away_qb_delta, 3) or 0,
-            "line": nz(line, 1), "total": nz(total, 1), "line_src": src,
-            "model": nz(r.model, 2), "proj_total": nz(proj_total, 1),
-            "edge": nz(r.model - line, 2) if line is not None and not pd.isna(line) else None,
-            "result": nz(r.result, 0), "home_score": nz(r.home_score, 0), "away_score": nz(r.away_score, 0),
-        })
-
     # ---------- last week + season to date ----------
     def graded(week):
         x = df[(df.season == season) & (df.week == week)].copy()
         if x.empty:
             return []
         x["model"] = predict(x)
+        x["t_model"], _ = total_model(x)
         out = []
         for r in x.sort_values(["gameday", "gametime"]).itertuples():
             line, total, src = line_info(r, week)
@@ -160,6 +237,14 @@ def main(fetch=True):
                 side, res = np.sign(r.model - line), np.sign(r.result - line)
                 row["ats"] = "push" if res == 0 else ("win" if side == res else "loss")
                 row["edge"] = nz(r.model - line, 2)
+            row.update(total=nz(total, 1), t_model=nz(r.t_model, 1))
+            if pd.notna(r.result) and total is not None and not pd.isna(total):
+                act = r.home_score + r.away_score
+                row["t_actual"] = nz(act, 0)
+                side, res = np.sign(r.t_model - total), np.sign(act - total)
+                row["t_ats"] = "push" if res == 0 else ("win" if side == res else "loss")
+                row["t_side"] = "Over" if r.t_model > total else "Under"
+                row["t_edge"] = nz(r.t_model - total, 1)
             out.append(row)
         return out
 
@@ -170,13 +255,15 @@ def main(fetch=True):
         big = [r for r in dec if abs(r["edge"]) >= 5]
         errs = [abs(r["error"]) for r in rows if "error" in r]
         mkt = [abs(r["result"] - r["line"]) for r in rows if "error" in r]
+        tdec = [r for r in rows if r.get("t_ats") in ("win", "loss")]
         season_weeks.append({"week": w, "wins": sum(r["ats"] == "win" for r in dec), "losses": sum(r["ats"] == "loss" for r in dec),
+                             "t_wins": sum(r["t_ats"] == "win" for r in tdec), "t_losses": sum(r["t_ats"] == "loss" for r in tdec),
                              "big_wins": sum(r["ats"] == "win" for r in big), "big_losses": sum(r["ats"] == "loss" for r in big),
                              "mae": nz(np.mean(errs), 1) if errs else None, "market_mae": nz(np.mean(mkt), 1) if mkt else None})
 
     # ---------- team ratings for the matchup tool and table ----------
     snap = snaps[(season, this_week)]
-    played = df[(df.season == season) & df.result.notna()]
+    played = df[(df.season == season) & df.result.notna() & (df.week < this_week)]
     db = load_dropbacks()
     teams = {}
     for t in sorted(snap["net"]["margin"]):
@@ -187,9 +274,8 @@ def main(fetch=True):
             return nz(v.mean(), 3) if n else None
         last = pd.concat([h.assign(qb=h.home_qb_id, qbn=h.home_qb_name), a.assign(qb=a.away_qb_id, qbn=a.away_qb_name)]).sort_values("week")
         # team's QB baseline = avg rating of starters in its last 8 games (incl. last season)
-        allg = df[((df.home_team == t) | (df.away_team == t)) & df.result.notna()].sort_values(["season", "week"]).tail(8)
+        allg = df[((df.home_team == t) | (df.away_team == t)) & df.result.notna() & ((df.season < season) | (df.week < this_week))].sort_values(["season", "week"]).tail(8)
         starters = [r.home_qb_id if r.home_team == t else r.away_qb_id for r in allg.itertuples()]
-        from qb import qb_rating_before
         base = float(np.mean([qb_rating_before(db, q, season, this_week)[0] for q in starters])) if starters else REPLACEMENT
         cur_qb = last.qbn.iloc[-1] if len(last) else None
         cur_id = last.qb.iloc[-1] if len(last) else (starters[-1] if starters else None)
@@ -219,6 +305,63 @@ def main(fetch=True):
             qbs.append({"id": q, "name": names[q], "rating": nz(rt, 3), "dropbacks": nn})
     qbs.sort(key=lambda x: -x["rating"])
 
+    # ---------- this week: injuries, weather, model, probabilities ----------
+    if fetch:
+        injuries.fetch(season)
+    inj, dc = injuries.load(season, this_week)
+    rate = lambda gid: (qb_rating_before(db, gid, season, this_week)[0] if isinstance(gid, str) else REPLACEMENT)
+    tw = df[(df.season == season) & (df.week == this_week)].copy().sort_values(["gameday", "gametime"])
+    reports, wx_list = {}, []
+    for r in tw.itertuples():
+        rep = {}
+        for side, team, qid, qname in [("home", r.home_team, r.home_qb_id, r.home_qb_name), ("away", r.away_team, r.away_qb_id, r.away_qb_name)]:
+            rep[side] = injuries.team_report(team, qid, qname, inj, dc, rate)
+            q = rep[side]["qb"]; base = teams[team]["qb_base"]
+            r_start = rate(qid)
+            eff = r_start
+            if q.get("status"):
+                rb = q["rating_backup"] if q.get("rating_backup") is not None else REPLACEMENT
+                eff = q["play_prob"] * r_start + (1 - q["play_prob"]) * rb
+                q["rating_start"], q["rating_backup"] = nz(r_start, 3), nz(rb, 3)
+            # usual starter hurt but the schedule already lists his replacement: note it, nothing to adjust
+            prev_id, prev_name = teams[team]["qb_id"], teams[team]["qb"]
+            if not q.get("status") and isinstance(prev_id, str) and prev_id != qid and len(inj):
+                st = inj[(inj.team == team) & (inj.gsis_id == prev_id)].report_status
+                if len(st):
+                    q["replaced"] = {"name": prev_name, "status": st.iloc[0]}
+            rep[side]["qb_delta_sched"] = nz(r_start - base, 3)
+            rep[side]["qb_delta"] = nz(eff - base, 3)
+        reports[r.game_id] = rep
+        wx_list.append(weather.forecast({"id": r.game_id, "stadium_id": r.stadium_id, "stadium": r.stadium,
+                                         "roof": r.roof if isinstance(r.roof, str) else None, "date": r.gameday, "time": r.gametime}))
+    tw["home_qb_delta"] = [reports[i]["home"]["qb_delta"] for i in tw.game_id]
+    tw["away_qb_delta"] = [reports[i]["away"]["qb_delta"] for i in tw.game_id]
+    tw["d_qb_delta"] = tw.home_qb_delta - tw.away_qb_delta
+    tw["model"] = predict(tw)
+    tbase, tf = total_model(tw, wx_list)
+    games = []
+    for (r, tb, wx, fr) in zip(tw.itertuples(), tbase, wx_list, tf.itertuples()):
+        line, total, src = line_info(r, this_week)
+        padj, ptype = precip_adj(wx)
+        tmodel = tb + padj
+        g_ = {
+            "id": r.game_id, "away": r.away_team, "home": r.home_team, "date": r.gameday, "time": r.gametime,
+            "weekday": r.weekday, "roof": r.roof if isinstance(r.roof, str) else None, "stadium": r.stadium,
+            "neutral": int(r.neutral), "rest_home": nz(r.home_rest, 0), "rest_away": nz(r.away_rest, 0),
+            "home_qb": r.home_qb_name, "away_qb": r.away_qb_name,
+            "home_qb_delta": reports[r.game_id]["home"]["qb_delta"] or 0, "away_qb_delta": reports[r.game_id]["away"]["qb_delta"] or 0,
+            "line": nz(line, 1), "total": nz(total, 1), "line_src": src,
+            "model": nz(r.model, 2), "t_model": nz(tmodel, 1), "precip": ptype, "dome": int(fr.dome),
+            "edge": nz(r.model - line, 2) if line is not None and not pd.isna(line) else None,
+            "t_edge": nz(tmodel - total, 1) if total is not None and not pd.isna(total) else None,
+            "result": nz(r.result, 0), "home_score": nz(r.home_score, 0), "away_score": nz(r.away_score, 0),
+            "inj": reports[r.game_id], "wx": wx,
+        }
+        g_.update(cover_probs(line, r.model, total, tmodel))
+        games.append(g_)
+    n_wx = sum(1 for w in wx_list if w and not w.get("indoor"))
+    print(f"injury report rows {len(inj)}, depth chart teams {dc.team.nunique() if len(dc) else 0}, forecasts {n_wx}")
+
     out = {
         "meta": {"season": season, "this_week": this_week, "last_week": last_week, "built": now,
                  "games_in_backtest": int(len(d)), "backtest_seasons": [min(test_seasons), max(test_seasons)],
@@ -227,8 +370,10 @@ def main(fetch=True):
         "weights": weights, "teams": teams, "qbs": qbs, "this_week": games,
         "last_week": graded(last_week) if last_week else [], "season_weeks": season_weeks,
         "backtest": {"variants": bt_rows, "by_season": by_season, "market_rmse": nz(market_rmse, 2)},
-        "weather": {"wind_per_mph_over_10": -0.4, "cold_per_deg_under_32": -0.2, "dome_total": 1.5,
-                    "rain": -2.0, "snow": -3.0},
+        "prob": {"kw": [round(float(v), 4) for v in kw], "k_min": int(P.KS[0]), "sd": P.SPREAD_SD, "K": K_SPREAD,
+                 "K_folds": k_folds, "calib": calib, "key_freq": key_freq},
+        "totals": totals_info,
+        "feeds": {"injury_report": bool(len(inj)), "depth_chart": bool(len(dc)), "forecasts": n_wx},
     }
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "model.json"), "w") as f:
