@@ -1,0 +1,55 @@
+name: Update model data
+
+on:
+  schedule:
+    # Every day at 13:15 UTC (8:15 AM Central). Tuesday's run grades the
+    # finished week; Wed-Sun runs refresh DraftKings lines and QB starters.
+    - cron: "15 13 * * *"
+  workflow_dispatch: {}   # "Run workflow" button in the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-model
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Past seasons of play-by-play never change, so keep them between runs
+      - uses: actions/cache@v4
+        with:
+          path: raw
+          key: nflverse-raw-${{ github.run_id }}
+          restore-keys: nflverse-raw-
+
+      - name: Build model
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          python pipeline/run.py
+          python pipeline/make_index.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "model-bot"
+          git config user.email "model-bot@users.noreply.github.com"
+          git add site/
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Update model data $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi
