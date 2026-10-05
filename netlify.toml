@@ -1,0 +1,10 @@
+# Static site: the GitHub Action rebuilds site/data/model.json and commits it,
+# which triggers a Netlify deploy. No build step needed on Netlify.
+[build]
+  publish = "site"
+  command = ""
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
