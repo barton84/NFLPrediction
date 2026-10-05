@@ -1,0 +1,98 @@
+{
+ "ATL@NO": {
+  "commence": "2026-10-06T00:15:00Z",
+  "home_spread": -1.5,
+  "total": 47.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "TB@DAL": {
+  "commence": "2026-10-09T00:15:00Z",
+  "home_spread": -9.5,
+  "total": 47.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "PHI@JAX": {
+  "commence": "2026-10-11T13:30:00Z",
+  "home_spread": -5.5,
+  "total": 42.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "CHI@GB": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": 2.5,
+  "total": 44.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "CIN@MIA": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": 7.0,
+  "total": 41.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "CLE@NYJ": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": -1.5,
+  "total": 39.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "HOU@TEN": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": 7.0,
+  "total": 39.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "IND@PIT": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": -2.5,
+  "total": 44.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "LV@NE": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": -3.5,
+  "total": 45.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "MIN@NO": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": 1.5,
+  "total": 42.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "NYG@WAS": {
+  "commence": "2026-10-11T17:00:00Z",
+  "home_spread": -3.0,
+  "total": 43.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "DEN@LAC": {
+  "commence": "2026-10-11T20:05:00Z",
+  "home_spread": 3.5,
+  "total": 42.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "DET@ARI": {
+  "commence": "2026-10-11T20:25:00Z",
+  "home_spread": 4.5,
+  "total": 53.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "SF@SEA": {
+  "commence": "2026-10-11T20:25:00Z",
+  "home_spread": -2.5,
+  "total": 47.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "BAL@ATL": {
+  "commence": "2026-10-12T00:20:00Z",
+  "home_spread": 3.5,
+  "total": 46.5,
+  "updated": "2026-10-05T15:23:31Z"
+ },
+ "BUF@LA": {
+  "commence": "2026-10-13T00:15:00Z",
+  "home_spread": -2.5,
+  "total": 53.5,
+  "updated": "2026-10-05T15:23:31Z"
+ }
+}
