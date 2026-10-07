@@ -145,6 +145,27 @@ def main(fetch=True):
                    "K": K_TOTAL, "sd": P.TOTAL_SD, "precip_prior": PRECIP_PRIOR}
     print("cover K folds", k_folds, "pooled", K_SPREAD, "| totals rmse", totals_info["rmse"], "K", K_TOTAL)
 
+    # ---------- frozen weights: the daily run reads them from a file so they only change on purpose ----------
+    # Retrain once a year (or after a deliberate model change) with:  RETRAIN=1 python pipeline/run.py
+    # then bump MODEL_VERSION and commit pipeline/model_weights.json.
+    wpath = os.path.join(HERE, "model_weights.json")
+    if os.path.exists(wpath) and not os.environ.get("RETRAIN"):
+        saved = json.load(open(wpath))
+        W.update(saved["spread"]); TC.update(saved["totals"])
+        K_SPREAD, K_TOTAL, kw = saved["K_spread"], saved["K_total"], np.array(saved["key_weights"])
+        weights.update({"hfa": W["home"], "margin": W["d_margin"], "sr": W["d_sr"], "qb": W["d_qb_delta"], "rest": W["rest_diff"],
+                        "ranges": saved["spread_ranges"]})
+        totals_info.update({"coef": TC, "K": K_TOTAL, "ranges": saved["totals_ranges"]})
+        print("using frozen weights from", saved["trained"], "version", saved["version"])
+    else:
+        json.dump({"version": MODEL_VERSION, "trained": datetime.date.today().isoformat(),
+                   "trained_on": [min(test_seasons), max(test_seasons)], "games": int(len(d)),
+                   "spread": W, "spread_ranges": weights["ranges"], "totals": TC, "totals_ranges": totals_info["ranges"],
+                   "K_spread": K_SPREAD, "K_total": K_TOTAL, "key_weights": [round(float(v), 6) for v in kw]},
+                  open(wpath, "w"), indent=1)
+        print("trained and saved weights to", wpath)
+    weights["trained"] = json.load(open(wpath))["trained"]
+
     def total_model(x, wx_list=None):
         f = total_features(x)
         if wx_list is not None:  # forecast overrides recorded weather for upcoming games

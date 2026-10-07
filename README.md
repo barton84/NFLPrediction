@@ -22,6 +22,16 @@ The Odds API (DraftKings spreads and totals)        ─┤─> pipeline/run.py �
 - `pipeline/run.py` runs everything and writes `site/data/model.json`.
 - `site/app.html` is the page. `pipeline/make_index.py` wraps it into `site/index.html`.
 
+## Model weights are frozen
+
+`pipeline/model_weights.json` holds every fitted weight. The daily run reads it and never refits, so the numbers only change on purpose. To retrain (normally once a year, after the season):
+
+```bash
+RETRAIN=1 python pipeline/run.py
+```
+
+Then bump `MODEL_VERSION` in `pipeline/run.py` and commit the new `model_weights.json`.
+
 ## Run locally
 
 ```bash

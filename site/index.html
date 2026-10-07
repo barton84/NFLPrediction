@@ -153,6 +153,19 @@ th.sortable .arr{opacity:.45}
 th.sortable.on .arr{opacity:1;color:var(--accent)}
 #clv-body{display:grid;gap:16px;min-width:0}
 #clv-body>*{min-width:0}
+.top-actions{display:flex;gap:8px;margin-left:auto}
+.top-right{flex:1 1 auto;justify-content:flex-end}
+#how-dlg{width:min(780px, calc(100% - 32px));max-height:86vh;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink)}
+#how-dlg::backdrop{background:rgba(5,10,18,.6)}
+.how-head{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;background:var(--panel);border-bottom:1px solid var(--line);z-index:1}
+.how-body{padding:16px 18px 22px;display:grid;gap:14px;line-height:1.55}
+.how-body h3{font-family:var(--f-display);font-size:1.05rem;text-transform:uppercase;letter-spacing:.05em;margin:6px 0 0}
+.how-body p,.how-body ul{margin:0}
+.how-body ul{padding-left:18px;display:grid;gap:6px}
+.eq{font-family:var(--f-data);font-size:.84rem;background:var(--panel-2);border-radius:8px;padding:12px 14px;overflow-x:auto;white-space:pre;line-height:1.7}
+.eq b{color:var(--accent)}
+.how-body table td,.how-body table th{white-space:normal}
+@media (max-width:560px){.eq{font-size:.68rem;padding:10px 12px}#how-dlg{width:100%;max-width:100%;max-height:92vh;margin:auto 0 0;border-radius:12px 12px 0 0}}
 .note-box{background:var(--panel-2);border-radius:8px;padding:10px 12px;font-size:.84rem}
 </style>
 
@@ -167,11 +180,17 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
     </div>
     <div class="top-right">
       <div class="chips" id="top-chips"></div>
+      <div class="top-actions">
+      <button type="button" class="theme-btn" id="how-btn" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 6h6M8 3v6M14 7.5h5M5 17.5h6M14.5 15l4 4M18.5 15l-4 4"/></svg>
+        <span>How it works</span>
+      </button>
       <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch to light mode">
         <svg class="i-sun" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg>
         <svg class="i-moon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg>
         <span id="theme-lbl">Light mode</span>
       </button>
+      </div>
     </div>
   </header>
   <div id="err" hidden></div>
@@ -182,6 +201,11 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
     <button type="button" role="tab" id="tab-res" data-t="res" aria-selected="false">Results</button>
     <button type="button" role="tab" id="tab-rat" data-t="rat" aria-selected="false">Ratings &amp; Method</button>
   </nav>
+
+  <dialog id="how-dlg" aria-labelledby="how-title">
+    <div class="how-head"><h2 id="how-title">How the model works</h2><button type="button" class="theme-btn" id="how-close" aria-label="Close">Close</button></div>
+    <div id="how-body" class="how-body"></div>
+  </dialog>
 
   <!-- ============ THIS WEEK ============ -->
   <div class="view" id="v-week" role="tabpanel" aria-labelledby="tab-week">
@@ -754,6 +778,70 @@ function renderCLV(){
     </tbody></table></div>`;
 }
 
+function renderHow(){
+  const w = W, T = D.totals.coef, f2 = x=>x.toFixed(2), n1 = x=>x.toFixed(1);
+  const g = sel.game, away = sel.away, home = sel.home;
+  const sp = g ? spreadState(g) : {now: project(away, home, null, {neutral:$("neutral").checked})};
+  const P = sp.now.parts, A = D.teams[away], H = D.teams[home];
+  const rows = [
+    ["Home field", P.hfa===0 ? (g&&g.neutral?"neutral site, so 0":"0") : n1(w.hfa), P.hfa],
+    ["Scoring margin", `${f2(w.margin)} × (${n1(H.r_margin)} − ${n1(A.r_margin)})`, P.margin],
+    ["Success rate", `${n1(w.sr)} × (${H.r_sr.toFixed(3)} − ${A.r_sr.toFixed(3)})`, P.sr],
+    ["QB", `${n1(w.qb)} × (${sp.now.qbH.toFixed(3)} − ${sp.now.qbA.toFixed(3)})`, P.qb],
+    ["Rest", g ? `${f2(w.rest)} × (${g.rest_home||0} − ${g.rest_away||0})` : "no schedule, so 0", P.rest],
+    ["Your manual injuries", "", P.inj + P.other]];
+  const edgeLine = g && g.line!=null ? `<p>The line is <b>${spreadTxt(home,away,g.line)}</b>, so the edge is <b>${Math.abs(sp.edge).toFixed(1)} points</b> and the model side is <b>${sideLine(sp.homeSide?home:away, sp.homeSide, g.line)}</b>.</p>` : "";
+  $("how-body").innerHTML = `
+    <p>Every number below is live: it uses the weights the site is running right now (model ${D.meta.model_version}, trained ${D.weights.trained} on ${D.meta.backtest_seasons[0]} to ${D.meta.backtest_seasons[1]}) and the game loaded in Game Detail.</p>
+    <h3>The spread equation</h3>
+<div class="eq">Home margin =
+    <b>${f2(w.hfa)}</b>   home field (0 at a neutral site)
+  + <b>${f2(w.margin)}</b> × (Home margin rtg − Away margin rtg)
+  + <b>${n1(w.sr)}</b> × (Home SR net − Away SR net)
+  + <b>${n1(w.qb)}</b> × (Home QB adj − Away QB adj)
+  + <b>${f2(w.rest)}</b> × (Home rest − Away rest days)
+  + your manual injury entries</div>
+    <p>A positive answer means the home team is favored by that many points. The <b>edge</b> is that number minus the posted line.</p>
+    <h3>What each piece means</h3>
+    <ul>
+      <li><b>Margin rtg:</b> how many points better than average a team has been, adjusted for the strength of its opponents and blended with last season early in the year. The ${f2(w.margin)} shrinks it a bit, because early margins overstate how good teams really are.</li>
+      <li><b>SR net:</b> offensive success rate minus the success rate the defense allows. A 0.06 edge (6 percentage points) is worth about ${n1(w.sr*0.06)} points.</li>
+      <li><b>QB adj:</b> the starter's EPA per dropback compared with the QBs behind the team's recent results. A 0.1 upgrade is worth about ${n1(w.qb*0.1)} points. Injured starters show up here.</li>
+      <li><b>Rest:</b> about ${f2(w.rest)} points per extra day of rest, capped at 7. It mostly matters after byes and Thursday games.</li>
+    </ul>
+    <h3>Worked example: ${away} @ ${home}</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>Piece</th><th>Calculation</th><th class="num">Points</th></tr></thead><tbody>
+      ${rows.map(r=>`<tr><td>${r[0]}</td><td class="mono">${r[1]}</td><td class="num mono">${f1(r[2])}</td></tr>`).join("")}
+      <tr><td><b>${home} margin</b></td><td></td><td class="num mono"><b>${f1(sp.now.margin)} → ${spreadTxt(home,away,sp.now.margin)}</b></td></tr>
+    </tbody></table></div>
+    ${edgeLine}
+    <h3>The totals equation</h3>
+<div class="eq">Total =
+    <b>${n1(T.intercept)}</b>
+  + <b>${f2(T.proj)}</b> × (both teams' projected points)
+  + <b>${n1(T.dome)}</b> if it's a dome
+  − <b>${Math.abs(T.wind10).toFixed(2)}</b> per mph of wind over 10
+  − <b>${Math.abs(T.cold32).toFixed(2)}</b> per degree below 32°F
+  + <b>${n1(T.qbsum)}</b> × (combined QB adj)
+  + rain or snow (rough, untested)</div>
+    <h3>Which Team Ratings columns feed the model</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>Column</th><th>Role</th></tr></thead><tbody>
+      <tr><td><b>Margin rtg</b></td><td>Model input. The main one.</td></tr>
+      <tr><td><b>SR net</b></td><td>Model input.</td></tr>
+      <tr><td><b>QB adj</b></td><td>Model input. Moves with the injury report.</td></tr>
+      <tr><td><b>Power</b></td><td>The three inputs combined: a team's rating on a neutral field.</td></tr>
+      <tr><td>PPG / Opp PPG</td><td>Reference. The model uses the same points through Margin rtg, adjusted for schedule.</td></tr>
+      <tr><td>Off SR / Def SR</td><td>Reference. The model uses the opponent-adjusted SR net instead.</td></tr>
+      <tr><td>Off / Def EPA per play</td><td>Reference. Tested and left out; they didn't improve accuracy.</td></tr>
+      <tr><td>GP</td><td>Reference. Fewer games means more of the rating still comes from last season.</td></tr>
+    </tbody></table></div>
+    <h3>What updates and what stays fixed</h3>
+    <ul>
+      <li><b>Every morning:</b> team ratings (after each week's games), QB adj (projected starters and the injury report), DraftKings lines, and weather forecasts.</li>
+      <li><b>Fixed all season:</b> the weights in both equations. They're fitted only on completed seasons and saved to a file, so they change only when we retrain on purpose, normally once a year after the season. Each retrain gets a new model version so the closing line value section can show whether it helped.</li>
+    </ul>`;
+}
+
 // ---------- RATINGS & METHOD ----------
 function renderRatings(){
   const cols = [["team","Team",0],["games","GP",1],["power","Power",1],["r_margin","Margin rtg",1],["r_sr","SR net",1],["off_epa","Off EPA/play",1],["def_epa","Def EPA/play",1],["off_sr","Off SR",1],["def_sr","Def SR",1],["ppg","PPG",1],["papg","Opp PPG",1],["qb","QB",0],["qbadj","QB adj",1]];
@@ -818,6 +906,9 @@ function syncThemeBtn(){ const dark=isDark(), b=$("theme-btn"); b.classList.togg
 $("theme-btn").onclick=()=>{ const next = isDark() ? "light" : "dark"; document.documentElement.setAttribute("data-theme", next); try{ localStorage.setItem("theme", next); }catch(e){} syncThemeBtn(); };
 try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeBtn); }catch(e){}
 syncThemeBtn();
+$("how-btn").onclick=()=>{ if(!D) return; renderHow(); const d=$("how-dlg"); if(d.showModal) d.showModal(); else d.setAttribute("open",""); $("how-body").scrollTop=0; };
+$("how-close").onclick=()=>$("how-dlg").close();
+$("how-dlg").addEventListener("click", e=>{ if(e.target===$("how-dlg")) $("how-dlg").close(); });
 
 async function boot(){
   try{

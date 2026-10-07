@@ -4,6 +4,10 @@ home/away efficiency stats. Output: raw/game_stats.parquet
 import pandas as pd, numpy as np, glob, os
 
 RAW = os.path.join(os.path.dirname(__file__), "..", "raw")
+INTL_STADIUMS = {"Wembley Stadium", "Twickenham Stadium", "Tottenham Stadium", "Tottenham Hotspur Stadium",
+                 "Azteca Stadium", "Estadio Banorte", "Allianz Arena", "FC Bayern Munich Stadium", "Deutsche Bank Park",
+                 "Arena Corinthians", "Bernabeu", "Melbourne Cricket Ground", "Stade de France", "Maracana Stadium"}
+INTL_IDS = {"LON00", "LON01", "LON02", "MEX00", "GER00", "MUN01", "FRA00", "SAO00", "MAD01", "MEL00", "PAR00", "RIO00"}
 
 
 def team_game_stats(pbp: pd.DataFrame) -> pd.DataFrame:
@@ -28,6 +32,9 @@ def main():
     for c in ["home_team", "away_team"]:
         g[c] = g[c].replace(remap)
     g["game_id"] = g.game_id.str.replace("_STL", "_LA").str.replace("_SD", "_LAC").str.replace("_OAK", "_LV")
+    # International games are neutral sites even when the schedule lists a "home" team
+    intl = g.stadium.isin(INTL_STADIUMS) | g.stadium_id.isin(INTL_IDS)
+    g.loc[intl, "location"] = "Neutral"
     frames = []
     for f in sorted(glob.glob(os.path.join(RAW, "pbp_*.parquet"))):
         cols = ["game_id", "posteam", "play_type", "epa", "success", "yards_gained", "qb_kneel", "qb_spike", "wp", "pass"]
