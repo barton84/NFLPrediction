@@ -73,7 +73,7 @@ def ridge_offdef(games, teams, prior_o, prior_d, lam, mu, hfa):
     return dict(zip(teams, r[:n])), dict(zip(teams, r[n:]))
 
 
-def build(g: pd.DataFrame, carry=0.5, k=6.0, final_lam=1.0):
+def build(g: pd.DataFrame, carry=0.5, k=6.0, final_lam=1.0, wt_prior=None, wt_blend=1.0, k_margin=None):
     """Returns (features per game, ratings snapshots keyed by (season, week))."""
     g = g.copy()
     g["neutral"] = (g.location == "Neutral").astype(int)
@@ -96,11 +96,15 @@ def build(g: pd.DataFrame, carry=0.5, k=6.0, final_lam=1.0):
     prior_o, prior_d = {}, {}
     feats, snaps = [], {}
     for season in seasons:
+        if wt_prior is not None:   # starting margin rating from the market's season win total
+            base = prior["margin"]
+            prior["margin"] = {t: wt_blend * wt_prior.get((season, t), base.get(t, 0.0)) + (1 - wt_blend) * base.get(t, 0.0)
+                               for t in teams}
         gs = g[g.season == season]
         hfa, mu = league_consts(season)
         for week in sorted(gs.week.unique()):
             past = done[(done.season == season) & (done.week < week)]
-            rat = {s: ridge_net(past, past[s].values, teams, prior[s], k, hfa[s]) for s in SIGNALS}
+            rat = {s: ridge_net(past, past[s].values, teams, prior[s], (k_margin or k) if s == "margin" else k, hfa[s]) for s in SIGNALS}
             ro, rd = ridge_offdef(past, teams, prior_o, prior_d, k, mu, hfa["margin"])
             snaps[(season, week)] = {"net": rat, "off": ro, "def": rd, "hfa": hfa, "mu": mu,
                                      "games_played": past.groupby("home_team").size().add(

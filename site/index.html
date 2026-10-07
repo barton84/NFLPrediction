@@ -335,7 +335,7 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
   <!-- ============ RATINGS & METHOD ============ -->
   <div class="view" id="v-rat" role="tabpanel" aria-labelledby="tab-rat" hidden>
     <section class="card" id="ratings">
-      <div class="sec-head"><div><h2>Team ratings</h2><div class="sub">Opponent-adjusted, blended with last season early in the year. Power = points better than an average team on a neutral field, using the current weights and current starting QB. Click a column to sort.</div></div></div>
+      <div class="sec-head"><div><h2>Team ratings</h2><div class="sub">Opponent-adjusted. Each season starts from the betting market's pre-Week 1 win total and shifts to real results as games are played. Power = points better than an average team on a neutral field, using the current weights and current starting QB. Click a column to sort.</div></div></div>
       <div class="tbl-wrap"><table id="rt-tbl"></table></div>
     </section>
     <section class="card" id="methods">
@@ -804,9 +804,9 @@ function renderHow(){
     <p>A positive answer means the home team is favored by that many points. The <b>edge</b> is that number minus the posted line.</p>
     <h3>What each piece means</h3>
     <ul>
-      <li><b>Margin rtg:</b> how many points better than average a team has been, adjusted for the strength of its opponents and blended with last season early in the year. The ${f2(w.margin)} shrinks it a bit, because early margins overstate how good teams really are.</li>
+      <li><b>Margin rtg:</b> how many points better than average a team has been, adjusted for the strength of its opponents. Each season it starts from the betting market's win total from just before Week 1, which already reflects offseason moves like a new QB or coach, then shifts toward real results as games are played. The ${f2(w.margin)} shrinks it a bit, because early margins overstate how good teams really are.</li>
       <li><b>SR net:</b> offensive success rate minus the success rate the defense allows. A 0.06 edge (6 percentage points) is worth about ${n1(w.sr*0.06)} points.</li>
-      <li><b>QB adj:</b> the starter's EPA per dropback compared with the QBs behind the team's recent results. A 0.1 upgrade is worth about ${n1(w.qb*0.1)} points. Injured starters show up here.</li>
+      <li><b>QB adj:</b> the starter's EPA per dropback compared with the QBs who started the team's earlier games this season (it's 0 in Week 1, since the win total already reflects the starter). A 0.1 upgrade is worth about ${n1(w.qb*0.1)} points. Injured starters show up here.</li>
       <li><b>Rest:</b> about ${f2(w.rest)} points per extra day of rest, capped at 7. It mostly matters after byes and Thursday games.</li>
     </ul>
     <h3>Worked example: ${away} @ ${home}</h3>
@@ -833,11 +833,12 @@ function renderHow(){
       <tr><td>PPG / Opp PPG</td><td>Reference. The model uses the same points through Margin rtg, adjusted for schedule.</td></tr>
       <tr><td>Off SR / Def SR</td><td>Reference. The model uses the opponent-adjusted SR net instead.</td></tr>
       <tr><td>Off / Def EPA per play</td><td>Reference. Tested and left out; they didn't improve accuracy.</td></tr>
-      <tr><td>GP</td><td>Reference. Fewer games means more of the rating still comes from last season.</td></tr>
+      <tr><td>GP</td><td>Reference. Fewer games means more of the rating still comes from the pre-Week 1 win total.</td></tr>
     </tbody></table></div>
     <h3>What updates and what stays fixed</h3>
     <ul>
       <li><b>Every morning:</b> team ratings (after each week's games), QB adj (projected starters and the injury report), DraftKings lines, and weather forecasts.</li>
+      <li><b>Once a year, before Week 1:</b> each team's win total, which sets where its rating starts.</li>
       <li><b>Fixed all season:</b> the weights in both equations. They're fitted only on completed seasons and saved to a file, so they change only when we retrain on purpose, normally once a year after the season. Each retrain gets a new model version so the closing line value section can show whether it helped.</li>
     </ul>`;
 }
@@ -861,7 +862,7 @@ function renderMethods(){
   $("methods-prose").innerHTML = `
     <p>Every number on this page comes from nflverse, the open NFL data project: schedules with closing lines back to 1999, play-by-play with EPA and success rate, weekly official injury reports and depth charts. Lines come from DraftKings when the Odds API key is set. Forecasts come from Open-Meteo. Ratings use only games played before each week, so nothing in the backtest could see the future.</p>
     <h3>How a rating is built</h3>
-    <p>Each team gets a rating for scoring margin and for success rate. Both are opponent-adjusted and start the season at ${Math.round(m.carry*100)}% of last year's final rating, weighted like ${m.prior_games} games. By midseason the current year dominates. Garbage-time plays are dropped from the efficiency stats.</p>
+    <p>Each team gets a rating for scoring margin and for success rate, both opponent-adjusted. Since model v2.1 the margin rating starts each season from the betting market's win total from just before Week 1 (weighted like ${m.prior_games} games), and success rate starts at ${Math.round(m.carry*100)}% of last year's final rating. By midseason the current year dominates. Starting from win totals cut early-season error (weeks 1 to 4) from 13.31 to 13.14 points and lowered error in 8 of 10 test seasons. Win totals: <a href="https://www.covers.com/sportsoddshistory/nfl-regular-season-win-total-results-by-team/" target="_blank" rel="noopener">Covers / SportsOddsHistory</a> (2015-2025) and <a href="https://www.sharpfootballanalysis.com/betting/nfl-team-win-totals-odds-best-bets/" target="_blank" rel="noopener">Sharp Football Analysis</a> (2026). Garbage-time plays are dropped from the efficiency stats.</p>
     <h3>How it was tested</h3>
     <p>${m.games_in_backtest.toLocaleString()} games from ${m.backtest_seasons[0]} to ${m.backtest_seasons[1]}. Weights were fit on nine seasons and scored on the tenth, rotating until every season had been the untouched holdout once.</p>
     <p><b>What earned a spot:</b> scoring margin, success rate, a starting-QB adjustment, and rest days. The QB adjustment was the biggest gain, cutting error from ${base.rmse} to ${fin.rmse}, and its weight landed between ${D.weights.ranges.d_qb_delta[0]} and ${D.weights.ranges.d_qb_delta[1]} in every holdout. <b>Left out:</b> EPA per play, yards per play, dropback EPA, and a divisional-game flag. None lowered error once the others were in.</p>

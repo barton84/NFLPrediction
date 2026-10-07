@@ -51,16 +51,18 @@ cd site && python -m http.server 8000 # open http://localhost:8000
 
 The workflow runs every morning, commits the refreshed data, and Netlify redeploys automatically. Each run uses 2 Odds API credits, so about 60 a month.
 
-## Current tested weights (2016-2025, 2,761 games)
+## Current tested weights, model v2.1 (2016-2025, 2,761 games)
 
 | Signal | Weight | Holdout range |
 |---|---|---|
-| Home field | 1.86 pts | 1.72 to 2.07 |
-| Scoring margin rating | 0.73 | 0.70 to 0.78 |
-| Success rate rating | 36 per 1.0 net SR | 32 to 41 |
-| QB change (EPA/dropback) | 25.1 | 22.7 to 28.0 |
+| Home field | 1.85 pts | 1.71 to 2.05 |
+| Scoring margin rating | 0.81 | 0.79 to 0.85 |
+| Success rate rating | 25 per 1.0 net SR | 21 to 29 |
+| QB change (EPA/dropback) | 30.1 | 27.4 to 33.3 |
 | Rest days | 0.15 per day | 0.12 to 0.19 |
+
+Model v2.1 starts each season from the market's pre-Week 1 win totals (`pipeline/data/win_totals.csv`, add each new season before Week 1).
 
 Totals model: 13.54 RMSE against 13.22 for the market total, so totals are view only.
 
-The model's error is 12.99 RMSE, against 12.70 for the closing line. Against the spread it lands near 49% overall. Treat flags as a reason to look closer, not as bets.
+The model's error is 12.90 RMSE, against 12.70 for the closing line. Against the spread it lands near 49% overall. Treat flags as a reason to look closer, not as bets.

@@ -37,7 +37,7 @@ def qb_rating_before(db, qb, season, week):
     return (epa + REPLACEMENT * N0) / (n + N0), int(h.n.sum())
 
 
-def add_qb_features(g: pd.DataFrame) -> pd.DataFrame:
+def add_qb_features(g: pd.DataFrame, season_reset=False) -> pd.DataFrame:
     db = load_dropbacks()
     db = db.sort_values(["season", "week"])
     # precompute ratings for every (qb, season, week) needed
@@ -58,13 +58,13 @@ def add_qb_features(g: pd.DataFrame) -> pd.DataFrame:
         row = {}
         for side, qb, team in [("h", r.home_qb_id, r.home_team), ("a", r.away_qb_id, r.away_team)]:
             cur = rate(qb, r.season, r.week)
-            past = [x for x in hist.get(team, [])][-8:]
+            past = [q for (ss, q) in hist.get(team, []) if (ss == r.season or not season_reset)][-8:]
             base = np.mean([rate(q, r.season, r.week) for q in past]) if past else cur
             row[side] = (cur, (cur - base) if not np.isnan(cur) else 0.0)
         hq.append(row["h"][0]); aq.append(row["a"][0]); hd.append(row["h"][1]); ad.append(row["a"][1])
         if pd.notna(r.result):
-            hist.setdefault(r.home_team, []).append(r.home_qb_id)
-            hist.setdefault(r.away_team, []).append(r.away_qb_id)
+            hist.setdefault(r.home_team, []).append((r.season, r.home_qb_id))
+            hist.setdefault(r.away_team, []).append((r.season, r.away_qb_id))
     g["home_qb_rating"], g["away_qb_rating"] = hq, aq
     g["home_qb_delta"], g["away_qb_delta"] = hd, ad
     g["d_qb_delta"] = g.home_qb_delta - g.away_qb_delta

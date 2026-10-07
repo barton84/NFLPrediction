@@ -20,10 +20,30 @@ from qb import add_qb_features, load_dropbacks, qb_rating_before, REPLACEMENT, N
 from backtest import prep, loso, report, ats
 
 CARRY, K = 0.5, 8          # prior carryover from last season, prior weight in games
-MODEL_VERSION = "v2.0"     # bump whenever the model math changes, so line movement can be compared by version
+MODEL_VERSION = "v2.1"     # bump whenever the model math changes, so line movement can be compared by version
 FEATURES = ["home", "d_margin", "d_sr", "d_qb_delta", "rest_diff"]
 T_FEATURES = ["proj", "dome", "wind10", "cold32", "qbsum"]
 PRECIP_PRIOR = {"rain": -2.0, "snow": -3.0}   # untested, applied only when the forecast says rain or snow is likely
+
+
+def win_total_prior(g, season):
+    """Starting margin rating per (season, team) from pipeline/data/win_totals.csv.
+    Win% is turned into points using Week 1 closing lines (pre-game information only)."""
+    path = os.path.join(HERE, "data", "win_totals.csv")
+    w = pd.read_csv(path)
+    w["abbr"] = w.team.map(fetch_odds.NAME_TO_ABBR)
+    w["wp"] = w.line / np.where(w.season >= 2021, 17, 16)
+    w["wp_c"] = w.wp - w.groupby("season").wp.transform("mean")
+    wp = dict(zip(zip(w.season, w.abbr), w.wp_c))
+    wk1 = g[(g.week == 1) & g.spread_line.notna()].copy()
+    wk1["dwp"] = [wp.get((s_, h), np.nan) - wp.get((s_, a), np.nan) for s_, h, a in zip(wk1.season, wk1.home_team, wk1.away_team)]
+    wk1 = wk1.dropna(subset=["dwp"])
+    X = np.c_[wk1.dwp, 1 - (wk1.location == "Neutral").astype(int)]
+    scale = float(np.linalg.lstsq(X, wk1.spread_line, rcond=None)[0][0])
+    if season not in set(w.season):
+        print(f"WARNING: no win totals for {season}; add them to pipeline/data/win_totals.csv (falls back to last season)")
+    print(f"win-total prior: 1.0 win% = {scale:.1f} pts, seasons {w.season.min()}-{w.season.max()}")
+    return {k: scale * v for k, v in wp.items()}
 
 
 def total_features(x, wx=None):
@@ -55,8 +75,11 @@ def main(fetch=True):
         fetch_data.main(season)
     build_games.main()
     g = pd.read_parquet(os.path.join(RAW, "game_stats.parquet"))
-    g = add_qb_features(g)
-    df, snaps = build(g, carry=CARRY, k=K)
+    # v2.1: each season starts from the market's pre-Week 1 win total, and the QB baseline
+    # resets each season (the win total already prices in a new starter)
+    g = add_qb_features(g, season_reset=True)
+    wt_prior = win_total_prior(g, season)
+    df, snaps = build(g, carry=CARRY, k=K, wt_prior=wt_prior)
 
     # ---------- which weeks are "last" and "this" ----------
     cur = df[df.season == season]
@@ -228,15 +251,22 @@ def main(fetch=True):
     if dk_now:
         json.dump(hist, open(hist_path, "w"), indent=1)
 
-    def dk_for(week, away, home):
-        p = os.path.join(OUT, "odds_history", f"{season}_{week:02d}.json")
-        if not os.path.exists(p):
-            return None
-        rec = json.load(open(p)).get(f"{away}@{home}")
+    dk_all = {}
+    for p in sorted(glob.glob(os.path.join(OUT, "odds_history", f"{season}_*.json"))):
+        for k_, v in json.load(open(p)).items():
+            if k_ not in dk_all or (v.get("updated") or "") >= (dk_all[k_].get("updated") or ""):
+                dk_all[k_] = v
+
+    def dk_for(week, away, home, gameday=None):
+        rec = dk_all.get(f"{away}@{home}")
+        if rec and gameday:   # make sure it is this meeting (commence is UTC, so allow a day either side)
+            delta = abs((datetime.date.fromisoformat(rec["commence"][:10]) - datetime.date.fromisoformat(gameday)).days)
+            if delta > 1:
+                return None
         return rec
 
     def line_info(r, week):
-        dk = dk_for(week, r.away_team, r.home_team)
+        dk = dk_for(week, r.away_team, r.home_team, r.gameday)
         if dk and dk.get("home_spread") is not None:
             return -dk["home_spread"], dk.get("total", r.total_line), "DK"
         return r.spread_line, r.total_line, "Consensus"
@@ -296,7 +326,7 @@ def main(fetch=True):
             return nz(v.mean(), 3) if n else None
         last = pd.concat([h.assign(qb=h.home_qb_id, qbn=h.home_qb_name), a.assign(qb=a.away_qb_id, qbn=a.away_qb_name)]).sort_values("week")
         # team's QB baseline = avg rating of starters in its last 8 games (incl. last season)
-        allg = df[((df.home_team == t) | (df.away_team == t)) & df.result.notna() & ((df.season < season) | (df.week < this_week))].sort_values(["season", "week"]).tail(8)
+        allg = df[((df.home_team == t) | (df.away_team == t)) & df.result.notna() & (df.season == season) & (df.week < this_week)].sort_values(["season", "week"]).tail(8)
         starters = [r.home_qb_id if r.home_team == t else r.away_qb_id for r in allg.itertuples()]
         base = float(np.mean([qb_rating_before(db, q, season, this_week)[0] for q in starters])) if starters else REPLACEMENT
         cur_qb = last.qbn.iloc[-1] if len(last) else None
