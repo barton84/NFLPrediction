@@ -13,13 +13,14 @@ ROOT = os.path.join(HERE, "..")
 RAW = os.path.join(ROOT, "raw")
 OUT = os.path.join(ROOT, "site", "data")
 
-import fetch_data, build_games, fetch_odds, injuries, weather
+import fetch_data, build_games, fetch_odds, injuries, weather, line_log
 import probability as P
 from ratings import build
 from qb import add_qb_features, load_dropbacks, qb_rating_before, REPLACEMENT, N0, DECAY
 from backtest import prep, loso, report, ats
 
 CARRY, K = 0.5, 8          # prior carryover from last season, prior weight in games
+MODEL_VERSION = "v2.0"     # bump whenever the model math changes, so line movement can be compared by version
 FEATURES = ["home", "d_margin", "d_sr", "d_qb_delta", "rest_diff"]
 T_FEATURES = ["proj", "dome", "wind10", "cold32", "qbsum"]
 PRECIP_PRIOR = {"rain": -2.0, "snow": -3.0}   # untested, applied only when the forecast says rain or snow is likely
@@ -346,7 +347,7 @@ def main(fetch=True):
         tmodel = tb + padj
         g_ = {
             "id": r.game_id, "away": r.away_team, "home": r.home_team, "date": r.gameday, "time": r.gametime,
-            "weekday": r.weekday, "roof": r.roof if isinstance(r.roof, str) else None, "stadium": r.stadium,
+            "season": int(r.season), "week": int(r.week), "weekday": r.weekday, "roof": r.roof if isinstance(r.roof, str) else None, "stadium": r.stadium,
             "neutral": int(r.neutral), "rest_home": nz(r.home_rest, 0), "rest_away": nz(r.away_rest, 0),
             "home_qb": r.home_qb_name, "away_qb": r.away_qb_name,
             "home_qb_delta": reports[r.game_id]["home"]["qb_delta"] or 0, "away_qb_delta": reports[r.game_id]["away"]["qb_delta"] or 0,
@@ -360,12 +361,27 @@ def main(fetch=True):
         g_.update(cover_probs(line, r.model, total, tmodel))
         games.append(g_)
     n_wx = sum(1 for w in wx_list if w and not w.get("indoor"))
+
+    # ---------- line movement log (permanent, one snapshot per game per day) ----------
+    log_path = os.path.join(OUT, "line_log.json")
+    log = line_log.load(log_path)
+    if not os.environ.get("FORCE_WEEK"):
+        log = line_log.record(log, games, MODEL_VERSION)
+    fin = df[df.game_id.isin(log.keys()) & df.result.notna()]
+    log = line_log.settle(log, {r.game_id: (float(r.spread_line), float(r.result)) for r in fin.itertuples() if pd.notna(r.spread_line)})
+    if not os.environ.get("FORCE_WEEK"):
+        with open(log_path, "w") as f_:
+            json.dump(log, f_, indent=1, sort_keys=True)
+    clv_rows = line_log.clv_rows(log)
+    clv = {"rows": [r for r in clv_rows if r["season"] == season], "summary": line_log.summarize([r for r in clv_rows if r["season"] == season]),
+           "tracked_games": len(log), "version": MODEL_VERSION}
+    print(f"line log: {len(log)} games tracked, {len(clv_rows)} graded")
     print(f"injury report rows {len(inj)}, depth chart teams {dc.team.nunique() if len(dc) else 0}, forecasts {n_wx}")
 
     out = {
         "meta": {"season": season, "this_week": this_week, "last_week": last_week, "built": now,
                  "games_in_backtest": int(len(d)), "backtest_seasons": [min(test_seasons), max(test_seasons)],
-                 "carry": CARRY, "prior_games": K, "replacement_qb": REPLACEMENT,
+                 "carry": CARRY, "prior_games": K, "model_version": MODEL_VERSION, "replacement_qb": REPLACEMENT,
                  "mu": nz(snap["mu"], 3), "dk_lines_this_week": sum(1 for x in games if x["line_src"] == "DK"), "hfa_note": snap["hfa"]["margin"]},
         "weights": weights, "teams": teams, "qbs": qbs, "this_week": games,
         "last_week": graded(last_week) if last_week else [], "season_weeks": season_weeks,
@@ -373,6 +389,7 @@ def main(fetch=True):
         "prob": {"kw": [round(float(v), 4) for v in kw], "k_min": int(P.KS[0]), "sd": P.SPREAD_SD, "K": K_SPREAD,
                  "K_folds": k_folds, "calib": calib, "key_freq": key_freq},
         "totals": totals_info,
+        "clv": clv,
         "feeds": {"injury_report": bool(len(inj)), "depth_chart": bool(len(dc)), "forecasts": n_wx},
     }
     os.makedirs(OUT, exist_ok=True)

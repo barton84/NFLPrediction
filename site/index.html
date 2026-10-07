@@ -84,7 +84,11 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 .pickers label{display:grid;gap:4px;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
 .pickers select{font-size:1rem;font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink)}
 .pickers .at{font-family:var(--f-display);font-size:1.6rem;color:var(--accent);padding-bottom:4px}
-.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+@media (max-width:560px){.score{grid-template-columns:1fr 1fr}.score .big:last-child{grid-column:1/-1}}
+.score .big{container-type:inline-size;overflow:hidden}
+.score .big .v{white-space:nowrap;font-size:clamp(1.2rem, 17cqi, 2.3rem)}
+@media (max-width:560px){.score .big{padding:12px 14px}.score .big .v{font-size:1.55rem}}
 .big{background:var(--panel-2);border-radius:8px;padding:14px 16px;display:grid;gap:2px;min-width:0}
 .big .v{font-family:var(--f-display);font-size:2.3rem;font-weight:800;line-height:1.05;color:var(--accent)}
 .big .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
@@ -119,9 +123,9 @@ th.sortable{cursor:pointer} th.sortable:hover{color:var(--ink)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* ---- tabs, meters, ladder, tags ---- */
-.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;overscroll-behavior:contain;touch-action:pan-x;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .tabs::-webkit-scrollbar{display:none}
-.tabs button{border:none;background:none;border-radius:0;padding:10px 14px;font-family:var(--f-display);font-size:1.05rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button{border:none;background:none;border-radius:0;padding:10px 14px;font-family:var(--f-display);font-size:1.05rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;flex:0 0 auto}
 .tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
 .tabs button:hover{color:var(--ink)}
 .view{display:grid;gap:22px}
@@ -144,6 +148,11 @@ th.sortable{cursor:pointer} th.sortable:hover{color:var(--ink)}
 .kf div{display:grid;grid-template-columns:34px 1fr 52px;gap:8px;align-items:center;font-family:var(--f-data);font-size:.78rem}
 .kf span.bar{height:10px;border-radius:3px;background:var(--line)}
 .kf span.bar.hot{background:var(--accent)}
+.ctl-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+th.sortable .arr{opacity:.45}
+th.sortable.on .arr{opacity:1;color:var(--accent)}
+#clv-body{display:grid;gap:16px;min-width:0}
+#clv-body>*{min-width:0}
 .note-box{background:var(--panel-2);border-radius:8px;padding:10px 12px;font-size:.84rem}
 </style>
 
@@ -178,11 +187,8 @@ th.sortable{cursor:pointer} th.sortable:hover{color:var(--ink)}
   <div class="view" id="v-week" role="tabpanel" aria-labelledby="tab-week">
     <section class="card">
       <div class="sec-head">
-        <div>
-          <h2 id="board-title">This week's games</h2>
-          <div class="sub" id="board-sub"></div>
-        </div>
-        <div class="row" style="flex:0 0 auto;gap:10px">
+        <h2 id="board-title">This week's games</h2>
+        <div class="ctl-row">
           <div class="seg" role="group" aria-label="Market">
             <button type="button" id="m-spread" aria-pressed="true">Spreads</button>
             <button type="button" id="m-total" aria-pressed="false">Totals</button>
@@ -193,6 +199,7 @@ th.sortable{cursor:pointer} th.sortable:hover{color:var(--ink)}
           </div>
         </div>
       </div>
+      <div class="sub" id="board-sub"></div>
       <div class="tbl-wrap"><table id="board-tbl"></table></div>
       <div class="sub" id="board-foot"></div>
     </section>
@@ -212,6 +219,8 @@ th.sortable{cursor:pointer} th.sortable:hover{color:var(--ink)}
       </div>
       <div class="score">
         <div class="big"><span class="k">Model spread</span><span class="v" id="o-spread">-</span><span class="note" id="o-market"></span></div>
+        <div class="big"><span class="k">Model side</span><span class="v" id="o-side">-</span><span class="note" id="o-side-note"></span></div>
+        <div class="big"><span class="k">Model edge</span><span class="v" id="o-edge">-</span><span class="note" id="o-edge-note"></span></div>
         <div class="big"><span class="k" id="o-cover-k">Cover chance</span><span class="v" id="o-cover">-</span><span class="note" id="o-cover-note"></span></div>
         <div class="big"><span class="k">Total</span><span class="v" id="o-total">-</span><span class="note" id="o-total-note"></span></div>
       </div>
@@ -265,17 +274,23 @@ th.sortable{cursor:pointer} th.sortable:hover{color:var(--ink)}
   <div class="view" id="v-res" role="tabpanel" aria-labelledby="tab-res" hidden>
     <section class="card">
       <div class="sec-head">
-        <div><h2 id="last-title">Last week, model vs. actual</h2><div class="sub" id="last-sub"></div></div>
+        <h2 id="last-title">Last week, model vs. actual</h2>
         <div class="seg" role="group" aria-label="Market">
           <button type="button" id="r-spread" aria-pressed="true">Spreads</button>
           <button type="button" id="r-total" aria-pressed="false">Totals</button>
         </div>
       </div>
+      <div class="sub" id="last-sub"></div>
       <div class="tbl-wrap"><table id="last-tbl"></table></div>
       <div>
         <h3 style="font-size:1rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Season to date</h3>
         <div class="season-strip" id="season-strip"></div>
       </div>
+    </section>
+    <section class="card" id="clv-card">
+      <div class="sec-head"><h2>Closing line value</h2><span class="sub" id="clv-ver"></span></div>
+      <div class="sub">Did the line move toward the model's side between when the model first posted and the morning of the game? Over time this is the quickest honest test of whether the edges are real: it shows up in a few hundred games, while win-loss records take seasons.</div>
+      <div id="clv-body"></div>
     </section>
     <section class="card">
       <div class="grid2">
@@ -336,13 +351,20 @@ function spreadTxt(home, away, margin){
 }
 // "JAX -4.5" or "PHI +4.5" for one side of a home-margin line L
 function sideLine(team, isHome, L){ const v = isHome ? -L : L; return `${team} ${v>0?"+":v<0?"-":""}${Math.abs(v)===0?"PK":Math.abs(v)}`; }
-function kick(g){
+function kickCT(g){   // schedule times are Eastern; Central is one hour behind year-round
   const d = new Date(g.date + "T12:00:00");
+  let h = 13, m = 0;
+  if (g.time){ [h,m] = g.time.split(":").map(Number); h -= 1; if (h < 0){ h += 24; d.setDate(d.getDate()-1); } }
+  return {d, h, m, sortKey: d.getTime()/60000 + h*60 + m};
+}
+function kick(g){
+  const {d, h, m} = kickCT(g);
   const day = d.toLocaleDateString("en-US",{weekday:"short", month:"short", day:"numeric"});
   if(!g.time) return day;
-  let [h,m] = g.time.split(":").map(Number); const ap = h>=12?"PM":"AM"; h = h%12||12;
-  return `${day} ${h}:${String(m).padStart(2,"0")} ${ap}`;
+  const ap = h>=12?"PM":"AM", h12 = h%12||12;
+  return `${day} ${h12}:${String(m).padStart(2,"0")} ${ap} CT`;
 }
+const pctPush = (p, push) => p==null ? "-" : `<span class="mono">${pct(p)}</span>${push>0.005?` <span class="sub">push ${pct(push)}</span>`:""}`;
 const meter = (p, push) => p==null ? "-" : `<span class="meter"><i><b style="width:${Math.min(100,p*100)}%"></b></i><span class="mono">${pct(p)}</span></span>${push>0.005?` <span class="sub">push ${pct(push)}</span>`:""}`;
 
 // ---------- probability engine (same math as pipeline/probability.py) ----------
@@ -460,14 +482,25 @@ function tags(g){
 }
 
 // ---------- THIS WEEK ----------
+let boardSort = {key:"kick", dir:1};
+function sortHead(key, label){
+  const on = boardSort.key===key, arr = on ? (boardSort.dir>0?"▴":"▾") : "↕";
+  return `<th class="sortable ${on?"on":""}" data-sort="${key}" scope="col" aria-sort="${on?(boardSort.dir>0?"ascending":"descending"):"none"}">${label} <span class="arr">${arr}</span></th>`;
+}
 function renderBoard(){
   const src = D.meta.dk_lines_this_week ? "DraftKings" : "consensus";
   $("board-title").textContent = `This week's games, week ${D.meta.this_week}`;
-  let h, n = 0;
+  let n = 0;
+  const rows = D.this_week.map(g=>{
+    const s = spreadState(g), t = totalState(g), done = g.result!=null;
+    const e = market==="spread" ? s.edge : t.edge;
+    return {g, s, t, done, absEdge: e==null||done ? -1 : Math.abs(e), kick: kickCT(g).sortKey};
+  });
+  rows.sort((a,b)=> boardSort.key==="kick" ? (a.kick-b.kick)*boardSort.dir : (a.absEdge-b.absEdge)*boardSort.dir || a.kick-b.kick);
+  let h;
   if (market === "spread"){
-    h = `<thead><tr><th>Matchup</th><th>Kickoff (ET)</th><th class="num">Line</th><th class="num">Model</th><th>Edge</th><th>Cover chance</th><th></th><th></th></tr></thead><tbody>`;
-    for (const g of D.this_week){
-      const s = spreadState(g), done = g.result!=null;
+    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Line</th><th class="num">Model</th><th>Model side</th>${sortHead("edge","Edge")}<th>Cover chance</th><th></th><th></th></tr></thead><tbody>`;
+    for (const {g, s, done} of rows){
       const flag = s.edge!=null && !done && Math.abs(s.edge)>=threshold; if (flag) n++;
       const soft = !flag && s.edge!=null && !done && Math.abs(s.edge)>=3;
       const sideTeam = s.homeSide ? g.home : g.away;
@@ -476,33 +509,39 @@ function renderBoard(){
         <td class="mono">${kick(g)}</td>
         <td class="num">${spreadTxt(g.home,g.away,g.line)} <span class="pill src">${g.line_src==="DK"?"DK":"cons."}</span></td>
         <td class="num">${spreadTxt(g.home,g.away,s.now.margin)}</td>
-        <td>${done ? `<span class="pill pend">final ${g.away_score}-${g.home_score}</span>` : s.edge==null?"-":`<span class="pick">${sideTeam}</span> <span class="mono">${Math.abs(s.edge).toFixed(1)}</span>`}</td>
-        <td>${done||s.edge==null ? "" : `${meter(s.cover, s.push)} <span class="sub">${sideLine(sideTeam, s.homeSide, g.line)}</span>`}</td>
+        <td>${done ? `<span class="pill pend">final ${g.away_score}-${g.home_score}</span>` : s.edge==null?"-":`<b>${sideLine(sideTeam, s.homeSide, g.line)}</b>`}</td>
+        <td class="mono">${done||s.edge==null ? "-" : Math.abs(s.edge).toFixed(1)}</td>
+        <td>${done||s.edge==null ? "" : pctPush(s.cover, s.push)}</td>
         <td>${flag?`<span class="pill" style="background:var(--accent);color:var(--accent-ink)">${threshold}+ EDGE</span>`:""}</td>
         <td><button class="link" type="button" data-open="${g.id}">Open</button></td></tr>`;
     }
-    $("board-sub").innerHTML = `<b style="color:var(--accent)">${n} game${n===1?"":"s"}</b> where the model is ${threshold}+ points off the ${src} line. The thin mark on each bar is 52.4%, the break-even point at -110.`;
+    $("board-sub").innerHTML = `<b style="color:var(--accent)">${n} game${n===1?"":"s"}</b> where the model is ${threshold}+ points off the ${src} line. Cover chance is for the model's side; break-even at -110 is 52.4%.`;
   } else {
-    h = `<thead><tr><th>Matchup</th><th>Kickoff (ET)</th><th class="num">Total</th><th class="num">Model total</th><th>Lean</th><th>Hit chance</th><th></th><th></th></tr></thead><tbody>`;
-    for (const g of D.this_week){
-      const t = totalState(g), done = g.result!=null;
+    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Total</th><th class="num">Model total</th><th>Model side</th>${sortHead("edge","Edge")}<th>Hit chance</th><th></th><th></th></tr></thead><tbody>`;
+    for (const {g, t, done} of rows){
       const big = t.edge!=null && !done && Math.abs(t.edge)>=threshold; if (big) n++;
       h += `<tr class="${big?"soft":""}">
         <td><b>${g.away}</b> @ <b>${g.home}</b>${tags(g)}</td>
         <td class="mono">${kick(g)}</td>
         <td class="num">${g.total??"-"} <span class="pill src">${g.line_src==="DK"?"DK":"cons."}</span></td>
         <td class="num">${t.now.total.toFixed(1)}</td>
-        <td>${done ? `<span class="pill pend">final ${g.home_score+g.away_score}</span>` : t.edge==null?"-":`<span class="pick">${t.over?"Over":"Under"}</span> <span class="mono">${Math.abs(t.edge).toFixed(1)}</span>`}</td>
-        <td>${done||t.edge==null ? "" : meter(t.prob, t.push)}</td>
+        <td>${done ? `<span class="pill pend">final ${g.home_score+g.away_score}</span>` : t.edge==null?"-":`<b>${t.over?"Over":"Under"} ${g.total}</b>`}</td>
+        <td class="mono">${done||t.edge==null ? "-" : Math.abs(t.edge).toFixed(1)}</td>
+        <td>${done||t.edge==null ? "" : pctPush(t.prob, t.push)}</td>
         <td>${big?'<span class="pill pend">view only</span>':""}</td>
         <td><button class="link" type="button" data-open="${g.id}">Open</button></td></tr>`;
     }
-    $("board-sub").innerHTML = `Totals are shown for reference and not flagged. In the backtest the totals model was less accurate than the market (${D.totals.rmse} vs ${D.totals.market_rmse} points of error), so it has to prove itself first. ${n} game${n===1?"":"s"} at ${threshold}+ points.`;
+    $("board-sub").innerHTML = `Totals are shown for reference and not flagged. In the backtest the totals model was less accurate than the market (${D.totals.rmse} vs ${D.totals.market_rmse} points of error). ${n} game${n===1?"":"s"} at ${threshold}+ points.`;
   }
   $("board-tbl").innerHTML = h + "</tbody>";
   $("board-tbl").querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ loadGame(b.dataset.open); show("game"); });
+  $("board-tbl").querySelectorAll("th[data-sort]").forEach(th=>th.onclick=()=>{
+    const k = th.dataset.sort;
+    boardSort = boardSort.key===k ? {key:k, dir:-boardSort.dir} : {key:k, dir: k==="edge" ? -1 : 1};
+    renderBoard();
+  });
   const f = D.feeds;
-  $("board-foot").innerHTML = `Injury report: ${f.injury_report ? "this week's official report applied" : "not posted yet for this week (first one comes out Wednesday)"}. Weather: ${f.forecasts ? f.forecasts+" outdoor forecasts loaded" : "no forecasts loaded yet; they refresh every morning once games are within about two weeks"}.`;
+  $("board-foot").innerHTML = `Kickoff times are Central. Injury report: ${f.injury_report ? "this week's official report applied" : "not posted yet for this week (first one comes out Wednesday)"}. Weather: ${f.forecasts ? f.forecasts+" outdoor forecasts loaded" : "no forecasts loaded yet; they refresh every morning once games are within about two weeks"}.`;
 }
 
 // ---------- GAME DETAIL ----------
@@ -589,11 +628,16 @@ function renderMatchup(){
   $("matchup-src").textContent = g ? `${kick(g)}${g.stadium?" · "+g.stadium:""}` : "Custom matchup (no posted line, rest days or forecast)";
   if (g && g.line!=null){
     const sideTeam = sp.homeSide ? home : away;
-    $("o-market").textContent = `Line: ${spreadTxt(home,away,g.line)} (${g.line_src==="DK"?"DraftKings":"consensus"}) · edge ${sideTeam} ${Math.abs(sp.edge).toFixed(1)}`;
+    $("o-market").textContent = `Line: ${spreadTxt(home,away,g.line)} (${g.line_src==="DK"?"DraftKings":"consensus"})`;
+    $("o-side").textContent = sideLine(sideTeam, sp.homeSide, g.line);
+    $("o-side-note").textContent = "The bet the model leans toward at the posted line";
+    $("o-edge").textContent = `${Math.abs(sp.edge).toFixed(1)} pts`;
+    $("o-edge-note").textContent = Math.abs(sp.edge) >= threshold ? `Flagged: ${threshold}+ points off the line` : `How far the model is from the line · flag at ${threshold}+`;
     $("o-cover-k").textContent = `${sideLine(sideTeam, sp.homeSide, g.line)} covers`;
     $("o-cover").textContent = pct(sp.cover);
     $("o-cover-note").textContent = (sp.push>0.005?`Push ${pct(sp.push)} · `:"") + "Break-even at -110 is 52.4%";
-  } else { $("o-market").textContent = "No posted line for this pairing"; $("o-cover-k").textContent="Cover chance"; $("o-cover").textContent = "-"; $("o-cover-note").textContent = "Load a game from the board"; }
+  } else { $("o-side").textContent = "-"; $("o-side-note").textContent = "Needs a posted line"; $("o-edge").textContent = "-"; $("o-edge-note").textContent = "Needs a posted line";
+    $("o-market").textContent = "No posted line for this pairing"; $("o-cover-k").textContent="Cover chance"; $("o-cover").textContent = "-"; $("o-cover-note").textContent = "Load a game from the board"; }
   // total
   if (g && g.total!=null){
     $("o-total").textContent = `${tt.over?"Over":"Under"} ${g.total}`;
@@ -643,15 +687,15 @@ function renderResults(){
   let h;
   if (resMarket === "spread"){
     const dec = rows.filter(r=>r.ats==="win"||r.ats==="loss"), wins = dec.filter(r=>r.ats==="win").length;
-    $("last-sub").textContent = `Graded with ratings frozen before week ${lw} kicked off. ATS = did the side the model leaned toward cover. ${wins}-${dec.length-wins} this week.`;
-    h = `<thead><tr><th>Matchup</th><th class="num">Line</th><th class="num">Model said</th><th class="num">Actual</th><th class="num">Model error</th><th class="num">Edge</th><th>ATS</th></tr></thead><tbody>`;
+    $("last-sub").textContent = `Graded with ratings frozen before week ${lw} kicked off. Model side = the bet the model leaned toward at the posted line. Edge = how far it disagreed. ATS grades that bet. ${wins}-${dec.length-wins} this week.`;
+    h = `<thead><tr><th>Matchup</th><th class="num">Line</th><th class="num">Model said</th><th class="num">Actual</th><th class="num">Model error</th><th>Model side</th><th class="num">Edge</th><th>ATS</th></tr></thead><tbody>`;
     for (const r of rows){
       const act = r.result==null ? "Not played yet" : `${r.home} ${r.home_score}, ${r.away} ${r.away_score}`;
       h += `<tr class="${r.edge!=null && Math.abs(r.edge)>=5?"flag":""}"><td><b>${r.away}</b> @ <b>${r.home}</b></td>
         <td class="num">${spreadTxt(r.home,r.away,r.line)} <span class="pill src">${r.line_src==="DK"?"DK":"cons."}</span></td>
         <td class="num">${spreadTxt(r.home,r.away,r.model)}</td><td class="num">${act}</td>
         <td class="num">${r.error==null?"-":f1(r.error)}</td>
-        <td class="num">${r.edge==null?"-":`${r.edge>0?r.home:r.away} ${Math.abs(r.edge).toFixed(1)}`}</td>
+        <td>${r.edge==null?"-":`<b>${sideLine(r.edge>0?r.home:r.away, r.edge>0, r.line)}</b>`}</td><td class="num">${r.edge==null?"-":Math.abs(r.edge).toFixed(1)}</td>
         <td>${r.ats?`<span class="pill ${r.ats}">${r.ats==="win"?"Covered":r.ats==="loss"?"Missed":"Push"}</span>`:'<span class="pill pend">Pending</span>'}</td></tr>`;
     }
   } else {
@@ -671,6 +715,43 @@ function renderResults(){
     D.prob.calib.map(c=>`<tr><td>${c.bucket}</td><td class="num">${c.n}</td><td class="num">${pct(c.said)}</td><td class="num">${(c.hit*100).toFixed(1)}%</td></tr>`).join("") + "</tbody>";
   const kf = D.prob.key_freq, mx = Math.max(...Object.values(kf));
   $("kf").innerHTML = Object.entries(kf).map(([k,v])=>`<div><span>${k}</span><span class="bar ${KEYS.includes(+k)?"hot":""}" style="width:${(v/mx*100).toFixed(1)}%"></span><span>${(v*100).toFixed(1)}%</span></div>`).join("");
+}
+
+function renderCLV(){
+  const C = D.clv, S = C && C.summary;
+  $("clv-ver").textContent = C ? `Model ${C.version}` : "";
+  if (!C || !C.rows.length){
+    $("clv-body").innerHTML = `<div class="note-box">Tracking is on. The site saves the line and the model's number every morning (${C?C.tracked_games:0} game${C&&C.tracked_games===1?"":"s"} logged so far). Results show here once those games are played. A first real read takes about half a season.</div>`;
+    return;
+  }
+  const sgn = v => (v>0?"+":"") + v.toFixed(2);
+  const tile = (k,v,u)=>`<div class="wk"><span>${k}</span><b>${v}</b><span>${u}</span></div>`;
+  const lw = S.by_week[S.by_week.length-1];
+  const latest = C.rows.filter(r=>r.week===lw.week);
+  const sideTxt = (r, L)=> r.side_home===null ? "No side (edge 0.0)" : sideLine(r.side_home ? r.home : r.away, r.side_home, L);
+  const pill = m => m>0 ? '<span class="pill win">Toward model</span>' : m<0 ? '<span class="pill loss">Away from model</span>' : '<span class="pill pend">No move</span>';
+  const bucketRows = rows => rows.map(b=>`<tr><td>${b.bucket||b.version}</td><td class="num">${b.n}</td><td class="num">${b.n?b.toward:"-"}</td><td class="num">${b.n?b.away:"-"}</td><td class="num">${b.n?b.flat:"-"}</td><td class="num mono">${b.n?sgn(b.avg):"-"}</td></tr>`).join("");
+  const head = first => `<thead><tr><th>${first}</th><th class="num">Games</th><th class="num">Toward</th><th class="num">Away</th><th class="num">No move</th><th class="num">Avg move</th></tr></thead>`;
+  $("clv-body").innerHTML = `
+    <div class="season-strip">
+      ${tile("Moved toward model", S.season.toward, "games this season")}
+      ${tile("Moved away", S.season.away, "games")}
+      ${tile("No move", S.season.flat, "games")}
+      ${tile("Season average", sgn(S.season.avg), `points per game, ${S.season.n} games`)}
+      ${tile(`Week ${lw.week} average`, sgn(lw.avg), `points per game, ${lw.n} games`)}
+    </div>
+    <div class="grid2">
+      <div class="sub-card"><h3>By size of edge</h3><div class="tbl-wrap"><table>${head("Edge when posted")}<tbody>${bucketRows(S.by_edge)}</tbody></table></div></div>
+      <div class="sub-card"><h3>By model version</h3><div class="tbl-wrap"><table>${head("Version")}<tbody>${bucketRows(S.by_version)}</tbody></table></div>
+        <span class="sub">Each model update gets a new version number, so you can see whether a change helped going forward.</span></div>
+    </div>
+    <h3 style="font-size:1rem;text-transform:uppercase;letter-spacing:.05em">Week ${lw.week}, game by game</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>Matchup</th><th>Model side when posted</th><th>Game-day line</th><th class="num">Edge</th><th class="num">Move</th><th>Direction</th></tr></thead><tbody>
+      ${latest.map(r=>`<tr><td><b>${r.away}</b> @ <b>${r.home}</b></td>
+        <td><b>${sideTxt(r, r.posted_line)}</b> <span class="sub">${new Date(r.posted_day+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})} · ${r.posted_src==="DK"?"DK":"cons."}</span></td>
+        <td>${sideTxt(r, r.close)} <span class="sub">${esc(r.close_src.replace("Consensus","cons.").replace("DK","DK"))}</span></td>
+        <td class="num mono">${Math.abs(r.edge).toFixed(1)}</td><td class="num mono">${sgn(r.move)}</td><td>${pill(r.move)}</td></tr>`).join("")}
+    </tbody></table></div>`;
 }
 
 // ---------- RATINGS & METHOD ----------
@@ -760,7 +841,7 @@ async function boot(){
   const setR = m=>{ resMarket=m; $("r-spread").setAttribute("aria-pressed", m==="spread"); $("r-total").setAttribute("aria-pressed", m==="total"); renderResults(); };
   $("r-spread").onclick=()=>setR("spread"); $("r-total").onclick=()=>setR("total");
   document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>show(b.dataset.t));
-  renderMethods(); renderResults();
+  renderMethods(); renderResults(); renderCLV();
   const upcoming = D.this_week.filter(g=>g.line!=null && g.result==null);
   const remembered = store.get("lastGame", null);
   const first = upcoming.find(g=>g.id===remembered) || upcoming.slice().sort((a,b)=>Math.abs(spreadState(b).edge)-Math.abs(spreadState(a).edge))[0] || D.this_week[0];

@@ -17,6 +17,7 @@ The Odds API (DraftKings spreads and totals)        ─┤─> pipeline/run.py �
 - `pipeline/probability.py` turns lines into cover and over/under chances, using a margin curve shaped by NFL key numbers.
 - `pipeline/injuries.py` reads the official injury report and depth charts. When a projected starting QB is out, his backup is rated instead.
 - `pipeline/weather.py` pulls kickoff forecasts for outdoor stadiums from Open-Meteo (free, no key).
+- `pipeline/line_log.py` keeps `site/data/line_log.json`, a permanent daily record of each game's line and the model's number (with the model version), and grades closing line value once games are played. Bump `MODEL_VERSION` in `run.py` whenever the model math changes.
 - `pipeline/fetch_odds.py` pulls DraftKings lines. It needs `ODDS_API_KEY`. Without the key, the site falls back to consensus lines.
 - `pipeline/run.py` runs everything and writes `site/data/model.json`.
 - `site/app.html` is the page. `pipeline/make_index.py` wraps it into `site/index.html`.
