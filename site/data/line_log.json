@@ -1,8 +1,10 @@
 {
  "2026_05_BAL_ATL": {
   "away": "BAL",
+  "close_consensus": 3.5,
   "date": "2026-10-11",
   "home": "ATL",
+  "result": -7.0,
   "season": 2026,
   "snaps": [
    {
@@ -91,8 +93,10 @@
  },
  "2026_05_CHI_GB": {
   "away": "CHI",
+  "close_consensus": -1.5,
   "date": "2026-10-11",
   "home": "GB",
+  "result": 24.0,
   "season": 2026,
   "snaps": [
    {
@@ -136,8 +140,10 @@
  },
  "2026_05_CIN_MIA": {
   "away": "CIN",
+  "close_consensus": -7.0,
   "date": "2026-10-11",
   "home": "MIA",
+  "result": -7.0,
   "season": 2026,
   "snaps": [
    {
@@ -181,8 +187,10 @@
  },
  "2026_05_CLE_NYJ": {
   "away": "CLE",
+  "close_consensus": 2.5,
   "date": "2026-10-11",
   "home": "NYJ",
+  "result": 5.0,
   "season": 2026,
   "snaps": [
    {
@@ -226,8 +234,10 @@
  },
  "2026_05_DEN_LAC": {
   "away": "DEN",
+  "close_consensus": -3.5,
   "date": "2026-10-11",
   "home": "LAC",
+  "result": -6.0,
   "season": 2026,
   "snaps": [
    {
@@ -271,8 +281,10 @@
  },
  "2026_05_DET_ARI": {
   "away": "DET",
+  "close_consensus": -5.5,
   "date": "2026-10-11",
   "home": "ARI",
+  "result": -24.0,
   "season": 2026,
   "snaps": [
    {
@@ -316,8 +328,10 @@
  },
  "2026_05_HOU_TEN": {
   "away": "HOU",
+  "close_consensus": -6.5,
   "date": "2026-10-11",
   "home": "TEN",
+  "result": -23.0,
   "season": 2026,
   "snaps": [
    {
@@ -361,8 +375,10 @@
  },
  "2026_05_IND_PIT": {
   "away": "IND",
+  "close_consensus": 3.0,
   "date": "2026-10-11",
   "home": "PIT",
+  "result": 12.0,
   "season": 2026,
   "snaps": [
    {
@@ -406,8 +422,10 @@
  },
  "2026_05_LV_NE": {
   "away": "LV",
+  "close_consensus": 3.5,
   "date": "2026-10-11",
   "home": "NE",
+  "result": 28.0,
   "season": 2026,
   "snaps": [
    {
@@ -451,8 +469,10 @@
  },
  "2026_05_MIN_NO": {
   "away": "MIN",
+  "close_consensus": -2.5,
   "date": "2026-10-11",
   "home": "NO",
+  "result": -10.0,
   "season": 2026,
   "snaps": [
    {
@@ -496,8 +516,10 @@
  },
  "2026_05_NYG_WAS": {
   "away": "NYG",
+  "close_consensus": 3.5,
   "date": "2026-10-11",
   "home": "WAS",
+  "result": 0.0,
   "season": 2026,
   "snaps": [
    {
@@ -541,8 +563,10 @@
  },
  "2026_05_PHI_JAX": {
   "away": "PHI",
+  "close_consensus": 7.5,
   "date": "2026-10-11",
   "home": "JAX",
+  "result": 2.0,
   "season": 2026,
   "snaps": [
    {
@@ -579,8 +603,10 @@
  },
  "2026_05_SF_SEA": {
   "away": "SF",
+  "close_consensus": 3.0,
   "date": "2026-10-11",
   "home": "SEA",
+  "result": -3.0,
   "season": 2026,
   "snaps": [
    {
@@ -647,5 +673,243 @@
   ],
   "time": "20:15",
   "week": 5
+ },
+ "2026_06_ARI_LA": {
+  "away": "ARI",
+  "date": "2026-10-18",
+  "home": "LA",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 12.5,
+    "model": 13.58,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:05",
+  "week": 6
+ },
+ "2026_06_BAL_CLE": {
+  "away": "BAL",
+  "date": "2026-10-18",
+  "home": "CLE",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": -4.5,
+    "model": -8.51,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 6
+ },
+ "2026_06_BUF_LV": {
+  "away": "BUF",
+  "date": "2026-10-18",
+  "home": "LV",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": -6.0,
+    "model": -5.09,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 6
+ },
+ "2026_06_CAR_PHI": {
+  "away": "CAR",
+  "date": "2026-10-18",
+  "home": "PHI",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 1.5,
+    "model": 1.06,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 6
+ },
+ "2026_06_CHI_ATL": {
+  "away": "CHI",
+  "date": "2026-10-18",
+  "home": "ATL",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": -3.0,
+    "model": 1.35,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 6
+ },
+ "2026_06_DAL_GB": {
+  "away": "DAL",
+  "date": "2026-10-18",
+  "home": "GB",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 1.5,
+    "model": 1.49,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:20",
+  "week": 6
+ },
+ "2026_06_HOU_JAX": {
+  "away": "HOU",
+  "date": "2026-10-18",
+  "home": "JAX",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 3.0,
+    "model": 4.34,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "09:30",
+  "week": 6
+ },
+ "2026_06_LAC_KC": {
+  "away": "LAC",
+  "date": "2026-10-18",
+  "home": "KC",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 8.5,
+    "model": 9.15,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 6
+ },
+ "2026_06_NO_NYG": {
+  "away": "NO",
+  "date": "2026-10-18",
+  "home": "NYG",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": -1.5,
+    "model": 2.35,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 6
+ },
+ "2026_06_NYJ_NE": {
+  "away": "NYJ",
+  "date": "2026-10-18",
+  "home": "NE",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 7.0,
+    "model": 9.99,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 6
+ },
+ "2026_06_PIT_TB": {
+  "away": "PIT",
+  "date": "2026-10-18",
+  "home": "TB",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": -3.0,
+    "model": 0.12,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 6
+ },
+ "2026_06_SEA_DEN": {
+  "away": "SEA",
+  "date": "2026-10-15",
+  "home": "DEN",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": -3.0,
+    "model": -0.35,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:15",
+  "week": 6
+ },
+ "2026_06_TEN_IND": {
+  "away": "TEN",
+  "date": "2026-10-18",
+  "home": "IND",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 7.0,
+    "model": 6.99,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 6
+ },
+ "2026_06_WAS_SF": {
+  "away": "WAS",
+  "date": "2026-10-19",
+  "home": "SF",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-12",
+    "line": 7.5,
+    "model": 11.7,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:15",
+  "week": 6
  }
 }
