@@ -48,8 +48,10 @@
  },
  "2026_05_BUF_LA": {
   "away": "BUF",
+  "close_consensus": 3.5,
   "date": "2026-10-12",
   "home": "LA",
+  "result": -3.0,
   "season": 2026,
   "snaps": [
    {
@@ -686,6 +688,13 @@
     "model": 13.58,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 13.5,
+    "model": 13.05,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "16:05",
@@ -699,6 +708,13 @@
   "snaps": [
    {
     "day": "2026-10-12",
+    "line": -4.5,
+    "model": -8.51,
+    "src": "DK",
+    "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
     "line": -4.5,
     "model": -8.51,
     "src": "DK",
@@ -720,6 +736,13 @@
     "model": -5.09,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": -6.0,
+    "model": -5.62,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "16:25",
@@ -737,6 +760,13 @@
     "model": 1.06,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 1.5,
+    "model": 1.02,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "13:00",
@@ -750,6 +780,13 @@
   "snaps": [
    {
     "day": "2026-10-12",
+    "line": -3.0,
+    "model": 1.35,
+    "src": "DK",
+    "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
     "line": -3.0,
     "model": 1.35,
     "src": "DK",
@@ -771,6 +808,13 @@
     "model": 1.49,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 1.5,
+    "model": 1.49,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "20:20",
@@ -786,6 +830,13 @@
     "day": "2026-10-12",
     "line": 3.0,
     "model": 4.34,
+    "src": "DK",
+    "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 3.0,
+    "model": 4.3,
     "src": "DK",
     "version": "v2.1"
    }
@@ -805,6 +856,13 @@
     "model": 9.15,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 8.5,
+    "model": 9.11,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "16:25",
@@ -820,6 +878,13 @@
     "day": "2026-10-12",
     "line": -1.5,
     "model": 2.35,
+    "src": "DK",
+    "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 1.5,
+    "model": 2.3,
     "src": "DK",
     "version": "v2.1"
    }
@@ -839,6 +904,13 @@
     "model": 9.99,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 7.5,
+    "model": 10.03,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "13:00",
@@ -852,6 +924,13 @@
   "snaps": [
    {
     "day": "2026-10-12",
+    "line": -3.0,
+    "model": 0.12,
+    "src": "DK",
+    "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
     "line": -3.0,
     "model": 0.12,
     "src": "DK",
@@ -873,6 +952,13 @@
     "model": -0.35,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": -2.5,
+    "model": -0.4,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "20:15",
@@ -890,6 +976,13 @@
     "model": 6.99,
     "src": "DK",
     "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 7.0,
+    "model": 7.0,
+    "src": "DK",
+    "version": "v2.1"
    }
   ],
   "time": "13:00",
@@ -905,6 +998,13 @@
     "day": "2026-10-12",
     "line": 7.5,
     "model": 11.7,
+    "src": "DK",
+    "version": "v2.1"
+   },
+   {
+    "day": "2026-10-13",
+    "line": 7.5,
+    "model": 11.66,
     "src": "DK",
     "version": "v2.1"
    }
