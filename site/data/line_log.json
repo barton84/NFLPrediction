@@ -678,8 +678,10 @@
  },
  "2026_06_ARI_LA": {
   "away": "ARI",
+  "close_consensus": 12.5,
   "date": "2026-10-18",
   "home": "LA",
+  "result": -2.0,
   "season": 2026,
   "snaps": [
    {
@@ -737,8 +739,10 @@
  },
  "2026_06_BAL_CLE": {
   "away": "BAL",
+  "close_consensus": -3.0,
   "date": "2026-10-18",
   "home": "CLE",
+  "result": 3.0,
   "season": 2026,
   "snaps": [
    {
@@ -796,8 +800,10 @@
  },
  "2026_06_BUF_LV": {
   "away": "BUF",
+  "close_consensus": -5.5,
   "date": "2026-10-18",
   "home": "LV",
+  "result": -3.0,
   "season": 2026,
   "snaps": [
    {
@@ -855,8 +861,10 @@
  },
  "2026_06_CAR_PHI": {
   "away": "CAR",
+  "close_consensus": -3.0,
   "date": "2026-10-18",
   "home": "PHI",
+  "result": -11.0,
   "season": 2026,
   "snaps": [
    {
@@ -914,8 +922,10 @@
  },
  "2026_06_CHI_ATL": {
   "away": "CHI",
+  "close_consensus": -1.5,
   "date": "2026-10-18",
   "home": "ATL",
+  "result": -8.0,
   "season": 2026,
   "snaps": [
    {
@@ -973,8 +983,10 @@
  },
  "2026_06_DAL_GB": {
   "away": "DAL",
+  "close_consensus": -1.5,
   "date": "2026-10-18",
   "home": "GB",
+  "result": 10.0,
   "season": 2026,
   "snaps": [
    {
@@ -1032,8 +1044,10 @@
  },
  "2026_06_HOU_JAX": {
   "away": "HOU",
+  "close_consensus": 2.5,
   "date": "2026-10-18",
   "home": "JAX",
+  "result": -3.0,
   "season": 2026,
   "snaps": [
    {
@@ -1084,8 +1098,10 @@
  },
  "2026_06_LAC_KC": {
   "away": "LAC",
+  "close_consensus": 7.5,
   "date": "2026-10-18",
   "home": "KC",
+  "result": 16.0,
   "season": 2026,
   "snaps": [
    {
@@ -1143,8 +1159,10 @@
  },
  "2026_06_NO_NYG": {
   "away": "NO",
+  "close_consensus": -1.5,
   "date": "2026-10-18",
   "home": "NYG",
+  "result": -7.0,
   "season": 2026,
   "snaps": [
    {
@@ -1202,8 +1220,10 @@
  },
  "2026_06_NYJ_NE": {
   "away": "NYJ",
+  "close_consensus": 7.5,
   "date": "2026-10-18",
   "home": "NE",
+  "result": 7.0,
   "season": 2026,
   "snaps": [
    {
@@ -1261,8 +1281,10 @@
  },
  "2026_06_PIT_TB": {
   "away": "PIT",
+  "close_consensus": -2.5,
   "date": "2026-10-18",
   "home": "TB",
+  "result": -7.0,
   "season": 2026,
   "snaps": [
    {
@@ -1360,8 +1382,10 @@
  },
  "2026_06_TEN_IND": {
   "away": "TEN",
+  "close_consensus": 6.5,
   "date": "2026-10-18",
   "home": "IND",
+  "result": -6.0,
   "season": 2026,
   "snaps": [
    {
@@ -1475,5 +1499,243 @@
   ],
   "time": "20:15",
   "week": 6
+ },
+ "2026_07_CIN_BAL": {
+  "away": "CIN",
+  "date": "2026-10-25",
+  "home": "BAL",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 3.0,
+    "model": -1.48,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 7
+ },
+ "2026_07_CLE_TEN": {
+  "away": "CLE",
+  "date": "2026-10-25",
+  "home": "TEN",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": -1.5,
+    "model": -0.03,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 7
+ },
+ "2026_07_DAL_PHI": {
+  "away": "DAL",
+  "date": "2026-10-26",
+  "home": "PHI",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": -4.5,
+    "model": 1.89,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:15",
+  "week": 7
+ },
+ "2026_07_DEN_ARI": {
+  "away": "DEN",
+  "date": "2026-10-25",
+  "home": "ARI",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": -4.5,
+    "model": -6.57,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:05",
+  "week": 7
+ },
+ "2026_07_GB_DET": {
+  "away": "GB",
+  "date": "2026-10-25",
+  "home": "DET",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 3.0,
+    "model": 4.69,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 7
+ },
+ "2026_07_IND_MIN": {
+  "away": "IND",
+  "date": "2026-10-25",
+  "home": "MIN",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 5.5,
+    "model": 7.71,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 7
+ },
+ "2026_07_KC_SEA": {
+  "away": "KC",
+  "date": "2026-10-25",
+  "home": "SEA",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 2.5,
+    "model": 1.24,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:20",
+  "week": 7
+ },
+ "2026_07_LA_LV": {
+  "away": "LA",
+  "date": "2026-10-25",
+  "home": "LV",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": -5.5,
+    "model": -4.64,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 7
+ },
+ "2026_07_MIA_NYJ": {
+  "away": "MIA",
+  "date": "2026-10-25",
+  "home": "NYJ",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 4.5,
+    "model": 5.85,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 7
+ },
+ "2026_07_NE_CHI": {
+  "away": "NE",
+  "date": "2026-10-22",
+  "home": "CHI",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 3.0,
+    "model": 3.05,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:15",
+  "week": 7
+ },
+ "2026_07_NYG_HOU": {
+  "away": "NYG",
+  "date": "2026-10-25",
+  "home": "HOU",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 10.0,
+    "model": 7.59,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 7
+ },
+ "2026_07_PIT_NO": {
+  "away": "PIT",
+  "date": "2026-10-25",
+  "home": "NO",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": -3.0,
+    "model": -3.23,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "09:30",
+  "week": 7
+ },
+ "2026_07_SF_ATL": {
+  "away": "SF",
+  "date": "2026-10-25",
+  "home": "ATL",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": -4.5,
+    "model": -4.39,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 7
+ },
+ "2026_07_TB_CAR": {
+  "away": "TB",
+  "date": "2026-10-25",
+  "home": "CAR",
+  "season": 2026,
+  "snaps": [
+   {
+    "day": "2026-10-19",
+    "line": 3.0,
+    "model": 6.13,
+    "src": "DK",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 7
  }
 }
