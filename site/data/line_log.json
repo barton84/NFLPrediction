@@ -2421,7 +2421,7 @@
   "snaps": [
    {
     "day": "2026-10-26",
-    "line": 7.0,
+    "line": 6.5,
     "model": 7.74,
     "src": "DK",
     "version": "v2.1"
@@ -2438,7 +2438,7 @@
   "snaps": [
    {
     "day": "2026-10-26",
-    "line": -1.5,
+    "line": 1.5,
     "model": 2.6,
     "src": "DK",
     "version": "v2.1"
