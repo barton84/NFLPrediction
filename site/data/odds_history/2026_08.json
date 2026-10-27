@@ -8,85 +8,85 @@
  "CAR@GB": {
   "commence": "2026-10-30T00:15:00Z",
   "home_spread": -3.5,
-  "total": 47.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "total": 48.5,
+  "updated": "2026-10-27T18:43:11Z"
  },
  "ARI@DAL": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -6.5,
   "total": 54.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "ATL@TB": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -2.5,
   "total": 46.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "BAL@BUF": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -3.5,
   "total": 53.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "TEN@CIN": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -10.0,
   "total": 46.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "CLE@PIT": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -3.5,
-  "total": 38.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "total": 39.5,
+  "updated": "2026-10-27T18:43:11Z"
  },
  "MIN@DET": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -3.0,
   "total": 46.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "IND@JAX": {
   "commence": "2026-11-01T18:00:00Z",
-  "home_spread": -7.5,
+  "home_spread": -8.5,
   "total": 46.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "LV@NYJ": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -1.5,
-  "total": 44.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "total": 45.5,
+  "updated": "2026-10-27T18:43:11Z"
  },
  "LAC@LA": {
   "commence": "2026-11-01T21:05:00Z",
   "home_spread": -6.5,
-  "total": 43.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "total": 44.5,
+  "updated": "2026-10-27T18:43:11Z"
  },
  "KC@DEN": {
   "commence": "2026-11-01T21:25:00Z",
   "home_spread": 1.5,
   "total": 41.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "NE@MIA": {
   "commence": "2026-11-01T21:25:00Z",
-  "home_spread": 7.0,
+  "home_spread": 7.5,
   "total": 44.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "PHI@WAS": {
   "commence": "2026-11-02T01:20:00Z",
-  "home_spread": -3.5,
+  "home_spread": -5.5,
   "total": 40.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  },
  "CHI@SEA": {
   "commence": "2026-11-03T01:20:00Z",
   "home_spread": -3.0,
   "total": 46.5,
-  "updated": "2026-10-26T19:21:18Z"
+  "updated": "2026-10-27T18:43:11Z"
  }
 }
