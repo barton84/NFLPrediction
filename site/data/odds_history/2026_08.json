@@ -8,85 +8,175 @@
  "CAR@GB": {
   "commence": "2026-10-30T00:15:00Z",
   "home_spread": -3.5,
-  "total": 48.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "total": 47.5,
+  "updated": "2026-10-28T18:53:30Z"
  },
  "ARI@DAL": {
   "commence": "2026-11-01T18:00:00Z",
-  "home_spread": -6.5,
+  "home_spread": -7.0,
   "total": 54.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
  },
  "ATL@TB": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -2.5,
-  "total": 46.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "total": 44.5,
+  "updated": "2026-10-28T18:53:30Z"
  },
  "BAL@BUF": {
   "commence": "2026-11-01T18:00:00Z",
-  "home_spread": -3.5,
-  "total": 53.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "home_spread": -3.0,
+  "total": 54.5,
+  "updated": "2026-10-28T18:53:30Z"
  },
  "TEN@CIN": {
   "commence": "2026-11-01T18:00:00Z",
-  "home_spread": -10.0,
+  "home_spread": -10.5,
   "total": 46.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
  },
  "CLE@PIT": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -3.5,
   "total": 39.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
  },
  "MIN@DET": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -3.0,
   "total": 46.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
  },
  "IND@JAX": {
   "commence": "2026-11-01T18:00:00Z",
-  "home_spread": -8.5,
+  "home_spread": -10.0,
   "total": 46.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
  },
  "LV@NYJ": {
   "commence": "2026-11-01T18:00:00Z",
   "home_spread": -1.5,
   "total": 45.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
  },
  "LAC@LA": {
   "commence": "2026-11-01T21:05:00Z",
   "home_spread": -6.5,
-  "total": 44.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "total": 45.5,
+  "updated": "2026-10-28T18:53:30Z"
  },
  "KC@DEN": {
   "commence": "2026-11-01T21:25:00Z",
   "home_spread": 1.5,
-  "total": 41.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "total": 40.5,
+  "updated": "2026-10-28T18:53:30Z"
  },
  "NE@MIA": {
   "commence": "2026-11-01T21:25:00Z",
-  "home_spread": 7.5,
-  "total": 44.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "home_spread": 7.0,
+  "total": 43.5,
+  "updated": "2026-10-28T18:53:30Z"
  },
  "PHI@WAS": {
   "commence": "2026-11-02T01:20:00Z",
   "home_spread": -5.5,
   "total": 40.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
  },
  "CHI@SEA": {
   "commence": "2026-11-03T01:20:00Z",
   "home_spread": -3.0,
   "total": 46.5,
-  "updated": "2026-10-27T18:43:11Z"
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "JAX@BAL": {
+  "commence": "2026-11-06T01:15:00Z",
+  "home_spread": -3.0,
+  "total": 48.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "CIN@ATL": {
+  "commence": "2026-11-08T14:30:00Z",
+  "home_spread": 3.0,
+  "total": 49.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "DEN@CAR": {
+  "commence": "2026-11-08T18:00:00Z",
+  "home_spread": 2.5,
+  "total": 44.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "CLE@NO": {
+  "commence": "2026-11-08T18:00:00Z",
+  "home_spread": -2.5,
+  "total": 42.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "DAL@IND": {
+  "commence": "2026-11-08T18:00:00Z",
+  "home_spread": 3.5,
+  "total": 51.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "DET@MIA": {
+  "commence": "2026-11-08T18:00:00Z",
+  "home_spread": 7.0,
+  "total": 47.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "NYJ@KC": {
+  "commence": "2026-11-08T18:00:00Z",
+  "home_spread": -9.5,
+  "total": 43.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "LA@WAS": {
+  "commence": "2026-11-08T18:00:00Z",
+  "home_spread": 5.5,
+  "total": 48.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "NYG@PHI": {
+  "commence": "2026-11-08T18:00:00Z",
+  "home_spread": 1.5,
+  "total": 40.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "HOU@LAC": {
+  "commence": "2026-11-08T21:05:00Z",
+  "home_spread": 3.0,
+  "total": 42.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "LV@SF": {
+  "commence": "2026-11-08T21:05:00Z",
+  "home_spread": -9.5,
+  "total": 48.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "ARI@SEA": {
+  "commence": "2026-11-08T21:25:00Z",
+  "home_spread": -10.5,
+  "total": 44.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "GB@NE": {
+  "commence": "2026-11-08T21:25:00Z",
+  "home_spread": -3.0,
+  "total": 47.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "TB@CHI": {
+  "commence": "2026-11-09T01:20:00Z",
+  "home_spread": -6.0,
+  "total": 47.5,
+  "updated": "2026-10-28T18:53:30Z"
+ },
+ "BUF@MIN": {
+  "commence": "2026-11-10T01:15:00Z",
+  "home_spread": 2.5,
+  "total": 47.5,
+  "updated": "2026-10-28T18:53:30Z"
  }
 }
