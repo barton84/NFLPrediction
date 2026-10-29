@@ -11,7 +11,7 @@
   "home_spread": -3.5,
   "home_price": -112,
   "total": 46.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "ARI@DAL": {
   "commence": "2026-11-01T18:00:00Z",
@@ -19,15 +19,15 @@
   "home_spread": -7.0,
   "home_price": -112,
   "total": 54.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "ATL@TB": {
   "commence": "2026-11-01T18:00:00Z",
-  "away_price": -112,
+  "away_price": -110,
   "home_spread": -2.5,
-  "home_price": -108,
+  "home_price": -110,
   "total": 44.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "BAL@BUF": {
   "commence": "2026-11-01T18:00:00Z",
@@ -35,15 +35,15 @@
   "home_spread": -3.0,
   "home_price": -112,
   "total": 54.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "TEN@CIN": {
   "commence": "2026-11-01T18:00:00Z",
-  "home_spread": -10.0,
-  "home_price": -118,
-  "away_price": -102,
+  "home_spread": -11.5,
+  "home_price": -108,
+  "away_price": -112,
   "total": 46.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "CLE@PIT": {
   "commence": "2026-11-01T18:00:00Z",
@@ -51,7 +51,7 @@
   "home_spread": -3.5,
   "home_price": -110,
   "total": 39.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "MIN@DET": {
   "commence": "2026-11-01T18:00:00Z",
@@ -59,7 +59,7 @@
   "home_price": -120,
   "away_price": 100,
   "total": 46.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "IND@JAX": {
   "commence": "2026-11-01T18:00:00Z",
@@ -67,7 +67,7 @@
   "home_spread": -10.0,
   "home_price": -108,
   "total": 46.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "LV@NYJ": {
   "commence": "2026-11-01T18:00:00Z",
@@ -75,7 +75,7 @@
   "home_spread": -1.5,
   "home_price": -110,
   "total": 45.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "LAC@LA": {
   "commence": "2026-11-01T21:05:00Z",
@@ -83,7 +83,7 @@
   "home_spread": -6.5,
   "home_price": -118,
   "total": 45.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "KC@DEN": {
   "commence": "2026-11-01T21:25:00Z",
@@ -91,7 +91,7 @@
   "home_price": -115,
   "away_price": -105,
   "total": 40.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "NE@MIA": {
   "commence": "2026-11-01T21:25:00Z",
@@ -99,15 +99,15 @@
   "home_price": -115,
   "away_price": -105,
   "total": 43.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "PHI@WAS": {
   "commence": "2026-11-02T01:20:00Z",
-  "away_price": -112,
+  "away_price": -110,
   "home_spread": -6.0,
-  "home_price": -108,
+  "home_price": -110,
   "total": 40.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "CHI@SEA": {
   "commence": "2026-11-03T01:20:00Z",
@@ -115,7 +115,7 @@
   "home_spread": -3.0,
   "home_price": -115,
   "total": 46.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "JAX@BAL": {
   "commence": "2026-11-06T01:15:00Z",
@@ -123,7 +123,7 @@
   "home_price": -105,
   "away_price": -115,
   "total": 48.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "CIN@ATL": {
   "commence": "2026-11-08T14:30:00Z",
@@ -131,7 +131,7 @@
   "home_price": 100,
   "away_price": -120,
   "total": 49.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "DEN@CAR": {
   "commence": "2026-11-08T18:00:00Z",
@@ -139,31 +139,31 @@
   "home_price": -110,
   "away_price": -110,
   "total": 44.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "CLE@NO": {
   "commence": "2026-11-08T18:00:00Z",
   "away_price": -110,
   "home_spread": -2.5,
   "home_price": -110,
-  "total": 42.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "total": 43.5,
+  "updated": "2026-10-29T18:58:46Z"
  },
  "DAL@IND": {
   "commence": "2026-11-08T18:00:00Z",
-  "away_price": -115,
-  "home_spread": 3.5,
-  "home_price": -105,
+  "away_price": -105,
+  "home_spread": 4.5,
+  "home_price": -115,
   "total": 51.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "DET@MIA": {
   "commence": "2026-11-08T18:00:00Z",
   "away_price": -115,
   "home_spread": 7.0,
   "home_price": -105,
-  "total": 47.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "total": 48.5,
+  "updated": "2026-10-29T18:58:46Z"
  },
  "NYJ@KC": {
   "commence": "2026-11-08T18:00:00Z",
@@ -171,7 +171,7 @@
   "home_price": -110,
   "away_price": -110,
   "total": 43.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "LA@WAS": {
   "commence": "2026-11-08T18:00:00Z",
@@ -179,7 +179,7 @@
   "home_spread": 5.5,
   "home_price": -110,
   "total": 48.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "NYG@PHI": {
   "commence": "2026-11-08T18:00:00Z",
@@ -187,15 +187,15 @@
   "home_spread": 1.5,
   "home_price": -110,
   "total": 40.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "HOU@LAC": {
   "commence": "2026-11-08T21:05:00Z",
   "away_price": -110,
-  "home_spread": 3.0,
+  "home_spread": 3.5,
   "home_price": -110,
   "total": 42.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "LV@SF": {
   "commence": "2026-11-08T21:05:00Z",
@@ -203,7 +203,7 @@
   "home_spread": -9.5,
   "home_price": -110,
   "total": 48.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "ARI@SEA": {
   "commence": "2026-11-08T21:25:00Z",
@@ -211,7 +211,7 @@
   "home_spread": -10.5,
   "home_price": -110,
   "total": 44.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "GB@NE": {
   "commence": "2026-11-08T21:25:00Z",
@@ -219,7 +219,7 @@
   "home_spread": -3.0,
   "home_price": -115,
   "total": 47.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "TB@CHI": {
   "commence": "2026-11-09T01:20:00Z",
@@ -227,7 +227,7 @@
   "home_price": -110,
   "away_price": -110,
   "total": 47.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  },
  "BUF@MIN": {
   "commence": "2026-11-10T01:15:00Z",
@@ -235,6 +235,6 @@
   "home_spread": 2.5,
   "home_price": -110,
   "total": 47.5,
-  "updated": "2026-10-29T14:23:21Z"
+  "updated": "2026-10-29T18:58:46Z"
  }
 }
