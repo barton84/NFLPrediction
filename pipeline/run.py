@@ -59,6 +59,17 @@ def total_features(x, wx=None):
 TEAM_NAMES = {v: k for k, v in fetch_odds.NAME_TO_ABBR.items()}
 
 
+def _clean(o):
+    """Replace NaN/inf anywhere in the output with null so browsers can parse the file."""
+    if isinstance(o, float):
+        return None if (np.isnan(o) or np.isinf(o)) else o
+    if isinstance(o, dict):
+        return {k: _clean(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_clean(v) for v in o]
+    return o
+
+
 def nz(x, nd=2):
     return None if x is None or (isinstance(x, float) and np.isnan(x)) else round(float(x), nd)
 
@@ -283,20 +294,24 @@ def main(fetch=True):
             line, total, src = line_info(r, week)
             row = {"id": r.game_id, "away": r.away_team, "home": r.home_team, "line": nz(line, 1), "line_src": src,
                    "model": nz(r.model, 2), "home_score": nz(r.home_score, 0), "away_score": nz(r.away_score, 0),
-                   "result": nz(r.result, 0), "home_qb": r.home_qb_name, "away_qb": r.away_qb_name}
-            if pd.notna(r.result) and line is not None and not pd.isna(line):
-                row["error"] = nz(r.model - r.result, 1)
-                side, res = np.sign(r.model - line), np.sign(r.result - line)
-                row["ats"] = "push" if res == 0 else ("win" if side == res else "loss")
+                   "result": nz(r.result, 0), "home_qb": r.home_qb_name if isinstance(r.home_qb_name, str) else None,
+                   "away_qb": r.away_qb_name if isinstance(r.away_qb_name, str) else None,
+                   "date": r.gameday, "time": r.gametime if isinstance(r.gametime, str) else None, "neutral": int(r.neutral)}
+            if line is not None and not pd.isna(line):
                 row["edge"] = nz(r.model - line, 2)
+                if pd.notna(r.result):
+                    row["error"] = nz(r.model - r.result, 1)
+                    side, res = np.sign(r.model - line), np.sign(r.result - line)
+                    row["ats"] = "push" if res == 0 else ("win" if side == res else "loss")
             row.update(total=nz(total, 1), t_model=nz(r.t_model, 1))
-            if pd.notna(r.result) and total is not None and not pd.isna(total):
-                act = r.home_score + r.away_score
-                row["t_actual"] = nz(act, 0)
-                side, res = np.sign(r.t_model - total), np.sign(act - total)
-                row["t_ats"] = "push" if res == 0 else ("win" if side == res else "loss")
+            if total is not None and not pd.isna(total):
                 row["t_side"] = "Over" if r.t_model > total else "Under"
                 row["t_edge"] = nz(r.t_model - total, 1)
+                if pd.notna(r.result):
+                    act = r.home_score + r.away_score
+                    row["t_actual"] = nz(act, 0)
+                    side, res = np.sign(r.t_model - total), np.sign(act - total)
+                    row["t_ats"] = "push" if res == 0 else ("win" if side == res else "loss")
             out.append(row)
         return out
 
@@ -304,7 +319,7 @@ def main(fetch=True):
     for w in range(1, last_week + 1):
         rows = graded(w)
         dec = [r for r in rows if r.get("ats") in ("win", "loss")]
-        big = [r for r in dec if abs(r["edge"]) >= 5]
+        big = [r for r in dec if r.get("edge") is not None and abs(r["edge"]) >= 5]
         errs = [abs(r["error"]) for r in rows if "error" in r]
         mkt = [abs(r["result"] - r["line"]) for r in rows if "error" in r]
         tdec = [r for r in rows if r.get("t_ats") in ("win", "loss")]
@@ -409,6 +424,8 @@ def main(fetch=True):
             "result": nz(r.result, 0), "home_score": nz(r.home_score, 0), "away_score": nz(r.away_score, 0),
             "inj": reports[r.game_id], "wx": wx,
         }
+        dk_rec = dk_for(this_week, r.away_team, r.home_team, r.gameday) if src == "DK" else None
+        g_["price_home"], g_["price_away"] = (dk_rec or {}).get("home_price"), (dk_rec or {}).get("away_price")
         g_.update(cover_probs(line, r.model, total, tmodel))
         games.append(g_)
     n_wx = sum(1 for w in wx_list if w and not w.get("indoor"))
@@ -416,13 +433,17 @@ def main(fetch=True):
     # ---------- line movement log (permanent, one snapshot per game per day) ----------
     log_path = os.path.join(OUT, "line_log.json")
     log = line_log.load(log_path)
-    if not os.environ.get("FORCE_WEEK"):
+    if not os.environ.get("FORCE_WEEK") and not os.environ.get("NO_RECORD"):
         log = line_log.record(log, games, MODEL_VERSION)
     fin = df[df.game_id.isin(log.keys()) & df.result.notna()]
     log = line_log.settle(log, {r.game_id: (float(r.spread_line), float(r.result)) for r in fin.itertuples() if pd.notna(r.spread_line)})
-    if not os.environ.get("FORCE_WEEK"):
+    if not os.environ.get("FORCE_WEEK") and not os.environ.get("NO_RECORD"):
         with open(log_path, "w") as f_:
             json.dump(log, f_, indent=1, sort_keys=True)
+    # each game's daily line history, for the line movement chart on Game Detail
+    for g_ in games:
+        e = log.get(g_["id"])
+        g_["history"] = [{k: s_.get(k) for k in ("day", "line", "src", "model", "total", "ph", "pa")} for s_ in e["snaps"]] if e else []
     clv_rows = line_log.clv_rows(log)
     clv = {"rows": [r for r in clv_rows if r["season"] == season], "summary": line_log.summarize([r for r in clv_rows if r["season"] == season]),
            "tracked_games": len(log), "version": MODEL_VERSION}
@@ -436,6 +457,7 @@ def main(fetch=True):
                  "mu": nz(snap["mu"], 3), "dk_lines_this_week": sum(1 for x in games if x["line_src"] == "DK"), "hfa_note": snap["hfa"]["margin"]},
         "weights": weights, "teams": teams, "qbs": qbs, "this_week": games,
         "last_week": graded(last_week) if last_week else [], "season_weeks": season_weeks,
+        "weeks": {str(int(w_)): graded(int(w_)) for w_ in sorted(df[df.season == season].week.unique()) if int(w_) != this_week},
         "backtest": {"variants": bt_rows, "by_season": by_season, "market_rmse": nz(market_rmse, 2)},
         "prob": {"kw": [round(float(v), 4) for v in kw], "k_min": int(P.KS[0]), "sd": P.SPREAD_SD, "K": K_SPREAD,
                  "K_folds": k_folds, "calib": calib, "key_freq": key_freq},
@@ -445,7 +467,7 @@ def main(fetch=True):
     }
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "model.json"), "w") as f:
-        json.dump(out, f, separators=(",", ":"), default=lambda o: None)
+        json.dump(_clean(out), f, separators=(",", ":"), default=lambda o: None, allow_nan=False)
     print(f"wrote model.json: season {season} this_week {this_week} last_week {last_week}; weights", {k: round(v, 3) for k, v in W.items()})
 
 

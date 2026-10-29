@@ -46,7 +46,8 @@ def record(log, games, version, now=None):
             continue
         e = log.setdefault(g["id"], {"away": g["away"], "home": g["home"], "date": g["date"], "time": g["time"],
                                      "season": g.get("season"), "week": g.get("week"), "snaps": []})
-        snap = {"day": today, "line": g["line"], "src": g["line_src"], "model": g["model"], "version": version}
+        snap = {"day": today, "line": g["line"], "src": g["line_src"], "model": g["model"], "version": version,
+                "total": g.get("total"), "ph": g.get("price_home"), "pa": g.get("price_away")}
         if e["snaps"] and e["snaps"][-1]["day"] == today:
             e["snaps"][-1] = snap          # re-run on the same day: keep the latest
         else:

@@ -47,6 +47,9 @@ def fetch():
                     for o in m["outcomes"]:
                         if NAME_TO_ABBR.get(o["name"]) == h:
                             rec["home_spread"] = o["point"]  # negative = home favored
+                            rec["home_price"] = o.get("price")
+                        elif NAME_TO_ABBR.get(o["name"]) == a:
+                            rec["away_price"] = o.get("price")
                 elif m["key"] == "totals":
                     rec["total"] = m["outcomes"][0]["point"]
             rec["updated"] = bk.get("last_update")

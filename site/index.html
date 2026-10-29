@@ -166,6 +166,18 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
 .eq b{color:var(--accent)}
 .how-body table td,.how-body table th{white-space:normal}
 @media (max-width:560px){.eq{font-size:.68rem;padding:10px 12px}#how-dlg{width:100%;max-width:100%;max-height:92vh;margin:auto 0 0;border-radius:12px 12px 0 0}}
+#move-head td,#move-head th{padding:6px 10px}
+#move-chart svg{display:block;width:100%;height:auto;max-width:100%}
+#move-head{width:auto;min-width:min(100%,420px)}
+.mv-grid{stroke:var(--line);stroke-width:1}
+.mv-line{stroke:var(--accent);stroke-width:2.5;fill:none}
+.mv-dot{fill:var(--accent);stroke:var(--panel);stroke-width:2}
+.mv-model{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+.mv-t{fill:var(--muted);font-family:var(--f-data);font-size:11px}
+.mv-v{fill:var(--ink);font-family:var(--f-data);font-size:11px;font-weight:600}
+.wk-sel{width:auto;padding:6px 10px;font-weight:600;border-radius:7px}
+.stale{color:var(--bad);font-weight:600}
+.chip.warn{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
 .note-box{background:var(--panel-2);border-radius:8px;padding:10px 12px;font-size:.84rem}
 </style>
 
@@ -196,7 +208,7 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
   <div id="err" hidden></div>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
-    <button type="button" role="tab" id="tab-week" data-t="week" aria-selected="true">This Week</button>
+    <button type="button" role="tab" id="tab-week" data-t="week" aria-selected="true">Matchups</button>
     <button type="button" role="tab" id="tab-game" data-t="game" aria-selected="false">Game Detail</button>
     <button type="button" role="tab" id="tab-res" data-t="res" aria-selected="false">Results</button>
     <button type="button" role="tab" id="tab-rat" data-t="rat" aria-selected="false">Ratings &amp; Method</button>
@@ -211,8 +223,9 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
   <div class="view" id="v-week" role="tabpanel" aria-labelledby="tab-week">
     <section class="card">
       <div class="sec-head">
-        <h2 id="board-title">This week's games</h2>
+        <h2 id="board-title">Matchups</h2>
         <div class="ctl-row">
+          <select id="wk-sel" class="wk-sel" aria-label="Week"></select>
           <div class="seg" role="group" aria-label="Market">
             <button type="button" id="m-spread" aria-pressed="true">Spreads</button>
             <button type="button" id="m-total" aria-pressed="false">Totals</button>
@@ -247,6 +260,12 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
         <div class="big"><span class="k">Model edge</span><span class="v" id="o-edge">-</span><span class="note" id="o-edge-note"></span></div>
         <div class="big"><span class="k" id="o-cover-k">Cover chance</span><span class="v" id="o-cover">-</span><span class="note" id="o-cover-note"></span></div>
         <div class="big"><span class="k">Total</span><span class="v" id="o-total">-</span><span class="note" id="o-total-note"></span></div>
+      </div>
+      <div class="sub-card" id="move-card">
+        <h3>Line movement <span class="src" id="move-src"></span></h3>
+        <div class="tbl-wrap"><table id="move-head"></table></div>
+        <div id="move-chart"></div>
+        <div class="sub" id="move-note"></div>
       </div>
       <div class="sub-card" id="ladder-card">
         <h3>Key number ladder</h3>
@@ -298,10 +317,13 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
   <div class="view" id="v-res" role="tabpanel" aria-labelledby="tab-res" hidden>
     <section class="card">
       <div class="sec-head">
-        <h2 id="last-title">Last week, model vs. actual</h2>
-        <div class="seg" role="group" aria-label="Market">
-          <button type="button" id="r-spread" aria-pressed="true">Spreads</button>
-          <button type="button" id="r-total" aria-pressed="false">Totals</button>
+        <h2 id="last-title">Model vs. actual</h2>
+        <div class="ctl-row">
+          <select id="rw-sel" class="wk-sel" aria-label="Week"></select>
+          <div class="seg" role="group" aria-label="Market">
+            <button type="button" id="r-spread" aria-pressed="true">Spreads</button>
+            <button type="button" id="r-total" aria-pressed="false">Totals</button>
+          </div>
         </div>
       </div>
       <div class="sub" id="last-sub"></div>
@@ -478,10 +500,13 @@ function totalState(g){
 // ---------- header ----------
 function renderHeader(){
   const m = D.meta, built = new Date(m.built);
-  $("meta-line").textContent = `${m.season} season · ratings through week ${m.last_week} · nflverse play-by-play · built ${built.toLocaleDateString("en-US",{month:"short",day:"numeric"})} ${built.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}`;
+  const ct = built.toLocaleString("en-US",{timeZone:"America/Chicago", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
+  const hrs = (Date.now() - built.getTime())/3.6e6;
+  const ago = hrs < 1 ? "under an hour ago" : hrs < 36 ? `${Math.round(hrs)} hour${Math.round(hrs)===1?"":"s"} ago` : `${Math.round(hrs/24)} days ago`;
+  $("meta-line").innerHTML = `${m.season} season · ratings through week ${m.last_week} · <span class="${hrs>36?"stale":""}" title="The data refreshes every morning around 8:15 AM Central (7:15 AM after daylight saving ends)">Last updated ${ct} CT (${ago})</span>`;
   const w = D.season_weeks.reduce((a,x)=>({w:a.w+x.wins,l:a.l+x.losses}),{w:0,l:0});
   const flagged = D.this_week.filter(g=>g.result==null && g.line!=null && Math.abs(spreadState(g).edge) >= threshold).length;
-  $("top-chips").innerHTML = `<span class="chip">Week ${m.this_week}</span>
+  $("top-chips").innerHTML = (hrs>36 ? `<span class="chip warn" title="The morning update may have failed. Check the Actions tab on GitHub.">Data is ${Math.round(hrs/24)} days old</span>` : "") + `<span class="chip">Week ${m.this_week}</span>
     <span class="chip hot">${flagged} flagged at ${threshold}+</span>
     <span class="chip">Season ATS ${w.w}-${w.l}</span>
     <span class="chip">Lines: ${m.dk_lines_this_week ? "DraftKings" : "consensus"}</span>`;
@@ -506,14 +531,72 @@ function tags(g){
 }
 
 // ---------- THIS WEEK ----------
-let boardSort = {key:"kick", dir:1};
+let boardSort = {key:"kick", dir:1}, boardWeek = null, resWeek = null;
+const WEEK_NAMES = {19:"Wild Card", 20:"Divisional", 21:"Conference", 22:"Super Bowl"};
+const weekName = w => WEEK_NAMES[w] || `Week ${w}`;
+function allWeeks(){ return [...new Set([...Object.keys(D.weeks||{}).map(Number), D.meta.this_week])].sort((a,b)=>a-b); }
+function weekRows(w){ return w===D.meta.this_week ? D.this_week : ((D.weeks||{})[w] || (w===D.meta.last_week ? D.last_week : [])); }
+function fillWeekSelects(){
+  const ws = allWeeks();
+  $("wk-sel").innerHTML = ws.map(w=>{
+    const rows = weekRows(w), done = rows.length && rows.every(r=>r.result!=null);
+    const tag = w===D.meta.this_week ? " · this week" : done ? " · final" : "";
+    return `<option value="${w}"${w===boardWeek?" selected":""}>${weekName(w)}${tag}</option>`;
+  }).join("");
+  const past = ws.filter(w=>weekRows(w).some(r=>r.result!=null));
+  $("rw-sel").innerHTML = past.map(w=>`<option value="${w}"${w===resWeek?" selected":""}>${weekName(w)}</option>`).join("");
+}
+function renderBoardOther(w){
+  const list = weekRows(w), past = list.some(r=>r.result!=null);
+  $("board-title").textContent = `${weekName(w)} matchups`;
+  const rows = list.map(r=>{ const e = market==="spread" ? r.edge : r.t_edge; return {r, e, absEdge: e==null?-1:Math.abs(e), kick: kickCT(r).sortKey}; });
+  rows.sort((a,b)=> boardSort.key==="kick" ? (a.kick-b.kick)*boardSort.dir : (a.absEdge-b.absEdge)*boardSort.dir || a.kick-b.kick);
+  const lineCell = r => r.line==null ? '<span class="sub">not posted</span>' : `${spreadTxt(r.home,r.away,r.line)} <span class="pill src">${r.line_src==="DK"?"DK":"cons."}</span>`;
+  let h, wins=0, losses=0, n=0;
+  if (market==="spread"){
+    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Line</th><th class="num">Model</th><th>Model side</th>${sortHead("edge","Edge")}${past?"<th class=\"num\">Final</th><th>ATS</th>":"<th></th><th></th>"}</tr></thead><tbody>`;
+    for (const {r,e} of rows){
+      const flag = e!=null && Math.abs(e)>=threshold; if (flag) n++;
+      if (r.ats==="win") wins++; if (r.ats==="loss") losses++;
+      h += `<tr class="${flag?"flag":e!=null&&Math.abs(e)>=3?"soft":""}"><td><b>${r.away}</b> @ <b>${r.home}</b></td><td class="mono">${kick(r)}</td>
+        <td class="num">${lineCell(r)}</td><td class="num">${spreadTxt(r.home,r.away,r.model)}</td>
+        <td>${e==null?"-":`<b>${sideLine(e>0?r.home:r.away, e>0, r.line)}</b>`}</td><td class="mono">${e==null?"-":Math.abs(e).toFixed(1)}</td>
+        ${past ? `<td class="num">${r.result==null?"-":`${r.away} ${r.away_score}, ${r.home} ${r.home_score}`}</td><td>${r.ats?`<span class="pill ${r.ats}">${r.ats==="win"?"Covered":r.ats==="loss"?"Missed":"Push"}</span>`:""}</td>`
+               : `<td>${flag?`<span class="pill" style="background:var(--accent);color:var(--accent-ink)">${threshold}+ EDGE</span>`:""}</td><td><button class="link" type="button" data-custom="${r.away}|${r.home}|${r.neutral||0}">Open</button></td>`}</tr>`;
+    }
+  } else {
+    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Total</th><th class="num">Model total</th><th>Model side</th>${sortHead("edge","Edge")}${past?"<th class=\"num\">Final total</th><th>Result</th>":"<th></th><th></th>"}</tr></thead><tbody>`;
+    for (const {r,e} of rows){
+      if (r.t_ats==="win") wins++; if (r.t_ats==="loss") losses++;
+      h += `<tr class="${e!=null&&Math.abs(e)>=threshold?"soft":""}"><td><b>${r.away}</b> @ <b>${r.home}</b></td><td class="mono">${kick(r)}</td>
+        <td class="num">${r.total??'<span class="sub">not posted</span>'}</td><td class="num">${r.t_model??"-"}</td>
+        <td>${e==null?"-":`<b>${r.t_side} ${r.total}</b>`}</td><td class="mono">${e==null?"-":Math.abs(e).toFixed(1)}</td>
+        ${past ? `<td class="num">${r.t_actual??"-"}</td><td>${r.t_ats?`<span class="pill ${r.t_ats}">${r.t_ats==="win"?"Hit":r.t_ats==="loss"?"Missed":"Push"}</span>`:""}</td>`
+               : `<td></td><td><button class="link" type="button" data-custom="${r.away}|${r.home}|${r.neutral||0}">Open</button></td>`}</tr>`;
+    }
+  }
+  $("board-sub").innerHTML = past
+    ? `${weekName(w)} is final. This is what model ${D.meta.model_version} said before kickoff, using only games played before that week. ${market==="spread"?"Against the spread":"Over/under leans"}: <b>${wins}-${losses}</b>.`
+    : `Early look at ${weekName(w)} using today's ratings. Lines appear once posted; injuries, weather and line movement are added when it becomes the current week. <b style="color:var(--accent)">${n}</b> game${n===1?"":"s"} at ${threshold}+ points so far.`;
+  $("board-tbl").innerHTML = h + "</tbody>";
+  $("board-tbl").querySelectorAll("[data-custom]").forEach(b=>b.onclick=()=>{
+    const [a,hm,neu] = b.dataset.custom.split("|"); sel = {away:a, home:hm, game:null};
+    $("away").value = a; $("home").value = hm; $("neutral").checked = neu==="1";
+    syncWxInputs(); renderInj(); renderMatchup(); show("game");
+  });
+  $("board-tbl").querySelectorAll("th[data-sort]").forEach(th=>th.onclick=()=>{
+    const k = th.dataset.sort; boardSort = boardSort.key===k ? {key:k, dir:-boardSort.dir} : {key:k, dir: k==="edge" ? -1 : 1}; renderBoard();
+  });
+  $("board-foot").textContent = "Kickoff times are Central.";
+}
 function sortHead(key, label){
   const on = boardSort.key===key, arr = on ? (boardSort.dir>0?"▴":"▾") : "↕";
   return `<th class="sortable ${on?"on":""}" data-sort="${key}" scope="col" aria-sort="${on?(boardSort.dir>0?"ascending":"descending"):"none"}">${label} <span class="arr">${arr}</span></th>`;
 }
 function renderBoard(){
+  if (boardWeek!=null && boardWeek!==D.meta.this_week) return renderBoardOther(boardWeek);
   const src = D.meta.dk_lines_this_week ? "DraftKings" : "consensus";
-  $("board-title").textContent = `This week's games, week ${D.meta.this_week}`;
+  $("board-title").textContent = `${weekName(D.meta.this_week)} matchups`;
   let n = 0;
   const rows = D.this_week.map(g=>{
     const s = spreadState(g), t = totalState(g), done = g.result!=null;
@@ -668,6 +751,7 @@ function renderMatchup(){
     $("o-total-note").textContent = `Model ${tt.now.total.toFixed(1)} · hits ${pct(tt.prob)}${tt.push>0.005?" · push "+pct(tt.push):""} · view only`;
   } else { $("o-total").textContent = tt.now.total.toFixed(1); $("o-total-note").textContent = "Projected total points"; }
   renderLadder(g, sp);
+  renderMovement(g);
   // weather breakdown
   const wx = wxState(g), auto = wxAuto(g);
   $("wind-v").textContent = wx.wind+" mph"; $("temp-v").textContent = wx.temp+"°F";
@@ -704,16 +788,70 @@ function renderLadder(g, sp){
   $("ladder-sub").textContent = `Chance ${team} covers at each line you might find, best on the left. The filled box is the posted line and outlined boxes are key numbers. A push means the bet is refunded. ${(kf[3]*100).toFixed(0)}% of NFL games end on exactly 3 and ${(kf[7]*100).toFixed(0)}% on exactly 7, so moving across those numbers is worth the most.`;
 }
 
+function renderMovement(g){
+  const card = $("move-card");
+  if (!g){ card.hidden = true; return; }
+  card.hidden = false;
+  const H = (g.history || []).slice();
+  const fmtSpread = v => v===0 ? "PK" : (v>0?"+":"") + (Number.isInteger(v)? v : v.toFixed(1));
+  const fmtPrice = p => p==null ? "" : (p>0?"+":"") + p;
+  const day = d => new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
+  // points: each daily snapshot, plus the current line if it moved since the last one
+  const pts = H.map(h=>({label: day(h.day), line: h.line, src: h.src, ph: h.ph, pa: h.pa, model: h.model}));
+  if (g.line!=null && (!pts.length || pts[pts.length-1].line !== g.line))
+    pts.push({label: "Now", line: g.line, src: g.line_src, ph: g.price_home, pa: g.price_away, model: g.model});
+  $("move-src").textContent = g.line_src==="DK" ? "DraftKings · checked every morning" : "consensus";
+  if (!pts.length){
+    $("move-head").innerHTML = ""; $("move-chart").innerHTML = "";
+    $("move-note").textContent = "No line history yet. The site starts saving this game's line on the first morning update after it's posted.";
+    return;
+  }
+  const first = pts[0], last = pts[pts.length-1];
+  const firstDay = H.length ? day(H[0].day) : "now";
+  $("move-head").innerHTML = `<thead><tr><th></th><th>First seen (${firstDay})</th><th>Now</th></tr></thead><tbody>
+    <tr><td><b>${g.away}</b></td><td class="mono">${fmtSpread(first.line)} <span class="sub">${fmtPrice(first.pa)}</span></td><td class="mono"><b>${fmtSpread(last.line)}</b> <span class="sub">${fmtPrice(last.pa)}</span></td></tr>
+    <tr><td><b>${g.home}</b></td><td class="mono">${fmtSpread(-first.line)} <span class="sub">${fmtPrice(first.ph)}</span></td><td class="mono"><b>${fmtSpread(-last.line)}</b> <span class="sub">${fmtPrice(last.ph)}</span></td></tr></tbody>`;
+  // chart of the home team's spread
+  const vals = pts.map(p=>-p.line), modelV = -(last.model ?? g.model);
+  let lo = Math.min(...vals, modelV), hi = Math.max(...vals, modelV);
+  lo = Math.floor(lo - 0.5); hi = Math.ceil(hi + 0.5); if (hi - lo < 3){ hi += 1; lo -= 1; }
+  const step = (hi - lo) > 10 ? 2 : 1;
+  const W = Math.max(300, Math.round($("move-chart").clientWidth || 640)), Hh = W < 500 ? 200 : 240, L = 40, R = W < 500 ? 84 : 112, T = 14, B = 30;
+  const x = i => pts.length===1 ? L + (W-L-R)/2 : L + i*(W-L-R)/(pts.length-1);
+  const y = v => T + (hi - v)*(Hh-T-B)/(hi - lo);
+  let svg = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="${g.home} spread over time">`;
+  for (let v = lo; v <= hi; v += step){
+    svg += `<line class="mv-grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="mv-t" x="${L-8}" y="${y(v)+4}" text-anchor="end">${fmtSpread(v)}</text>`;
+  }
+  svg += `<line class="mv-model" x1="${L}" x2="${W-R}" y1="${y(modelV)}" y2="${y(modelV)}"/>
+    <text class="mv-t" x="${W-R+8}" y="${y(modelV)+4}">Model ${fmtSpread(modelV)}</text>`;
+  svg += `<polyline class="mv-line" points="${pts.map((p,i)=>`${x(i)},${y(vals[i])}`).join(" ")}"/>`;
+  pts.forEach((p,i)=>{
+    svg += `<circle class="mv-dot" cx="${x(i)}" cy="${y(vals[i])}" r="5"><title>${p.label}: ${g.home} ${fmtSpread(vals[i])}${p.ph!=null?" ("+fmtPrice(p.ph)+")":""}</title></circle>`;
+    svg += `<text class="mv-t" x="${x(i)}" y="${Hh-8}" text-anchor="middle">${p.label}</text>`;
+  });
+  svg += `<text class="mv-v" x="${x(pts.length-1)+10}" y="${y(vals[vals.length-1])-8}">${g.home} ${fmtSpread(vals[vals.length-1])}</text>`;
+  $("move-chart").innerHTML = svg + "</svg>";
+  // plain-language summary from the side the model leaned when the line was first seen
+  const mv = first.model - first.line;
+  const homeSide = mv > 0, toward = homeSide ? (last.line - first.line) : (first.line - last.line);
+  const sideTeam = homeSide ? g.home : g.away;
+  $("move-note").innerHTML = Math.abs(last.line - first.line) < 0.01
+    ? `No movement since ${firstDay}. The dashed line is the model's number.`
+    : `The line has moved <b>${Math.abs(last.line-first.line).toFixed(1)} points ${toward>0?"toward":"away from"} the model</b> since ${firstDay} (the model's side was ${sideTeam}). The dashed line is the model's number. Snapshots are taken once each morning.`;
+}
+
 // ---------- RESULTS ----------
 function renderResults(){
-  const lw = D.meta.last_week, rows = D.last_week;
-  $("last-title").textContent = `Last week, model vs. actual (week ${lw})`;
+  const lw = resWeek ?? D.meta.last_week, rows = weekRows(lw);
+  $("last-title").textContent = `${weekName(lw)}, model vs. actual`;
   let h;
   if (resMarket === "spread"){
     const dec = rows.filter(r=>r.ats==="win"||r.ats==="loss"), wins = dec.filter(r=>r.ats==="win").length;
     $("last-sub").textContent = `Graded with ratings frozen before week ${lw} kicked off. Model side = the bet the model leaned toward at the posted line. Edge = how far it disagreed. ATS grades that bet. ${wins}-${dec.length-wins} this week.`;
     h = `<thead><tr><th>Matchup</th><th class="num">Line</th><th class="num">Model said</th><th class="num">Actual</th><th class="num">Model error</th><th>Model side</th><th class="num">Edge</th><th>ATS</th></tr></thead><tbody>`;
     for (const r of rows){
+      if (r.result==null && r.line==null) continue;
       const act = r.result==null ? "Not played yet" : `${r.home} ${r.home_score}, ${r.away} ${r.away_score}`;
       h += `<tr class="${r.edge!=null && Math.abs(r.edge)>=5?"flag":""}"><td><b>${r.away}</b> @ <b>${r.home}</b></td>
         <td class="num">${spreadTxt(r.home,r.away,r.line)} <span class="pill src">${r.line_src==="DK"?"DK":"cons."}</span></td>
@@ -750,8 +888,9 @@ function renderCLV(){
   }
   const sgn = v => (v>0?"+":"") + v.toFixed(2);
   const tile = (k,v,u)=>`<div class="wk"><span>${k}</span><b>${v}</b><span>${u}</span></div>`;
-  const lw = S.by_week[S.by_week.length-1];
-  const latest = C.rows.filter(r=>r.week===lw.week);
+  const wantW = resWeek ?? D.meta.last_week;
+  const lw = S.by_week.find(b=>b.week===wantW) || {week: wantW, n: 0, avg: 0};
+  const latest = C.rows.filter(r=>r.week===wantW);
   const sideTxt = (r, L)=> r.side_home===null ? "No side (edge 0.0)" : sideLine(r.side_home ? r.home : r.away, r.side_home, L);
   const pill = m => m>0 ? '<span class="pill win">Toward model</span>' : m<0 ? '<span class="pill loss">Away from model</span>' : '<span class="pill pend">No move</span>';
   const bucketRows = rows => rows.map(b=>`<tr><td>${b.bucket||b.version}</td><td class="num">${b.n}</td><td class="num">${b.n?b.toward:"-"}</td><td class="num">${b.n?b.away:"-"}</td><td class="num">${b.n?b.flat:"-"}</td><td class="num mono">${b.n?sgn(b.avg):"-"}</td></tr>`).join("");
@@ -762,20 +901,21 @@ function renderCLV(){
       ${tile("Moved away", S.season.away, "games")}
       ${tile("No move", S.season.flat, "games")}
       ${tile("Season average", sgn(S.season.avg), `points per game, ${S.season.n} games`)}
-      ${tile(`Week ${lw.week} average`, sgn(lw.avg), `points per game, ${lw.n} games`)}
+      ${tile(`${weekName(lw.week)} average`, lw.n ? sgn(lw.avg) : "-", lw.n ? `points per game, ${lw.n} games` : "not tracked")}
     </div>
     <div class="grid2">
       <div class="sub-card"><h3>By size of edge</h3><div class="tbl-wrap"><table>${head("Edge when posted")}<tbody>${bucketRows(S.by_edge)}</tbody></table></div></div>
       <div class="sub-card"><h3>By model version</h3><div class="tbl-wrap"><table>${head("Version")}<tbody>${bucketRows(S.by_version)}</tbody></table></div>
         <span class="sub">Each model update gets a new version number, so you can see whether a change helped going forward.</span></div>
     </div>
-    <h3 style="font-size:1rem;text-transform:uppercase;letter-spacing:.05em">Week ${lw.week}, game by game</h3>
+    <h3 style="font-size:1rem;text-transform:uppercase;letter-spacing:.05em">${weekName(lw.week)}, game by game</h3>
+    ${!latest.length ? `<div class="note-box">No line movement was tracked for ${weekName(lw.week)}. Tracking started in week 5.</div>` : `
     <div class="tbl-wrap"><table><thead><tr><th>Matchup</th><th>Model side when posted</th><th>Game-day line</th><th class="num">Edge</th><th class="num">Move</th><th>Direction</th></tr></thead><tbody>
       ${latest.map(r=>`<tr><td><b>${r.away}</b> @ <b>${r.home}</b></td>
         <td><b>${sideTxt(r, r.posted_line)}</b> <span class="sub">${new Date(r.posted_day+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})} · ${r.posted_src==="DK"?"DK":"cons."}</span></td>
         <td>${sideTxt(r, r.close)} <span class="sub">${esc(r.close_src.replace("Consensus","cons.").replace("DK","DK"))}</span></td>
         <td class="num mono">${Math.abs(r.edge).toFixed(1)}</td><td class="num mono">${sgn(r.move)}</td><td>${pill(r.move)}</td></tr>`).join("")}
-    </tbody></table></div>`;
+    </tbody></table></div>`}`;
 }
 
 function renderHow(){
@@ -897,6 +1037,7 @@ function initSliders(){
 function show(t){
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.t===t));
   ["week","game","res","rat"].forEach(x=>$("v-"+x).hidden = x!==t);
+  if (t==="game" && D && sel.game) renderMovement(sel.game);
   store.set("tab", t);
 }
 function refresh(){ renderHeader(); renderBoard(); renderMatchup(); renderRatings(); }
@@ -907,6 +1048,7 @@ function syncThemeBtn(){ const dark=isDark(), b=$("theme-btn"); b.classList.togg
 $("theme-btn").onclick=()=>{ const next = isDark() ? "light" : "dark"; document.documentElement.setAttribute("data-theme", next); try{ localStorage.setItem("theme", next); }catch(e){} syncThemeBtn(); };
 try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeBtn); }catch(e){}
 syncThemeBtn();
+let _mvT; window.addEventListener("resize", ()=>{ clearTimeout(_mvT); _mvT = setTimeout(()=>{ if (D && sel.game) renderMovement(sel.game); }, 150); });
 $("how-btn").onclick=()=>{ if(!D) return; renderHow(); const d=$("how-dlg"); if(d.showModal) d.showModal(); else d.setAttribute("open",""); $("how-body").scrollTop=0; };
 $("how-close").onclick=()=>$("how-dlg").close();
 $("how-dlg").addEventListener("click", e=>{ if(e.target===$("how-dlg")) $("how-dlg").close(); });
@@ -933,6 +1075,10 @@ async function boot(){
   const setR = m=>{ resMarket=m; $("r-spread").setAttribute("aria-pressed", m==="spread"); $("r-total").setAttribute("aria-pressed", m==="total"); renderResults(); };
   $("r-spread").onclick=()=>setR("spread"); $("r-total").onclick=()=>setR("total");
   document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+  boardWeek = D.meta.this_week; resWeek = D.meta.last_week || null;
+  fillWeekSelects();
+  $("wk-sel").onchange = ()=>{ boardWeek = +$("wk-sel").value; renderBoard(); };
+  $("rw-sel").onchange = ()=>{ resWeek = +$("rw-sel").value; renderResults(); renderCLV(); };
   renderMethods(); renderResults(); renderCLV();
   const upcoming = D.this_week.filter(g=>g.line!=null && g.result==null);
   const remembered = store.get("lastGame", null);
