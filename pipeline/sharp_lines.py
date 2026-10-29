@@ -16,6 +16,8 @@ only the points where the main line or a price changed.
 
 Needs env var ODDSPAPI_KEY (GitHub secret). Without it this does nothing.
 Run with --probe to print the raw shape of the API responses for one game.
+Run with --now to pull every game that has not kicked off yet, right away
+(about one request per game). The pull shortly before kickoff still happens.
 """
 import os, sys, json, time, datetime, urllib.request, urllib.parse
 from zoneinfo import ZoneInfo
@@ -29,6 +31,7 @@ BOOKS = {"circasports": "circa", "pinnacle": "pin"}
 OUT = os.path.join(os.path.dirname(__file__), "..", "site", "data")
 CT = ZoneInfo("America/Chicago")
 PROBE = "--probe" in sys.argv
+NOW = "--now" in sys.argv        # pull every upcoming game right away (manual "pull now" run)
 
 
 def api(path, **params):
@@ -199,7 +202,8 @@ def main(now=None):
     todo = []
     for g in D.get("this_week", []):
         kick = line_log.kickoff_et(g["date"], g["time"])
-        kind = "final" if PROBE else due(store.get(g["id"], {}), kick, now)
+        kind = "final" if PROBE else ("early" if NOW and now < kick and "final" not in store.get(g["id"], {}).get("pulled", {})
+                                      else due(store.get(g["id"], {}), kick, now))
         if kind:
             todo.append((g, kick, kind))
     if PROBE:
