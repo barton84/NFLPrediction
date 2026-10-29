@@ -18,7 +18,10 @@ The Odds API (DraftKings spreads and totals)        ─┤─> pipeline/run.py �
 - `pipeline/injuries.py` reads the official injury report and depth charts. When a projected starting QB is out, his backup is rated instead.
 - `pipeline/weather.py` pulls kickoff forecasts for outdoor stadiums from Open-Meteo (free, no key).
 - `pipeline/line_log.py` keeps `site/data/line_log.json`, a permanent daily record of each game's line and the model's number (with the model version), and grades closing line value once games are played. Bump `MODEL_VERSION` in `run.py` whenever the model math changes.
-- `pipeline/fetch_odds.py` pulls DraftKings lines. It needs `ODDS_API_KEY`. Without the key, the site falls back to consensus lines.
+- `pipeline/intraday.py` rechecks DraftKings, FanDuel and Caesars spreads about 8 times a day (workflow `line_checks.yml`). It adds a timestamped point to the line log and updates the line, edge and cover chance on the site without rebuilding the model.
+- `pipeline/sharp_lines.py` pulls Circa and Pinnacle line history from OddsPapi (secret `ODDSPAPI_KEY`, free plan) on Wednesday and shortly before each kickoff, into `site/data/sharp_lines.json`. Run "Line checks" by hand with "probe" ticked to test the feed.
+- `pipeline/fetch_odds.py` pulls DraftKings lines, plus FanDuel and Caesars for the line movement chart (same credit cost; add books in `EXTRA_BOOKS` and `line_log.BOOK_CODES`). It needs `ODDS_API_KEY`. Without the key, the site falls back to consensus lines.
+- `pipeline/team_stats.py` builds the season-to-date team cards on Game Detail (record, ATS, over/under, offense and defense per game with league ranks).
 - `pipeline/run.py` runs everything and writes `site/data/model.json`.
 - `site/app.html` is the page. `pipeline/make_index.py` wraps it into `site/index.html`.
 
@@ -49,7 +52,9 @@ cd site && python -m http.server 8000 # open http://localhost:8000
 3. In the Actions tab, open "Update model data" and click "Run workflow" once to confirm it works.
 4. In Netlify, choose Add new site > Import from Git and pick the repo. Leave the build command blank and set the publish directory to `site`. The `netlify.toml` file already sets this.
 
-The workflow runs every morning, commits the refreshed data, and Netlify redeploys automatically. Each run uses 2 Odds API credits, so about 60 a month.
+The "Update model data" workflow runs every morning, commits the refreshed data, and Netlify redeploys automatically. Each run uses 2 credits on `ODDS_API_KEY`, so about 60 a month.
+
+The "Line checks" workflow runs 8 times a day on the same `ODDS_API_KEY` and uses 1 credit per run (spreads only), about 250 a month. Together the two workflows use about 300 credits a month, which fits the free plan's 500.
 
 ## Current tested weights, model v2.1 (2016-2025, 2,761 games)
 

@@ -13,7 +13,7 @@ ROOT = os.path.join(HERE, "..")
 RAW = os.path.join(ROOT, "raw")
 OUT = os.path.join(ROOT, "site", "data")
 
-import fetch_data, build_games, fetch_odds, injuries, weather, line_log
+import fetch_data, build_games, fetch_odds, injuries, weather, line_log, team_stats
 import probability as P
 from ratings import build
 from qb import add_qb_features, load_dropbacks, qb_rating_before, REPLACEMENT, N0, DECAY
@@ -426,6 +426,11 @@ def main(fetch=True):
         }
         dk_rec = dk_for(this_week, r.away_team, r.home_team, r.gameday) if src == "DK" else None
         g_["price_home"], g_["price_away"] = (dk_rec or {}).get("home_price"), (dk_rec or {}).get("away_price")
+        any_rec = dk_for(this_week, r.away_team, r.home_team, r.gameday) or {}
+        for c in line_log.BOOK_CODES:   # extra books for the line movement chart
+            b = any_rec.get(c) or {}
+            g_[f"{c}_line"] = -b["home_spread"] if b.get("home_spread") is not None else None
+            g_[f"{c}_price_home"], g_[f"{c}_price_away"] = b.get("home_price"), b.get("away_price")
         g_.update(cover_probs(line, r.model, total, tmodel))
         games.append(g_)
     n_wx = sum(1 for w in wx_list if w and not w.get("indoor"))
@@ -440,10 +445,10 @@ def main(fetch=True):
     if not os.environ.get("FORCE_WEEK") and not os.environ.get("NO_RECORD"):
         with open(log_path, "w") as f_:
             json.dump(log, f_, indent=1, sort_keys=True)
-    # each game's daily line history, for the line movement chart on Game Detail
+    # each game's line history (morning runs plus daytime checks), for the line movement chart on Game Detail
     for g_ in games:
         e = log.get(g_["id"])
-        g_["history"] = [{k: s_.get(k) for k in ("day", "line", "src", "model", "total", "ph", "pa")} for s_ in e["snaps"]] if e else []
+        g_["history"] = [{k: s_.get(k) for k in line_log.SNAP_KEYS} for s_ in e["snaps"]] if e else []
     clv_rows = line_log.clv_rows(log)
     clv = {"rows": [r for r in clv_rows if r["season"] == season], "summary": line_log.summarize([r for r in clv_rows if r["season"] == season]),
            "tracked_games": len(log), "version": MODEL_VERSION}
@@ -463,12 +468,21 @@ def main(fetch=True):
                  "K_folds": k_folds, "calib": calib, "key_freq": key_freq},
         "totals": totals_info,
         "clv": clv,
+        "team_stats": _safe_team_stats(season),
         "feeds": {"injury_report": bool(len(inj)), "depth_chart": bool(len(dc)), "forecasts": n_wx},
     }
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "model.json"), "w") as f:
         json.dump(_clean(out), f, separators=(",", ":"), default=lambda o: None, allow_nan=False)
     print(f"wrote model.json: season {season} this_week {this_week} last_week {last_week}; weights", {k: round(v, 3) for k, v in W.items()})
+
+
+def _safe_team_stats(season):
+    try:
+        return team_stats.build(season)
+    except Exception as e:   # the team cards are a nice-to-have; never fail the build over them
+        print("team stats failed:", e)
+        return {}
 
 
 if __name__ == "__main__":

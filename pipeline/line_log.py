@@ -1,11 +1,13 @@
 """Line movement log and closing line value (CLV).
 
 site/data/line_log.json is a permanent record, committed to the repo by the
-daily workflow. For every game it keeps one snapshot per day until kickoff:
-the posted line, where it came from (DraftKings or consensus), the model's
-number, and the model version that produced it. Snapshots are never
-overwritten by later days, so the line from when the model first posted is
-always there.
+workflows. For every game it keeps a snapshot from each morning model run
+("kind": "daily") plus one from each spreads-only line check during the day
+("kind": "check", see intraday.py), until kickoff: the posted line, where it
+came from (DraftKings or consensus), the extra books' lines and prices
+(e.g. FanDuel "fd", "fdph", "fdpa"; Caesars "cz", "czph", "czpa"), the model's number, the model version,
+and a UTC timestamp ("ts"). Snapshots are never overwritten by later runs, so
+the line from when the model first posted is always there.
 
 Closing line value compares the first snapshot (when the model posted) with
 the last snapshot before kickoff (game-day morning). When both came from
@@ -19,6 +21,9 @@ import json, os, datetime
 from zoneinfo import ZoneInfo
 
 ET = ZoneInfo("America/New_York")
+BOOK_CODES = ("fd", "cz")   # matches fetch_odds.EXTRA_BOOKS
+SNAP_KEYS = ("day", "ts", "kind", "line", "src", "model", "total", "ph", "pa") + tuple(
+    k for c in BOOK_CODES for k in (c, c + "ph", c + "pa"))
 CT = ZoneInfo("America/Chicago")
 
 
@@ -46,13 +51,40 @@ def record(log, games, version, now=None):
             continue
         e = log.setdefault(g["id"], {"away": g["away"], "home": g["home"], "date": g["date"], "time": g["time"],
                                      "season": g.get("season"), "week": g.get("week"), "snaps": []})
-        snap = {"day": today, "line": g["line"], "src": g["line_src"], "model": g["model"], "version": version,
+        snap = {"day": today, "ts": now.strftime("%Y-%m-%dT%H:%MZ"), "kind": "daily", "line": g["line"],
+                "src": g["line_src"], "model": g["model"], "version": version,
                 "total": g.get("total"), "ph": g.get("price_home"), "pa": g.get("price_away")}
-        if e["snaps"] and e["snaps"][-1]["day"] == today:
-            e["snaps"][-1] = snap          # re-run on the same day: keep the latest
+        snap.update(book_fields(g))
+        last = e["snaps"][-1] if e["snaps"] else None
+        if last and last["day"] == today and last.get("kind", "daily") == "daily":
+            e["snaps"][-1] = snap          # manual re-run of the morning build: keep the latest
         else:
             e["snaps"].append(snap)
     return log
+
+
+def book_fields(g):
+    """Extra books' line and prices for a snapshot, from a game's {code}_line / _price_home / _price_away."""
+    out = {}
+    for c in BOOK_CODES:
+        out[c], out[c + "ph"], out[c + "pa"] = g.get(f"{c}_line"), g.get(f"{c}_price_home"), g.get(f"{c}_price_away")
+    return out
+
+
+def add_check(log, gid, line, ph, pa, now=None, books=None):
+    """Append a spreads-only line check (intraday.py). The model number, model version
+    and total are carried over from the game's latest snapshot, since only the line was checked."""
+    e = log.get(gid)
+    if not e or not e.get("snaps"):
+        return False
+    now = now or datetime.datetime.now(datetime.timezone.utc)
+    if kickoff_et(e["date"], e["time"]) <= now:
+        return False
+    prev = e["snaps"][-1]
+    e["snaps"].append({"day": now.astimezone(CT).date().isoformat(), "ts": now.strftime("%Y-%m-%dT%H:%MZ"),
+                       "kind": "check", "line": line, "src": "DK", "model": prev["model"], "version": prev.get("version"),
+                       "total": prev.get("total"), "ph": ph, "pa": pa, **book_fields(books or {})})
+    return True
 
 
 def settle(log, finals):

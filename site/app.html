@@ -10,7 +10,7 @@
 :root{
   --bg:#f3f5f8; --panel:#ffffff; --panel-2:#eaeef3; --line:#d4dbe4;
   --ink:#121a26; --muted:#5a6676; --accent:#d4561a; --accent-ink:#ffffff; --accent-soft:#fbe6da;
-  --good:#1d7a4c; --good-soft:#dcf1e5; --bad:#b4322c; --bad-soft:#f8dedc; --warn:#a86a00;
+  --fd:#1f6fd1; --cz:#8a5a00; --circa:#7b4fd6; --pin:#0f8a7e; --good:#1d7a4c; --good-soft:#dcf1e5; --bad:#b4322c; --bad-soft:#f8dedc; --warn:#a86a00;
   --f-display:"Saira Condensed","Arial Narrow",Arial,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-data:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -18,11 +18,11 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0f141c; --panel:#161d28; --panel-2:#1d2633; --line:#2a3443;
   --ink:#e6ebf2; --muted:#93a0b2; --accent:#f07a3c; --accent-ink:#1a0e06; --accent-soft:#3a2418;
-  --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}}
+  --fd:#5aa2f0; --cz:#d9b25c; --circa:#a98bf5; --pin:#3fc1b0; --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0f141c; --panel:#161d28; --panel-2:#1d2633; --line:#2a3443;
   --ink:#e6ebf2; --muted:#93a0b2; --accent:#f07a3c; --accent-ink:#1a0e06; --accent-soft:#3a2418;
-  --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}
+  --fd:#5aa2f0; --cz:#d9b25c; --circa:#a98bf5; --pin:#3fc1b0; --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5}
 .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 60px;display:grid;gap:22px}
@@ -83,6 +83,32 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 .big .note{font-size:.8rem;color:var(--muted)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 @media (min-width:900px){.mgrid{grid-template-columns:1fr 1fr}}
+.tc{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:8px;padding:14px 16px;display:grid;gap:4px;max-width:640px}
+.tc-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px}
+.tc-head .tm b{font-family:var(--f-display);font-size:1.45rem;line-height:1.1;display:block}
+.tc-head .tm span{color:var(--muted);font-size:.8rem}
+.tc-head .tm.r{text-align:right}
+.tc-head .at{color:var(--muted);padding-bottom:6px}
+.tc-meta{display:flex;flex-wrap:wrap;gap:4px 14px;color:var(--muted);font-size:.85rem;margin-top:6px}
+.tc-meta b{color:var(--ink)}
+.tc-badges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.tc-badge{font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:4px;background:var(--good-soft);color:var(--good)}
+.tc-badge.ov{background:var(--accent-soft);color:var(--accent)}
+.tc-badge.un{background:var(--panel-2);color:var(--ink)}
+.tc-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.tc-row .k{color:var(--muted);font-size:.82rem;text-align:center;white-space:nowrap}
+.tc-row .v{font-family:var(--f-data);font-variant-numeric:tabular-nums;font-size:.95rem}
+.tc-row .v.r{text-align:right}
+.tc-row .v b{font-size:1.05rem}
+.tc-row .rk{font-size:.78rem;color:var(--muted);margin:0 6px}
+.tc-row .rk.good{color:var(--good)} .tc-row .rk.bad{color:var(--bad)}
+.tc-bars{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px}
+.tc-bar{height:5px;border-radius:3px;background:var(--panel-2);overflow:hidden;display:flex}
+.tc-bar.l{justify-content:flex-end}
+.tc-bar i{display:block;height:100%;background:var(--muted)}
+.tc-bar i.hot{background:var(--accent)}
+.tc-sec{font-weight:600;font-size:.88rem;margin-top:10px}
+@media (max-width:500px){.tc{padding:12px}.tc-head .tm b{font-size:1.15rem}.tc-row{gap:6px}.tc-row .v{font-size:.85rem}.tc-row .rk{margin:0 3px}}
 .sub-card{border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px;min-width:0;align-content:start}
 .sub-card h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.05em}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -131,7 +157,7 @@ th.sortable{cursor:pointer} th.sortable:hover{color:var(--ink)}
 .rung.key{border-color:var(--accent)}
 .rung.cur{background:var(--accent);color:var(--accent-ink)} .rung.cur .p{color:var(--accent-ink)}
 .inj-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 8px;background:var(--panel-2);border-radius:6px;font-size:.84rem}
-.src{font-family:var(--f-data);font-size:.66rem;font-weight:500;padding:2px 7px;border-radius:999px;background:var(--panel-2);color:var(--muted);vertical-align:2px;margin-left:6px;text-transform:none;letter-spacing:0}
+.src{font-family:var(--f-data);font-size:.66rem;font-weight:500;padding:2px 7px;border-radius:999px;background:var(--panel-2);color:var(--muted);vertical-align:2px;margin-left:6px;text-transform:none;letter-spacing:0;white-space:nowrap;display:inline-block}
 .kf{display:grid;gap:4px}
 .kf div{display:grid;grid-template-columns:34px 1fr 52px;gap:8px;align-items:center;font-family:var(--f-data);font-size:.78rem}
 .kf span.bar{height:10px;border-radius:3px;background:var(--line)}
@@ -154,12 +180,26 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
 .eq b{color:var(--accent)}
 .how-body table td,.how-body table th{white-space:normal}
 @media (max-width:560px){.eq{font-size:.68rem;padding:10px 12px}#how-dlg{width:100%;max-width:100%;max-height:92vh;margin:auto 0 0;border-radius:12px 12px 0 0}}
-#move-head td,#move-head th{padding:6px 10px}
-#move-chart svg{display:block;width:100%;height:auto;max-width:100%}
-#move-head{width:auto;min-width:min(100%,420px)}
+#move-head td,#move-head th,#rmove-head td,#rmove-head th{padding:6px 10px}
+@media (max-width:500px){#move-head td,#move-head th,#rmove-head td,#rmove-head th{padding:6px 5px}#move-head .sub,#rmove-head .sub{font-size:.75rem}}
+#move-chart svg,#rmove-chart svg{display:block;width:100%;height:auto;max-width:100%}
+#move-head,#rmove-head{width:auto;min-width:min(100%,420px)}
 .mv-grid{stroke:var(--line);stroke-width:1}
 .mv-line{stroke:var(--accent);stroke-width:2.5;fill:none}
 .mv-dot{fill:var(--accent);stroke:var(--panel);stroke-width:2}
+.mv-chk{fill:var(--panel);stroke:var(--accent);stroke-width:1.5}
+.mv-bk{stroke-width:2;fill:none}
+.mv-bk-dot{stroke:var(--panel);stroke-width:1.5}
+#move-head i.sw,#rmove-head i.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.mv-key{display:flex;flex-wrap:wrap;gap:6px 8px;margin:4px 0 10px;font-size:.8rem;color:var(--muted)}
+.mv-key span{display:inline-flex;align-items:center;gap:6px}
+.mv-key i{display:inline-block;width:18px;height:3px;border-radius:2px}
+.mv-key i.dash{height:0;border-top:2px dashed var(--muted);border-radius:0}
+.mv-key button{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.8rem;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer;min-height:32px}
+.mv-key button.off{color:var(--muted);background:transparent;border-style:dashed}
+.mv-key button.off i{opacity:.3}
+.mv-key button[aria-pressed="true"]{border-color:var(--muted)}
+.mv-key .mv-model-key{display:inline-flex;align-items:center;gap:6px;padding:5px 2px}
 .mv-model{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
 .mv-t{fill:var(--muted);font-family:var(--f-data);font-size:11px}
 .mv-v{fill:var(--ink);font-family:var(--f-data);font-size:11px;font-weight:600}
@@ -242,6 +282,7 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
       <div class="row" style="justify-content:flex-start">
         <label class="sub" style="flex:0 0 auto;display:flex;gap:6px;align-items:center"><input type="checkbox" id="neutral"> Neutral site</label>
       </div>
+      <div id="team-card"></div>
       <div class="score">
         <div class="big"><span class="k">Model spread</span><span class="v" id="o-spread">-</span><span class="note" id="o-market"></span></div>
         <div class="big"><span class="k">Model side</span><span class="v" id="o-side">-</span><span class="note" id="o-side-note"></span></div>
@@ -251,6 +292,7 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
       </div>
       <div class="sub-card" id="move-card">
         <h3>Line movement <span class="src" id="move-src"></span></h3>
+        <div id="move-filter"></div>
         <div class="tbl-wrap"><table id="move-head"></table></div>
         <div id="move-chart"></div>
         <div class="sub" id="move-note"></div>
@@ -261,6 +303,9 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
         <div class="tbl-wrap"><div class="ladder" id="ladder"></div></div>
       </div>
       <div class="grid2 mgrid">
+        <!-- manual injury, weather and weight controls are retired: the model uses the
+             automatic injury report, forecasts and frozen weights. Kept hidden so old code paths still find their elements. -->
+        <div hidden aria-hidden="true">
         <div class="sub-card">
           <h3>Injuries <span class="src" id="inj-src"></span></h3>
           <div id="inj-auto" style="display:grid;gap:10px"></div>
@@ -293,6 +338,7 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
           <div><button type="button" id="reset-w">Reset to tested values</button></div>
           <p class="sub" style="margin:0">Defaults are fitted on 2016-2025. The range under each slider is what the weight came out to when each season was held out in turn. Changing a slider updates the board too.</p>
         </div>
+        </div>
         <div class="sub-card">
           <h3>How this game was built</h3>
           <div class="breakdown" id="bd"></div>
@@ -321,9 +367,20 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
         <div class="season-strip" id="season-strip"></div>
       </div>
     </section>
+    <section class="card" id="rmove-sec">
+      <div class="sec-head"><h2>Line movement</h2><select id="rmove-sel" class="wk-sel" aria-label="Game"></select></div>
+      <div class="sub" id="rmove-sub">How each book's line moved from when it was first posted to kickoff.</div>
+      <div class="sub-card" id="rmove-card">
+        <h3><span id="rmove-title"></span> <span class="src" id="rmove-src"></span></h3>
+        <div id="rmove-filter"></div>
+        <div class="tbl-wrap"><table id="rmove-head"></table></div>
+        <div id="rmove-chart"></div>
+        <div class="sub" id="rmove-note"></div>
+      </div>
+    </section>
     <section class="card" id="clv-card">
       <div class="sec-head"><h2>Closing line value</h2><span class="sub" id="clv-ver"></span></div>
-      <div class="sub">Did the line move toward the model's side between when the model first posted and the morning of the game? Over time this is the quickest honest test of whether the edges are real: it shows up in a few hundred games, while win-loss records take seasons.</div>
+      <div class="sub">After the model posts its number, does the betting line move toward the model's side by kickoff? When it does, the market is agreeing with the model, which is usually the first sign an edge is real. The first number is how often that happens. The second is how often the model's side covered in those games.</div>
       <div id="clv-body"></div>
     </section>
     <section class="card">
@@ -360,6 +417,7 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
 <script>
 (function(){
 const $ = id => document.getElementById(id);
+let SHARP = {};
 let D, W0, W = {}, threshold = 5, market = "spread", resMarket = "spread", sortKey = "power", sortDir = -1;
 let sel = {away:null, home:null, game:null};
 const wxEdits = {};   // per-game weather edits, this session only
@@ -422,10 +480,10 @@ function overProb(line, center){
 }
 
 // ---------- spread model ----------
-function injPts(team){ return store.get("inj_"+team, []).reduce((s,i)=>s + i.v*STATUS[i.s],0); }
-function otherPts(g, side){ if(!g || !store.get("countOther", false)) return 0; return (g.inj?.[side]?.players||[]).reduce((s,p)=>s+p.pts,0); }
+function injPts(team){ return 0; }   // manual injuries retired; the official report is applied automatically
+function otherPts(g, side){ return 0; return (g.inj?.[side]?.players||[]).reduce((s,p)=>s+p.pts,0); }
 function qbDelta(team, side, g){
-  const t = D.teams[team], ov = store.get("qb_"+team, "__auto");
+  const t = D.teams[team], ov = "__auto";
   if (ov === "__backup") return D.meta.replacement_qb - t.qb_base;
   if (ov && ov !== "__auto"){ const q = D.qbs.find(x=>x.id===ov); return (q ? q.rating : D.meta.replacement_qb) - t.qb_base; }
   if (g) return g[side+"_qb_delta"] || 0;
@@ -491,7 +549,12 @@ function renderHeader(){
   const ct = built.toLocaleString("en-US",{timeZone:"America/Chicago", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
   const hrs = (Date.now() - built.getTime())/3.6e6;
   const ago = hrs < 1 ? "under an hour ago" : hrs < 36 ? `${Math.round(hrs)} hour${Math.round(hrs)===1?"":"s"} ago` : `${Math.round(hrs/24)} days ago`;
-  $("meta-line").innerHTML = `${m.season} season · ratings through week ${m.last_week} · <span class="${hrs>36?"stale":""}" title="The data refreshes every morning around 8:15 AM Central (7:15 AM after daylight saving ends)">Last updated ${ct} CT (${ago})</span>`;
+  $("meta-line").innerHTML = `${m.season} season · ratings through week ${m.last_week} · <span class="${hrs>36?"stale":""}" title="The model refreshes every morning around 8:15 AM Central (7:15 AM after daylight saving ends)">Last updated ${ct} CT (${ago})</span>`;
+  if (m.lines_checked && new Date(m.lines_checked) > built){
+    const lc = new Date(m.lines_checked), lh = (Date.now()-lc.getTime())/3.6e6;
+    const lago = lh < 1 ? Math.max(1, Math.round(lh*60))+" min ago" : lh < 48 ? Math.round(lh)+" hr ago" : Math.round(lh/24)+" days ago";
+    $("meta-line").innerHTML += ` · <span title="DraftKings, FanDuel and Caesars spreads are rechecked about 8 times a day between model updates. Last check ${lc.toLocaleString("en-US",{timeZone:"America/Chicago", hour:"numeric", minute:"2-digit"})} CT.">Lines checked ${lago}</span>`;
+  }
   const w = D.season_weeks.reduce((a,x)=>({w:a.w+x.wins,l:a.l+x.losses}),{w:0,l:0});
   const flagged = D.this_week.filter(g=>g.result==null && g.line!=null && Math.abs(spreadState(g).edge) >= threshold).length;
   $("top-chips").innerHTML = (hrs>36 ? `<span class="chip warn" title="The morning update may have failed. Check the Actions tab on GitHub.">Data is ${Math.round(hrs/24)} days old</span>` : "") + `<span class="chip">Week ${m.this_week}</span>
@@ -594,7 +657,7 @@ function renderBoard(){
   rows.sort((a,b)=> boardSort.key==="kick" ? (a.kick-b.kick)*boardSort.dir : (a.absEdge-b.absEdge)*boardSort.dir || a.kick-b.kick);
   let h;
   if (market === "spread"){
-    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Line</th><th class="num">Model</th><th>Model side</th>${sortHead("edge","Edge")}<th>Cover chance</th><th></th><th></th></tr></thead><tbody>`;
+    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Line</th><th class="num">Model</th><th>Model side</th>${sortHead("edge","Edge")}<th></th><th></th></tr></thead><tbody>`;
     for (const {g, s, done} of rows){
       const flag = s.edge!=null && !done && Math.abs(s.edge)>=threshold; if (flag) n++;
       const soft = !flag && s.edge!=null && !done && Math.abs(s.edge)>=3;
@@ -606,13 +669,12 @@ function renderBoard(){
         <td class="num">${spreadTxt(g.home,g.away,s.now.margin)}</td>
         <td>${done ? `<span class="pill pend">final ${g.away_score}-${g.home_score}</span>` : s.edge==null?"-":`<b>${sideLine(sideTeam, s.homeSide, g.line)}</b>`}</td>
         <td class="mono">${done||s.edge==null ? "-" : Math.abs(s.edge).toFixed(1)}</td>
-        <td>${done||s.edge==null ? "" : pctPush(s.cover, s.push)}</td>
         <td>${flag?`<span class="pill" style="background:var(--accent);color:var(--accent-ink)">${threshold}+ EDGE</span>`:""}</td>
         <td><button class="link" type="button" data-open="${g.id}">Open</button></td></tr>`;
     }
-    $("board-sub").innerHTML = `<b style="color:var(--accent)">${n} game${n===1?"":"s"}</b> where the model is ${threshold}+ points off the ${src} line. Cover chance is for the model's side; break-even at -110 is 52.4%.`;
+    $("board-sub").innerHTML = `<b style="color:var(--accent)">${n} game${n===1?"":"s"}</b> where the model is ${threshold}+ points off the ${src} line.`;
   } else {
-    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Total</th><th class="num">Model total</th><th>Model side</th>${sortHead("edge","Edge")}<th>Hit chance</th><th></th><th></th></tr></thead><tbody>`;
+    h = `<thead><tr><th>Matchup</th>${sortHead("kick","Kickoff")}<th class="num">Total</th><th class="num">Model total</th><th>Model side</th>${sortHead("edge","Edge")}<th></th><th></th></tr></thead><tbody>`;
     for (const {g, t, done} of rows){
       const big = t.edge!=null && !done && Math.abs(t.edge)>=threshold; if (big) n++;
       h += `<tr class="${big?"soft":""}">
@@ -622,7 +684,6 @@ function renderBoard(){
         <td class="num">${t.now.total.toFixed(1)}</td>
         <td>${done ? `<span class="pill pend">final ${g.home_score+g.away_score}</span>` : t.edge==null?"-":`<b>${t.over?"Over":"Under"} ${g.total}</b>`}</td>
         <td class="mono">${done||t.edge==null ? "-" : Math.abs(t.edge).toFixed(1)}</td>
-        <td>${done||t.edge==null ? "" : pctPush(t.prob, t.push)}</td>
         <td>${big?'<span class="pill pend">view only</span>':""}</td>
         <td><button class="link" type="button" data-open="${g.id}">Open</button></td></tr>`;
     }
@@ -653,7 +714,7 @@ function syncWxInputs(){
   $("venue").value = w.venue; $("precip").value = w.precip; $("wind").value = w.wind; $("temp").value = w.temp;
 }
 function qbSelect(team, side){
-  const g = sel.game, ov = store.get("qb_"+team, "__auto");
+  const g = sel.game, ov = "__auto";
   const q = g?.inj?.[side]?.qb;
   let autoLbl = g ? (q && q.status ? `Injury report: ${q.status==="Out" ? q.backup : q.name+" ("+q.status.toLowerCase()+")"}` : `${g[side+"_qb"]||"Expected starter"} (expected)`) : `${D.teams[team].qb||"Current starter"} (current)`;
   const opts = [`<option value="__auto">${esc(autoLbl)}</option>`, `<option value="__backup">Generic backup</option>`]
@@ -705,11 +766,48 @@ function readWxInputs(){
   const diff = {}; for (const k in cur) if (cur[k]!==auto[k]) diff[k]=cur[k];
   wxEdits[key] = diff;
 }
+// ---------- TEAM CARD (Game Detail) ----------
+function renderTeamCard(away, home, g){
+  const el = $("team-card"), TS = D.team_stats || {}, A = TS[away], H = TS[home];
+  if (!A || !H){ el.innerHTML = ""; return; }
+  const pct = (w, l) => w + l ? Math.round(100 * w / (w + l)) : null;
+  const rec = (w, l, t) => `${w}-${l}${t ? "-" + t : ""}`;
+  const rk = n => `<span class="rk ${n<=10?"good":n>=23?"bad":""}">#${n}</span>`;
+  const atsA = pct(A.ats_w, A.ats_l), atsH = pct(H.ats_w, H.ats_l), ouA = pct(A.ou_o, A.ou_u), ouH = pct(H.ou_o, H.ou_u);
+  const badges = [];
+  if (atsA != null && atsH != null && Math.abs(atsA - atsH) >= 30 && Math.max(atsA, atsH) >= 60)
+    badges.push(`<span class="tc-badge">ATS mismatch, edge ${atsA > atsH ? D.teams[away].name : D.teams[home].name}</span>`);
+  if (ouA >= 60 && ouH >= 60) badges.push(`<span class="tc-badge ov">Both hitting the over</span>`);
+  else if (ouA != null && ouH != null && ouA <= 40 && ouH <= 40) badges.push(`<span class="tc-badge un">Both hitting the under</span>`);
+  const pctRow = (label, pa, ra, ph, rh) => `<div class="tc-row"><div class="v"><b>${pa==null?"-":pa+"%"}</b> <span class="sub">${ra}</span></div><div class="k">${label}</div><div class="v r"><span class="sub">${rh}</span> <b>${ph==null?"-":ph+"%"}</b></div>
+    <div class="tc-bars"><div class="tc-bar l"><i class="${pa>=60?"hot":""}" style="width:${pa||0}%"></i></div><div class="tc-bar"><i class="${ph>=60?"hot":""}" style="width:${ph||0}%"></i></div></div></div>`;
+  const statRow = (label, k) => `<div class="tc-row"><div class="v">${A[k].toFixed(1)}${rk(A[k+"_rk"])}</div><div class="k">${label}</div><div class="v r">${rk(H[k+"_rk"])}${H[k].toFixed(1)}</div></div>`;
+  let meta = "";
+  if (g){
+    const L = g.line, T = g.total;
+    meta = `<div class="tc-meta"><span>${kick(g)}</span>${L!=null?`<b>${spreadTxt(g.home, g.away, L)}</b>`:""}${T!=null?`<b>O/U ${T}</b>`:""}<span>${g.line_src==="DK"?"Lines from DraftKings":"Consensus lines"}</span></div>`;
+  }
+  el.innerHTML = `<div class="tc">
+    <div class="tc-head"><div class="tm"><b>${esc(D.teams[away].name)}</b><span>Away</span></div><div class="at">@</div><div class="tm r"><b>${esc(D.teams[home].name)}</b><span>Home</span></div></div>
+    ${meta}
+    ${badges.length ? `<div class="tc-badges">${badges.join("")}</div>` : ""}
+    <div class="tc-row"><div class="v"><b>${rec(A.w, A.l, A.tie)}</b></div><div class="k">Record</div><div class="v r"><b>${rec(H.w, H.l, H.tie)}</b></div></div>
+    ${pctRow("Against the spread", atsA, rec(A.ats_w, A.ats_l, A.ats_p), atsH, rec(H.ats_w, H.ats_l, H.ats_p))}
+    ${pctRow("Over / under, over %", ouA, rec(A.ou_o, A.ou_u, A.ou_p), ouH, rec(H.ou_o, H.ou_u, H.ou_p))}
+    <div class="tc-sec">Offense per game</div>
+    ${statRow("Points", "pts")}${statRow("Pass yards", "pass_yds")}${statRow("Rush yards", "rush_yds")}
+    <div class="tc-sec">Defense per game, allowed</div>
+    ${statRow("Points", "pts_alw")}${statRow("Pass yards", "pass_alw")}${statRow("Rush yards", "rush_alw")}
+    <div class="sub" style="margin-top:8px">${A.gp===H.gp?`Season to date, ${A.gp} games each.`:`Season to date (${away} ${A.gp} games, ${home} ${H.gp}).`} Ranks are out of 32, #1 is best; green is top 10, red is bottom 10. ATS and over/under use the consensus closing line.</div>
+  </div>`;
+}
+
 function renderMatchup(){
   const away=$("away").value, home=$("home").value; sel.away=away; sel.home=home;
   if (sel.game && (sel.game.away!==away || sel.game.home!==home)) sel.game = null;
   const g = sel.game;
   $("g-title").textContent = `${away} @ ${home}`;
+  renderTeamCard(away, home, g);
   // spread
   let sp, tt;
   if (g){ sp = spreadState(g); tt = totalState(g); }
@@ -756,7 +854,7 @@ function renderMatchup(){
   // spread breakdown
   const S = sp.now.parts;
   $("bd").innerHTML = [["Home field", S.hfa], [`Scoring margin (${D.teams[home].r_margin.toFixed(1)} vs ${D.teams[away].r_margin.toFixed(1)})`, S.margin],
-    ["Success rate", S.sr], ["QB situation (incl. injury report)", S.qb], ["Rest days", S.rest], ["Your manual injuries", S.inj], ["Other injured starters", S.other]]
+    ["Success rate", S.sr], ["QB situation (incl. injury report)", S.qb], ["Rest days", S.rest]]
     .map(([k,v])=>`<div><span>${k}</span><span>${f1(v)}</span></div>`).join("") +
     `<div><b>${home} margin</b><b>${f1(sp.now.margin)}</b></div><p class="sub" style="margin:6px 0 0;font-family:var(--f-body)">Positive numbers favor ${esc(D.teams[home].name)}.</p>`;
 }
@@ -776,60 +874,174 @@ function renderLadder(g, sp){
   $("ladder-sub").textContent = `Chance ${team} covers at each line you might find, best on the left. The filled box is the posted line and outlined boxes are key numbers. A push means the bet is refunded. ${(kf[3]*100).toFixed(0)}% of NFL games end on exactly 3 and ${(kf[7]*100).toFixed(0)}% on exactly 7, so moving across those numbers is worth the most.`;
 }
 
-function renderMovement(g){
-  const card = $("move-card");
+// extra books on the line movement chart (DraftKings is the main line)
+// fd/cz come from the line checks; circa/pin come from data/sharp_lines.json (sharp: true)
+const MV_BOOKS = [{k:"fd", name:"FanDuel", color:"var(--fd)", off:3}, {k:"cz", name:"Caesars", color:"var(--cz)", off:-3},
+  {k:"circa", name:"Circa", color:"var(--circa)", off:6, sharp:true}, {k:"pin", name:"Pinnacle", color:"var(--pin)", off:-6, sharp:true}];
+let mvOn = null;   // which books the chart shows; remembered per device
+function mvSaved(){ if (!mvOn){ const v = store.get("mvBooks", null); mvOn = new Set(Array.isArray(v) && v.length ? v : ["dk", ...MV_BOOKS.map(b=>b.k)]); } return mvOn; }
+function renderMovement(g, pre = "move"){
+  const card = $(pre+"-card");
   if (!g){ card.hidden = true; return; }
   card.hidden = false;
   const H = (g.history || []).slice();
   const fmtSpread = v => v===0 ? "PK" : (v>0?"+":"") + (Number.isInteger(v)? v : v.toFixed(1));
   const fmtPrice = p => p==null ? "" : (p>0?"+":"") + p;
-  const day = d => new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
-  // points: each daily snapshot, plus the current line if it moved since the last one
-  const pts = H.map(h=>({label: day(h.day), line: h.line, src: h.src, ph: h.ph, pa: h.pa, model: h.model}));
-  if (g.line!=null && (!pts.length || pts[pts.length-1].line !== g.line))
-    pts.push({label: "Now", line: g.line, src: g.line_src, ph: g.price_home, pa: g.price_away, model: g.model});
-  $("move-src").textContent = g.line_src==="DK" ? "DraftKings · checked every morning" : "consensus";
+  const CT = {timeZone:"America/Chicago"};
+  const day = t => new Date(t).toLocaleDateString("en-US",{...CT, month:"short", day:"numeric"});
+  const when = t => new Date(t).toLocaleString("en-US",{...CT, month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
+  // older snapshots have only a day; those came from the morning run (about 8:15 AM CT)
+  const tOf = h => h.ts ? Date.parse(h.ts.length===17 ? h.ts.replace("Z",":00Z") : h.ts) : Date.parse(h.day+"T13:15:00Z");
+  const pts = H.map(h=>{ const p = {t: tOf(h), line: h.line, src: h.src, ph: h.ph, pa: h.pa, model: h.model};
+    MV_BOOKS.forEach(b=>{ p[b.k] = h[b.k]; p[b.k+"ph"] = h[b.k+"ph"]; p[b.k+"pa"] = h[b.k+"pa"]; }); return p; });
+  if (g.line!=null && (!pts.length || pts[pts.length-1].line !== g.line)){
+    const p = {t: Date.now(), line: g.line, src: g.line_src, ph: g.price_home, pa: g.price_away, model: g.model};
+    MV_BOOKS.forEach(b=>{ p[b.k] = g[b.k+"_line"]; p[b.k+"ph"] = g[b.k+"_price_home"]; p[b.k+"pa"] = g[b.k+"_price_away"]; });
+    pts.push(p);
+  }
+  pts.sort((a,b)=>a.t-b.t);
+  // every book as a list of {t, line, ph, pa}
+  const sh = (SHARP && SHARP[g.id] && SHARP[g.id].books) || {};
+  const allBooks = MV_BOOKS.map(b=>{
+    const ser = b.sharp ? (sh[b.k] || []).map(p=>({t: tOf({ts: p.t}), line: p.line, ph: p.ph, pa: p.pa}))
+                        : pts.filter(p=>p[b.k]!=null).map(p=>({t: p.t, line: p[b.k], ph: p[b.k+"ph"], pa: p[b.k+"pa"]}));
+    ser.sort((a,c)=>a.t-c.t);
+    return {...b, pts: ser, last: ser[ser.length-1]};
+  }).filter(b=>b.pts.length);
+  const on = mvSaved(), avail = [{k:"dk", name:"DraftKings", color:"var(--accent)"}, ...allBooks];
+  if (!avail.some(b=>on.has(b.k))) avail.forEach(b=>on.add(b.k));   // never show an empty chart
+  const showDK = on.has("dk"), books = allBooks.filter(b=>on.has(b.k));
+  // spread visible lines evenly a few pixels apart, so books on the same number sit side by side
+  const shown = [...(showDK ? ["dk"] : []), ...books.map(b=>b.k)], gapPx = shown.length > 3 ? 3 : 2.5;
+  const offOf = k => (shown.indexOf(k) - (shown.length - 1) / 2) * gapPx;
+  const checks = H.some(h=>h.kind==="check");
+  $(pre+"-src").textContent = g.line_src==="DK" ? (allBooks.length ? `${1+allBooks.length} books` : "DraftKings") + (checks ? " · 8 checks a day" : "") : "consensus";
   if (!pts.length){
-    $("move-head").innerHTML = ""; $("move-chart").innerHTML = "";
-    $("move-note").textContent = "No line history yet. The site starts saving this game's line on the first morning update after it's posted.";
+    $(pre+"-head").innerHTML = ""; $(pre+"-chart").innerHTML = ""; $(pre+"-filter").innerHTML = "";
+    $(pre+"-note").textContent = "No line history yet. The site starts saving this game's line on the first update after it's posted.";
     return;
   }
   const first = pts[0], last = pts[pts.length-1];
-  const firstDay = H.length ? day(H[0].day) : "now";
-  $("move-head").innerHTML = `<thead><tr><th></th><th>First seen (${firstDay})</th><th>Now</th></tr></thead><tbody>
-    <tr><td><b>${g.away}</b></td><td class="mono">${fmtSpread(first.line)} <span class="sub">${fmtPrice(first.pa)}</span></td><td class="mono"><b>${fmtSpread(last.line)}</b> <span class="sub">${fmtPrice(last.pa)}</span></td></tr>
-    <tr><td><b>${g.home}</b></td><td class="mono">${fmtSpread(-first.line)} <span class="sub">${fmtPrice(first.ph)}</span></td><td class="mono"><b>${fmtSpread(-last.line)}</b> <span class="sub">${fmtPrice(last.ph)}</span></td></tr></tbody>`;
-  // chart of the home team's spread
+  const firstDay = day(first.t);
+  // table: one row per book, one column per team (narrow enough for phones)
+  const cell = (v, p, bold) => `<td class="mono">${v==null?"-":`${bold?"<b>":""}${fmtSpread(v)}${bold?"</b>":""} <span class="sub">${fmtPrice(p)}</span>`}</td>`;
+  const sw = c => `<i class="sw" style="background:${c}"></i>`;
+  let th = `<thead><tr><th></th><th>${g.away}</th><th>${g.home}</th></tr></thead><tbody>
+    <tr><td class="sub">DK first seen, ${firstDay}</td>${cell(first.line, first.pa)}${cell(-first.line, first.ph)}</tr>
+    ${showDK ? `<tr><td>${sw("var(--accent)")}DraftKings</td>${cell(last.line, last.pa, 1)}${cell(-last.line, last.ph, 1)}</tr>` : ""}`;
+  books.forEach(b=>{ const l = b.last; th += `<tr><td>${sw(b.color)}${b.name}</td>${cell(l.line, l.pa, 1)}${cell(-l.line, l.ph, 1)}</tr>`; });
+  $(pre+"-head").innerHTML = th + "</tbody>";
+  // chart of the home team's spread over time, drawn as steps (a line holds until it moves)
   const vals = pts.map(p=>-p.line), modelV = -(last.model ?? g.model);
-  let lo = Math.min(...vals, modelV), hi = Math.max(...vals, modelV);
+  const all = [...(showDK || !books.length ? vals : []), ...books.flatMap(b=>b.pts.map(p=>-p.line)), modelV];
+  let lo = Math.min(...all), hi = Math.max(...all);
   lo = Math.floor(lo - 0.5); hi = Math.ceil(hi + 0.5); if (hi - lo < 3){ hi += 1; lo -= 1; }
   const step = (hi - lo) > 10 ? 2 : 1;
-  const W = Math.max(300, Math.round($("move-chart").clientWidth || 640)), Hh = W < 500 ? 200 : 240, L = 40, R = W < 500 ? 84 : 112, T = 14, B = 30;
-  const x = i => pts.length===1 ? L + (W-L-R)/2 : L + i*(W-L-R)/(pts.length-1);
+  const W = Math.max(300, Math.round($(pre+"-chart").clientWidth || 640)), Hh = W < 500 ? 200 : 240, L = 40, R = W < 500 ? 84 : 112, T = 14, B = 30;
+  const kick = Date.parse(`${g.date}T${g.time||"13:00"}:00-05:00`);
+  let t0 = Math.min(...(showDK || !books.length ? [first.t] : []), ...books.map(b=>b.pts[0].t)), t1 = Math.max(last.t, ...books.map(b=>b.last.t), Math.min(Date.now(), kick));   // carry the line out to now, until kickoff
+  if (t1 - t0 < 864e5){ const mid = (t0+t1)/2; t0 = mid - 432e5; t1 = mid + 432e5; }
+  const x = t => L + (t - t0)*(W-L-R)/(t1 - t0);
   const y = v => T + (hi - v)*(Hh-T-B)/(hi - lo);
+  const stepPath = (ps, vs, off) => { let d = `M${x(ps[0].t)},${y(vs[0])+off}`;
+    for (let i = 1; i < ps.length; i++) d += ` H${x(ps[i].t)} V${y(vs[i])+off}`;
+    if (x(t1) > x(ps[ps.length-1].t) + 1) d += ` H${x(t1)}`; return d; };
   let svg = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="${g.home} spread over time">`;
   for (let v = lo; v <= hi; v += step){
     svg += `<line class="mv-grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="mv-t" x="${L-8}" y="${y(v)+4}" text-anchor="end">${fmtSpread(v)}</text>`;
   }
+  // one date label per day, at noon Central, thinned out when days get crowded
+  const days = [];
+  for (let d = new Date(new Date(t0).toLocaleDateString("en-CA",CT)+"T12:00:00-05:00").getTime(); d <= t1 + 432e5; d += 864e5) if (d >= t0 - 1 && d <= t1 + 1) days.push(d);
+  const every = Math.max(1, Math.ceil(days.length * 52 / (W-L-R)));
+  days.forEach((d,i)=>{ if (i % every === 0) svg += `<text class="mv-t" x="${x(d)}" y="${Hh-8}" text-anchor="middle">${day(d)}</text>`; });
   svg += `<line class="mv-model" x1="${L}" x2="${W-R}" y1="${y(modelV)}" y2="${y(modelV)}"/>
     <text class="mv-t" x="${W-R+8}" y="${y(modelV)+4}">Model ${fmtSpread(modelV)}</text>`;
-  svg += `<polyline class="mv-line" points="${pts.map((p,i)=>`${x(i)},${y(vals[i])}`).join(" ")}"/>`;
-  pts.forEach((p,i)=>{
-    svg += `<circle class="mv-dot" cx="${x(i)}" cy="${y(vals[i])}" r="5"><title>${p.label}: ${g.home} ${fmtSpread(vals[i])}${p.ph!=null?" ("+fmtPrice(p.ph)+")":""}</title></circle>`;
-    svg += `<text class="mv-t" x="${x(i)}" y="${Hh-8}" text-anchor="middle">${p.label}</text>`;
+  // other books drawn first, a few pixels above and below DraftKings so matching lines show side by side
+  books.forEach(b=>{
+    const bv = b.pts.map(p=>-p.line);
+    svg += `<path class="mv-bk" style="stroke:${b.color}" d="${stepPath(b.pts, bv, offOf(b.k))}"/>`;
+    b.pts.forEach((p,i)=>{ if (i===0 || bv[i]!==bv[i-1])
+      svg += `<circle class="mv-bk-dot" style="fill:${b.color}" cx="${x(p.t)}" cy="${y(bv[i])+offOf(b.k)}" r="3.5"><title>${when(p.t)} CT: ${b.name} ${g.home} ${fmtSpread(bv[i])}${p.ph!=null?" ("+fmtPrice(p.ph)+")":""}</title></circle>`; });
   });
-  svg += `<text class="mv-v" x="${x(pts.length-1)+10}" y="${y(vals[vals.length-1])-8}">${g.home} ${fmtSpread(vals[vals.length-1])}</text>`;
-  $("move-chart").innerHTML = svg + "</svg>";
+  if (showDK){
+  svg += `<path class="mv-line" d="${stepPath(pts, vals, offOf("dk"))}" fill="none"/>`;
+  pts.forEach((p,i)=>{
+    const moved = i===0 || vals[i] !== vals[i-1];
+    svg += `<circle class="${moved?"mv-dot":"mv-chk"}" cx="${x(p.t)}" cy="${y(vals[i])+offOf("dk")}" r="${moved?5:3}"><title>${when(p.t)} CT: DraftKings ${g.home} ${fmtSpread(vals[i])}${p.ph!=null?" ("+fmtPrice(p.ph)+")":""}</title></circle>`;
+  });
+  svg += `<text class="mv-v" x="${Math.min(x(t1), W-R)+8}" y="${y(vals[vals.length-1])-8}">${g.home} ${fmtSpread(vals[vals.length-1])}</text>`;
+  } else if (books.length === 1){
+    const b = books[0];
+    svg += `<text class="mv-v" x="${Math.min(x(t1), W-R)+8}" y="${y(-b.last.line)-8}">${g.home} ${fmtSpread(-b.last.line)}</text>`;
+  }
+  const allOn = avail.every(b=>on.has(b.k));
+  const key = avail.length < 2 ? `<div class="mv-key"><span><i style="background:var(--accent)"></i>DraftKings</span><span class="mv-model-key"><i class="dash"></i>Model</span></div>`
+    : `<div class="mv-key" role="group" aria-label="Books to show"><button type="button" data-mv="all" aria-pressed="${allOn}" class="${allOn?"":"off"}">All</button>`
+    + avail.map(b=>`<button type="button" data-mv="${b.k}" aria-pressed="${on.has(b.k)}" class="${on.has(b.k)?"":"off"}"><i style="background:${b.color}"></i>${b.name}</button>`).join("")
+    + `<span class="mv-model-key"><i class="dash"></i>Model</span></div>`;
+  $(pre+"-filter").innerHTML = key;
+  $(pre+"-chart").innerHTML = svg + "</svg>";
+  $(pre+"-filter").querySelectorAll("[data-mv]").forEach(btn=>btn.onclick=()=>{
+    const k = btn.dataset.mv;
+    if (k === "all"){ avail.forEach(b=>on.add(b.k)); }
+    else if (allOn){ on.clear(); on.add(k); }   // from "All", one tap shows just that book
+    else if (on.has(k)){ if (avail.filter(b=>on.has(b.k)).length > 1) on.delete(k); }   // keep at least one
+    else on.add(k);
+    store.set("mvBooks", [...on]); renderMovement(g, pre);
+  });
   // plain-language summary from the side the model leaned when the line was first seen
-  const mv = first.model - first.line;
-  const homeSide = mv > 0, toward = homeSide ? (last.line - first.line) : (first.line - last.line);
-  const sideTeam = homeSide ? g.home : g.away;
-  $("move-note").innerHTML = Math.abs(last.line - first.line) < 0.01
-    ? `No movement since ${firstDay}. The dashed line is the model's number.`
-    : `The line has moved <b>${Math.abs(last.line-first.line).toFixed(1)} points ${toward>0?"toward":"away from"} the model</b> since ${firstDay} (the model's side was ${sideTeam}). The dashed line is the model's number. Snapshots are taken once each morning.`;
+  const lead = showDK || !books.length ? {name: "DraftKings", pts} : books[0];
+  const others = showDK ? books : books.slice(1);
+  const lf = lead.pts[0], ll = lead.pts[lead.pts.length-1], lv = lead.pts.map(p=>p.line);
+  const homeSide = (first.model - first.line) > 0, toward = homeSide ? (ll.line - lf.line) : (lf.line - ll.line);
+  const sideTeam = homeSide ? g.home : g.away, leadDay = day(lf.t);
+  const nMoves = lv.filter((v,i)=>i>0 && v!==lv[i-1]).length;
+  const same = others.filter(b=>Math.abs(b.last.line - ll.line) < 0.01).map(b=>b.name);
+  const diff = others.filter(b=>Math.abs(b.last.line - ll.line) >= 0.01).map(b=>`${b.name} has ${g.home} ${fmtSpread(-b.last.line)}`);
+  const andList = a => a.length > 2 ? a.slice(0,-1).join(", ") + " and " + a[a.length-1] : a.join(" and ");
+  const bookNote = !others.length ? "" : (same.length ? ` ${andList(same)} ${same.length>1?"have":"has"} the same number as ${lead.name}.` : "") + (diff.length ? ` ${diff.join(", ")}.` : "");
+  const tail = bookNote + ` Last checked ${when(last.t)} CT.${showDK?" Open dots are checks with no change.":""}${books.length + showDK > 1 ? " Lines that run side by side are at the same number." : ""}${books.some(b=>b.sharp)?" Circa and Pinnacle update Wednesday and shortly before kickoff, with every move in between.":""} Tap a dot for the time and price.`;
+  $(pre+"-note").innerHTML = (Math.abs(ll.line - lf.line) < 0.01
+    ? `${lead.name} is back where it started on ${leadDay}${nMoves?` after ${nMoves} move${nMoves===1?"":"s"}`:", no movement"}.`
+    : `${lead.name} has moved <b>${Math.abs(ll.line-lf.line).toFixed(1)} points ${toward>0?"toward":"away from"} the model</b> since ${leadDay} (the model's side was ${sideTeam}).`) + tail;
 }
 
 // ---------- RESULTS ----------
+// ---------- RESULTS: line movement for finished weeks ----------
+let LOG = null, LOGP = null, resGame = null;
+function loadLog(){ if (!LOGP) LOGP = fetch("data/line_log.json", {cache:"no-cache"}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>(LOG=j)); return LOGP; }
+function resMoveGame(id){
+  const e = LOG && LOG[id]; if (!e || !e.snaps || !e.snaps.length) return null;
+  const f = e.snaps[0], l = e.snaps[e.snaps.length-1];
+  const g = {id, home: e.home, away: e.away, date: e.date, time: e.time, line: l.line, line_src: l.src, model: f.model,
+             price_home: l.ph, price_away: l.pa, history: e.snaps, result: e.result};
+  MV_BOOKS.forEach(b=>{ g[b.k+"_line"] = l[b.k]; g[b.k+"_price_home"] = l[b.k+"ph"]; g[b.k+"_price_away"] = l[b.k+"pa"]; });
+  return g;
+}
+function renderResMovement(){
+  const sec = $("rmove-sec"), w = resWeek ?? D.meta.last_week;
+  loadLog().then(()=>{
+    const rows = weekRows(w).filter(r=>LOG[r.id] && LOG[r.id].snaps && LOG[r.id].snaps.length);
+    if (!rows.length){
+      $("rmove-sel").innerHTML = ""; $("rmove-sel").hidden = true; $("rmove-card").hidden = true;
+      $("rmove-sub").textContent = `No line history was saved for ${weekName(w)}. Line tracking started in week 5.`;
+      return;
+    }
+    $("rmove-sel").hidden = false;
+    $("rmove-sub").textContent = "How each book's line moved from when it was first posted to kickoff. Pick a game.";
+    if (!rows.some(r=>r.id===resGame)){   // default: the game the model disagreed with most
+      resGame = rows.slice().sort((a,b)=>Math.abs(b.edge||0)-Math.abs(a.edge||0))[0].id;
+    }
+    $("rmove-sel").innerHTML = rows.map(r=>`<option value="${r.id}" ${r.id===resGame?"selected":""}>${r.away} @ ${r.home}${r.edge!=null&&Math.abs(r.edge)>=5?" (5+ edge)":""}</option>`).join("");
+    $("rmove-sel").onchange = ()=>{ resGame = $("rmove-sel").value; renderResMovement(); };
+    const g = resMoveGame(resGame), r = rows.find(x=>x.id===resGame);
+    $("rmove-title").textContent = `${g.away} @ ${g.home}` + (r && r.result!=null ? `, final ${g.away} ${r.away_score}, ${g.home} ${r.home_score}` : "");
+    renderMovement(g, "rmove");
+  });
+}
+
+
 function renderResults(){
   const lw = resWeek ?? D.meta.last_week, rows = weekRows(lw);
   $("last-title").textContent = `${weekName(lw)}, model vs. actual`;
@@ -863,46 +1075,61 @@ function renderResults(){
     <span>Spreads · 5+ edges ${w.big_wins}-${w.big_losses}</span><span>Totals ${w.t_wins??0}-${w.t_losses??0}</span></div>`).join("");
   $("calib-tbl").innerHTML = `<thead><tr><th>Page would show</th><th class="num">Games</th><th class="num">Average shown</th><th class="num">Actually covered</th></tr></thead><tbody>` +
     D.prob.calib.map(c=>`<tr><td>${c.bucket}</td><td class="num">${c.n}</td><td class="num">${pct(c.said)}</td><td class="num">${(c.hit*100).toFixed(1)}%</td></tr>`).join("") + "</tbody>";
+  if (!$("v-res").hidden) renderResMovement();   // the chart needs the tab visible to size itself
   const kf = D.prob.key_freq, mx = Math.max(...Object.values(kf));
   $("kf").innerHTML = Object.entries(kf).map(([k,v])=>`<div><span>${k}</span><span class="bar ${KEYS.includes(+k)?"hot":""}" style="width:${(v/mx*100).toFixed(1)}%"></span><span>${(v*100).toFixed(1)}%</span></div>`).join("");
 }
 
 function renderCLV(){
-  const C = D.clv, S = C && C.summary;
+  const C = D.clv;
   $("clv-ver").textContent = C ? `Model ${C.version}` : "";
   if (!C || !C.rows.length){
-    $("clv-body").innerHTML = `<div class="note-box">Tracking is on. The site saves the line and the model's number every morning (${C?C.tracked_games:0} game${C&&C.tracked_games===1?"":"s"} logged so far). Results show here once those games are played. A first real read takes about half a season.</div>`;
+    $("clv-body").innerHTML = `<div class="note-box">Tracking is on. The site saves the line and the model's number every morning, and rechecks the line during the day (${C?C.tracked_games:0} game${C&&C.tracked_games===1?"":"s"} logged so far). Results show here once those games are played.</div>`;
     return;
   }
-  const sgn = v => (v>0?"+":"") + v.toFixed(2);
-  const tile = (k,v,u)=>`<div class="wk"><span>${k}</span><b>${v}</b><span>${u}</span></div>`;
+  // grade the model's side at the line it posted against
+  const graded = C.rows.map(r=>{
+    let ats = null;
+    if (r.side_home !== null && r.result != null){
+      const m = r.side_home ? r.result - r.posted_line : r.posted_line - r.result;
+      ats = m > 0 ? "win" : m < 0 ? "loss" : "push";
+    }
+    return {...r, ats};
+  });
+  const stats = rs => {
+    const moved = rs.filter(r=>r.move !== 0), tow = rs.filter(r=>r.move > 0), awy = rs.filter(r=>r.move < 0);
+    const rec = x => ({w: x.filter(r=>r.ats==="win").length, l: x.filter(r=>r.ats==="loss").length});
+    return {n: rs.length, moved: moved.length, toward: tow.length, flat: rs.length - moved.length,
+            movePct: moved.length ? tow.length / moved.length : null, tw: rec(tow), aw: rec(awy)};
+  };
+  const pctTxt = (a, b) => b ? Math.round(100 * a / b) + "%" : "-";
   const wantW = resWeek ?? D.meta.last_week;
-  const lw = S.by_week.find(b=>b.week===wantW) || {week: wantW, n: 0, avg: 0};
-  const latest = C.rows.filter(r=>r.week===wantW);
+  const S = stats(graded), Wk = stats(graded.filter(r=>r.week===wantW));
+  const tile = (k, v, u) => `<div class="wk"><span>${k}</span><b>${v}</b><span>${u}</span></div>`;
+  const tiles = (lbl, x) => x.n ? `
+      ${tile(`${lbl}: line moved toward model`, pctTxt(x.toward, x.moved), `${x.toward} of ${x.moved} games where the line moved`)}
+      ${tile(`${lbl}: covered when it did`, pctTxt(x.tw.w, x.tw.w + x.tw.l), `${x.tw.w}-${x.tw.l} for the model's side`)}`
+    : tile(`${lbl}`, "-", "no tracked games");
+  const buckets = [["Under 1 pt", 0, 1], ["1 to 3 pts", 1, 3], ["3 to 5 pts", 3, 5], ["5+ pts", 5, 99]];
   const sideTxt = (r, L)=> r.side_home===null ? "No side (edge 0.0)" : sideLine(r.side_home ? r.home : r.away, r.side_home, L);
   const pill = m => m>0 ? '<span class="pill win">Toward model</span>' : m<0 ? '<span class="pill loss">Away from model</span>' : '<span class="pill pend">No move</span>';
-  const bucketRows = rows => rows.map(b=>`<tr><td>${b.bucket||b.version}</td><td class="num">${b.n}</td><td class="num">${b.n?b.toward:"-"}</td><td class="num">${b.n?b.away:"-"}</td><td class="num">${b.n?b.flat:"-"}</td><td class="num mono">${b.n?sgn(b.avg):"-"}</td></tr>`).join("");
-  const head = first => `<thead><tr><th>${first}</th><th class="num">Games</th><th class="num">Toward</th><th class="num">Away</th><th class="num">No move</th><th class="num">Avg move</th></tr></thead>`;
+  const atsPill = a => a ? `<span class="pill ${a}">${a==="win"?"Covered":a==="loss"?"Missed":"Push"}</span>` : "-";
+  const latest = graded.filter(r=>r.week===wantW);
   $("clv-body").innerHTML = `
-    <div class="season-strip">
-      ${tile("Moved toward model", S.season.toward, "games this season")}
-      ${tile("Moved away", S.season.away, "games")}
-      ${tile("No move", S.season.flat, "games")}
-      ${tile("Season average", sgn(S.season.avg), `points per game, ${S.season.n} games`)}
-      ${tile(`${weekName(lw.week)} average`, lw.n ? sgn(lw.avg) : "-", lw.n ? `points per game, ${lw.n} games` : "not tracked")}
-    </div>
-    <div class="grid2">
-      <div class="sub-card"><h3>By size of edge</h3><div class="tbl-wrap"><table>${head("Edge when posted")}<tbody>${bucketRows(S.by_edge)}</tbody></table></div></div>
-      <div class="sub-card"><h3>By model version</h3><div class="tbl-wrap"><table>${head("Version")}<tbody>${bucketRows(S.by_version)}</tbody></table></div>
-        <span class="sub">Each model update gets a new version number, so you can see whether a change helped going forward.</span></div>
-    </div>
-    <h3 style="font-size:1rem;text-transform:uppercase;letter-spacing:.05em">${weekName(lw.week)}, game by game</h3>
-    ${!latest.length ? `<div class="note-box">No line movement was tracked for ${weekName(lw.week)}. Tracking started in week 5.</div>` : `
-    <div class="tbl-wrap"><table><thead><tr><th>Matchup</th><th>Model side when posted</th><th>Game-day line</th><th class="num">Edge</th><th class="num">Move</th><th>Direction</th></tr></thead><tbody>
+    <div class="season-strip">${tiles("Season", S)}${tiles(weekName(wantW), Wk)}</div>
+    <div class="sub">For comparison, when the line moved away from the model its side went ${S.aw.w}-${S.aw.l} (${pctTxt(S.aw.w, S.aw.w + S.aw.l)}). ${S.flat} game${S.flat===1?"":"s"} had no move and ${S.flat===1?"is":"are"} left out of the first number. Covered is graded at the line the model posted against.</div>
+    <div class="sub-card"><h3>By size of edge</h3><div class="tbl-wrap"><table>
+      <thead><tr><th>Edge when posted</th><th class="num">Games</th><th class="num">Line moved</th><th class="num">Toward model</th><th class="num">Covered when toward</th></tr></thead><tbody>
+      ${buckets.map(([b, lo, hi])=>{ const x = stats(graded.filter(r=>Math.abs(r.edge)>=lo && Math.abs(r.edge)<hi));
+        return `<tr><td>${b}</td><td class="num">${x.n}</td><td class="num">${x.moved}</td><td class="num">${pctTxt(x.toward, x.moved)}</td><td class="num">${x.tw.w+x.tw.l ? `${pctTxt(x.tw.w, x.tw.w+x.tw.l)} <span class="sub">${x.tw.w}-${x.tw.l}</span>` : "-"}</td></tr>`; }).join("")}
+      </tbody></table></div></div>
+    <h3 style="font-size:1rem;text-transform:uppercase;letter-spacing:.05em">${weekName(wantW)}, game by game</h3>
+    ${!latest.length ? `<div class="note-box">No line movement was tracked for ${weekName(wantW)}. Tracking started in week 5.</div>` : `
+    <div class="tbl-wrap"><table><thead><tr><th>Matchup</th><th>Model side when posted</th><th>Game-day line</th><th class="num">Edge</th><th class="num">Move</th><th>Direction</th><th>ATS</th></tr></thead><tbody>
       ${latest.map(r=>`<tr><td><b>${r.away}</b> @ <b>${r.home}</b></td>
         <td><b>${sideTxt(r, r.posted_line)}</b> <span class="sub">${new Date(r.posted_day+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})} · ${r.posted_src==="DK"?"DK":"cons."}</span></td>
-        <td>${sideTxt(r, r.close)} <span class="sub">${esc(r.close_src.replace("Consensus","cons.").replace("DK","DK"))}</span></td>
-        <td class="num mono">${Math.abs(r.edge).toFixed(1)}</td><td class="num mono">${sgn(r.move)}</td><td>${pill(r.move)}</td></tr>`).join("")}
+        <td>${sideTxt(r, r.close)} <span class="sub">${esc(r.close_src.replace("Consensus","cons."))}</span></td>
+        <td class="num mono">${Math.abs(r.edge).toFixed(1)}</td><td class="num mono">${(r.move>0?"+":"")+r.move.toFixed(1)}</td><td>${pill(r.move)}</td><td>${atsPill(r.ats)}</td></tr>`).join("")}
     </tbody></table></div>`}`;
 }
 
@@ -916,8 +1143,7 @@ function renderHow(){
     ["Scoring margin", `${f2(w.margin)} × (${n1(H.r_margin)} − ${n1(A.r_margin)})`, P.margin],
     ["Success rate", `${n1(w.sr)} × (${H.r_sr.toFixed(3)} − ${A.r_sr.toFixed(3)})`, P.sr],
     ["QB", `${n1(w.qb)} × (${sp.now.qbH.toFixed(3)} − ${sp.now.qbA.toFixed(3)})`, P.qb],
-    ["Rest", g ? `${f2(w.rest)} × (${g.rest_home||0} − ${g.rest_away||0})` : "no schedule, so 0", P.rest],
-    ["Your manual injuries", "", P.inj + P.other]];
+    ["Rest", g ? `${f2(w.rest)} × (${g.rest_home||0} − ${g.rest_away||0})` : "no schedule, so 0", P.rest]];
   const edgeLine = g && g.line!=null ? `<p>The line is <b>${spreadTxt(home,away,g.line)}</b>, so the edge is <b>${Math.abs(sp.edge).toFixed(1)} points</b> and the model side is <b>${sideLine(sp.homeSide?home:away, sp.homeSide, g.line)}</b>.</p>` : "";
   $("how-body").innerHTML = `
     <p>Every number below is live: it uses the weights the site is running right now (model ${D.meta.model_version}, trained ${D.weights.trained} on ${D.meta.backtest_seasons[0]} to ${D.meta.backtest_seasons[1]}) and the game loaded in Game Detail.</p>
@@ -927,8 +1153,7 @@ function renderHow(){
   + <b>${f2(w.margin)}</b> × (Home margin rtg − Away margin rtg)
   + <b>${n1(w.sr)}</b> × (Home SR net − Away SR net)
   + <b>${n1(w.qb)}</b> × (Home QB adj − Away QB adj)
-  + <b>${f2(w.rest)}</b> × (Home rest − Away rest days)
-  + your manual injury entries</div>
+  + <b>${f2(w.rest)}</b> × (Home rest − Away rest days)</div>
     <p>A positive answer means the home team is favored by that many points. The <b>edge</b> is that number minus the posted line.</p>
     <h3>What each piece means</h3>
     <ul>
@@ -966,6 +1191,8 @@ function renderHow(){
     <h3>What updates and what stays fixed</h3>
     <ul>
       <li><b>Every morning:</b> team ratings (after each week's games), QB adj (projected starters and the injury report), DraftKings lines, and weather forecasts.</li>
+      <li><b>About 8 times a day:</b> DraftKings, FanDuel and Caesars spreads are rechecked. The DraftKings line and edge update, and all three books are added to the line movement chart. The model's own numbers only change on the morning update.</li>
+      <li><b>Circa and Pinnacle:</b> their full line history is pulled from OddsPapi on Wednesday and again shortly before each kickoff, so every move shows on the chart even though it is only pulled twice.</li>
       <li><b>Once a year, before Week 1:</b> each team's win total, which sets where its rating starts.</li>
       <li><b>Fixed all season:</b> the weights in both equations. They're fitted only on completed seasons and saved to a file, so they change only when we retrain on purpose, normally once a year after the season. Each retrain gets a new model version so the closing line value section can show whether it helped.</li>
     </ul>`;
@@ -997,7 +1224,7 @@ function renderMethods(){
     <h3>Injuries</h3>
     <p>When the official report lists a projected starting QB as Out, the model rates his backup from the depth chart instead. Doubtful blends in 20% of the starter and Questionable 80%, roughly how often players with those tags end up playing. Other injured starters are listed with rough position values that are not backtested, so they only count if you switch them on.</p>
     <h3>Cover chance and key numbers</h3>
-    <p>Final margins pile up on 3 (${(Pr.key_freq[3]*100).toFixed(1)}% of games) and 7 (${(Pr.key_freq[7]*100).toFixed(1)}%). The cover chance uses a margin curve shaped to match that, centered where the posted line makes both sides even, then moved toward the model by a fitted amount. <b>That amount came out to ${Pr.K} in every one of the ten holdout seasons.</b> Once the closing line is known, the model's edge has not told us anything extra about who covers, so most games read close to 50%. The number moves when you enter something the line can't know yet, like your own injury news or weather edits. The ladder is useful either way: it shows how much a better half point is worth.</p>
+    <p>Final margins pile up on 3 (${(Pr.key_freq[3]*100).toFixed(1)}% of games) and 7 (${(Pr.key_freq[7]*100).toFixed(1)}%). The cover chance uses a margin curve shaped to match that, centered where the posted line makes both sides even, then moved toward the model by a fitted amount. <b>That amount came out to ${Pr.K} in every one of the ten holdout seasons.</b> Once the closing line is known, the model's edge has not told us anything extra about who covers, so most games read close to 50%. The ladder is useful either way: it shows how much a better half point is worth.</p>
     <h3>Totals</h3>
     <p>Projected total = team scoring ratings plus fitted adjustments: dome ${f1(T.coef.dome)}, wind ${T.coef.wind10.toFixed(2)} per mph over 10, cold ${T.coef.cold32.toFixed(2)} per degree below freezing, and QB changes. Rain and snow use rough, untested values. Totals missed by ${T.rmse} points against ${T.market_rmse} for the market line, and picked the right side of the total ${(T.ou_hit*100).toFixed(1)}% of the time (${(T.hit5*100).toFixed(1)}% on ${T.n5} games with 5+ point leans). That is why totals are view only for now.</p>
     <h3>The honest ceiling</h3>
@@ -1012,7 +1239,8 @@ function renderMethods(){
 // ---------- sliders ----------
 const SL = [["hfa","s-hfa",v=>v.toFixed(1)+" pts","home"],["margin","s-margin",v=>v.toFixed(2),"d_margin"],["sr","s-sr",v=>v.toFixed(0),"d_sr"],["qb","s-qb",v=>v.toFixed(1),"d_qb_delta"],["rest","s-rest",v=>v.toFixed(2)+"/day","rest_diff"]];
 function initSliders(){
-  W = Object.assign({}, W0, store.get("weights", null)||{});
+  W = Object.assign({}, W0);   // weights are frozen; old slider edits saved in the browser are ignored
+  store.set("weights", null); store.set("countOther", null);
   for (const [k,id,fmt,rk] of SL){
     const el = $(id); el.value = W[k]; $(id+"-v").textContent = fmt(W[k]);
     const r = D.weights.ranges[rk]; $(id+"-r").textContent = `Tested: ${fmt(W0[k])}. Holdout range ${fmt(r[0])} to ${fmt(r[1])}.`;
@@ -1026,6 +1254,7 @@ function show(t){
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.t===t));
   ["week","game","res","rat"].forEach(x=>$("v-"+x).hidden = x!==t);
   if (t==="game" && D && sel.game) renderMovement(sel.game);
+  if (t==="res" && D) renderResMovement();
   store.set("tab", t);
 }
 function refresh(){ renderHeader(); renderBoard(); renderMatchup(); renderRatings(); }
@@ -1036,7 +1265,7 @@ function syncThemeBtn(){ const dark=isDark(), b=$("theme-btn"); b.classList.togg
 $("theme-btn").onclick=()=>{ const next = isDark() ? "light" : "dark"; document.documentElement.setAttribute("data-theme", next); try{ localStorage.setItem("theme", next); }catch(e){} syncThemeBtn(); };
 try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeBtn); }catch(e){}
 syncThemeBtn();
-let _mvT; window.addEventListener("resize", ()=>{ clearTimeout(_mvT); _mvT = setTimeout(()=>{ if (D && sel.game) renderMovement(sel.game); }, 150); });
+let _mvT; window.addEventListener("resize", ()=>{ clearTimeout(_mvT); _mvT = setTimeout(()=>{ if (D && sel.game) renderMovement(sel.game); if (D && !$("v-res").hidden) renderResMovement(); }, 150); });
 $("how-btn").onclick=()=>{ if(!D) return; renderHow(); const d=$("how-dlg"); if(d.showModal) d.showModal(); else d.setAttribute("open",""); $("how-body").scrollTop=0; };
 $("how-close").onclick=()=>$("how-dlg").close();
 $("how-dlg").addEventListener("click", e=>{ if(e.target===$("how-dlg")) $("how-dlg").close(); });
@@ -1046,6 +1275,8 @@ async function boot(){
     const r = await fetch("data/model.json", {cache:"no-cache"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     D = await r.json();
+    // Circa and Pinnacle history is optional and lives in its own file
+    try{ const r2 = await fetch("data/sharp_lines.json", {cache:"no-cache"}); if (r2.ok) SHARP = await r2.json(); }catch(e){}
   }catch(e){ $("err").hidden=false; $("err").textContent = "Could not load data/model.json. Run the pipeline first. ("+e.message+")"; return; }
   W0 = {hfa:D.weights.hfa, margin:D.weights.margin, sr:D.weights.sr, qb:D.weights.qb, rest:D.weights.rest};
   initProb(); initSliders();
