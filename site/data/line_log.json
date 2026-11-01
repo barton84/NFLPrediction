@@ -4267,6 +4267,24 @@
     "total": 46.5,
     "ts": "2026-11-01T11:24Z",
     "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 3.0,
+    "fdpa": -102,
+    "fdph": -120,
+    "kind": "daily",
+    "line": 3.0,
+    "model": 3.19,
+    "pa": -105,
+    "ph": -115,
+    "src": "DK",
+    "total": 46.5,
+    "ts": "2026-11-01T18:27Z",
+    "version": "v2.1"
    }
   ],
   "time": "20:15",
@@ -5710,6 +5728,24 @@
     "total": 40.5,
     "ts": "2026-11-01T11:24Z",
     "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -1.5,
+    "fdpa": -102,
+    "fdph": -120,
+    "kind": "daily",
+    "line": -1.5,
+    "model": -0.16,
+    "pa": 100,
+    "ph": -120,
+    "src": "DK",
+    "total": 41.5,
+    "ts": "2026-11-01T18:27Z",
+    "version": "v2.1"
    }
   ],
   "time": "16:25",
@@ -6190,6 +6226,24 @@
     "src": "DK",
     "total": 45.5,
     "ts": "2026-11-01T11:24Z",
+    "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 6.5,
+    "fdpa": -108,
+    "fdph": -112,
+    "kind": "daily",
+    "line": 6.5,
+    "model": 7.67,
+    "pa": -105,
+    "ph": -115,
+    "src": "DK",
+    "total": 45.5,
+    "ts": "2026-11-01T18:27Z",
     "version": "v2.1"
    }
   ],
@@ -7634,6 +7688,24 @@
     "total": 43.5,
     "ts": "2026-11-01T11:24Z",
     "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -7.5,
+    "fdpa": 104,
+    "fdph": -128,
+    "kind": "daily",
+    "line": -7.0,
+    "model": -10.13,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 41.5,
+    "ts": "2026-11-01T18:27Z",
+    "version": "v2.1"
    }
   ],
   "time": "16:25",
@@ -8114,6 +8186,24 @@
     "src": "DK",
     "total": 40.5,
     "ts": "2026-11-01T11:24Z",
+    "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 5.5,
+    "fdpa": 100,
+    "fdph": -122,
+    "kind": "daily",
+    "line": 6.0,
+    "model": 0.7,
+    "pa": -108,
+    "ph": -112,
+    "src": "DK",
+    "total": 40.5,
+    "ts": "2026-11-01T18:27Z",
     "version": "v2.1"
    }
   ],
