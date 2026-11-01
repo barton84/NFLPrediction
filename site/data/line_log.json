@@ -4321,6 +4321,24 @@
     "total": 46.5,
     "ts": "2026-11-01T21:15Z",
     "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 3.0,
+    "fdpa": -102,
+    "fdph": -120,
+    "kind": "check",
+    "line": 3.0,
+    "model": 3.19,
+    "pa": -105,
+    "ph": -115,
+    "src": "DK",
+    "total": 46.5,
+    "ts": "2026-11-01T22:44Z",
+    "version": "v2.1"
    }
   ],
   "time": "20:15",
@@ -8366,6 +8384,24 @@
     "src": "DK",
     "total": 40.5,
     "ts": "2026-11-01T21:15Z",
+    "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 5.5,
+    "fdpa": -105,
+    "fdph": -115,
+    "kind": "check",
+    "line": 6.0,
+    "model": 0.7,
+    "pa": -108,
+    "ph": -112,
+    "src": "DK",
+    "total": 40.5,
+    "ts": "2026-11-01T22:44Z",
     "version": "v2.1"
    }
   ],
