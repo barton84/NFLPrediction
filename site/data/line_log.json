@@ -4363,6 +4363,27 @@
     "total": 46.5,
     "ts": "2026-11-01T23:55Z",
     "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-02",
+    "fd": 3.0,
+    "fdpa": -102,
+    "fdph": -120,
+    "kind": "daily",
+    "line": 3.0,
+    "mgm": 3.0,
+    "mgmpa": -102,
+    "mgmph": -118,
+    "model": 3.19,
+    "pa": 100,
+    "ph": -120,
+    "src": "DK",
+    "total": 46.5,
+    "ts": "2026-11-02T15:37Z",
+    "version": "v2.1"
    }
   ],
   "time": "20:15",
@@ -7895,8 +7916,10 @@
  },
  "2026_08_PHI_WAS": {
   "away": "PHI",
+  "close_consensus": 6.0,
   "date": "2026-11-01",
   "home": "WAS",
+  "result": 17.0,
   "season": 2026,
   "snaps": [
    {
