@@ -2281,8 +2281,10 @@
  },
  "2026_08_ARI_DAL": {
   "away": "ARI",
+  "close_consensus": 7.0,
   "date": "2026-11-01",
   "home": "DAL",
+  "result": -3.0,
   "season": 2026,
   "snaps": [
    {
@@ -2762,8 +2764,10 @@
  },
  "2026_08_ATL_TB": {
   "away": "ATL",
+  "close_consensus": 2.5,
   "date": "2026-11-01",
   "home": "TB",
+  "result": 16.0,
   "season": 2026,
   "snaps": [
    {
@@ -3243,8 +3247,10 @@
  },
  "2026_08_BAL_BUF": {
   "away": "BAL",
+  "close_consensus": 3.0,
   "date": "2026-11-01",
   "home": "BUF",
+  "result": 26.0,
   "season": 2026,
   "snaps": [
    {
@@ -4364,8 +4370,10 @@
  },
  "2026_08_CLE_PIT": {
   "away": "CLE",
+  "close_consensus": 3.5,
   "date": "2026-11-01",
   "home": "PIT",
+  "result": 21.0,
   "season": 2026,
   "snaps": [
    {
@@ -4845,8 +4853,10 @@
  },
  "2026_08_IND_JAX": {
   "away": "IND",
+  "close_consensus": 10.0,
   "date": "2026-11-01",
   "home": "JAX",
+  "result": 35.0,
   "season": 2026,
   "snaps": [
    {
@@ -5326,8 +5336,10 @@
  },
  "2026_08_KC_DEN": {
   "away": "KC",
+  "close_consensus": 1.5,
   "date": "2026-11-01",
   "home": "DEN",
+  "result": 4.0,
   "season": 2026,
   "snaps": [
    {
@@ -5861,8 +5873,10 @@
  },
  "2026_08_LAC_LA": {
   "away": "LAC",
+  "close_consensus": 6.5,
   "date": "2026-11-01",
   "home": "LA",
+  "result": 15.0,
   "season": 2026,
   "snaps": [
    {
@@ -6378,8 +6392,10 @@
  },
  "2026_08_LV_NYJ": {
   "away": "LV",
+  "close_consensus": 1.5,
   "date": "2026-11-01",
   "home": "NYJ",
+  "result": -5.0,
   "season": 2026,
   "snaps": [
    {
@@ -6859,8 +6875,10 @@
  },
  "2026_08_MIN_DET": {
   "away": "MIN",
+  "close_consensus": 3.0,
   "date": "2026-11-01",
   "home": "DET",
+  "result": 4.0,
   "season": 2026,
   "snaps": [
    {
@@ -7340,8 +7358,10 @@
  },
  "2026_08_NE_MIA": {
   "away": "NE",
+  "close_consensus": -7.0,
   "date": "2026-11-01",
   "home": "MIA",
+  "result": -5.0,
   "season": 2026,
   "snaps": [
    {
@@ -8446,8 +8466,10 @@
  },
  "2026_08_TEN_CIN": {
   "away": "TEN",
+  "close_consensus": 13.5,
   "date": "2026-11-01",
   "home": "CIN",
+  "result": 7.0,
   "season": 2026,
   "snaps": [
    {
@@ -8924,5 +8946,425 @@
   ],
   "time": "13:00",
   "week": 8
+ },
+ "2026_09_ARI_SEA": {
+  "away": "ARI",
+  "date": "2026-11-08",
+  "home": "SEA",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 10.5,
+    "fdpa": -110,
+    "fdph": -110,
+    "kind": "daily",
+    "line": 11.5,
+    "model": 14.45,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 44.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 9
+ },
+ "2026_09_BUF_MIN": {
+  "away": "BUF",
+  "date": "2026-11-09",
+  "home": "MIN",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -3.0,
+    "fdpa": -104,
+    "fdph": -118,
+    "kind": "daily",
+    "line": -3.0,
+    "model": -0.92,
+    "pa": -102,
+    "ph": -118,
+    "src": "DK",
+    "total": 46.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:15",
+  "week": 9
+ },
+ "2026_09_CIN_ATL": {
+  "away": "CIN",
+  "date": "2026-11-08",
+  "home": "ATL",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -3.5,
+    "fdpa": -102,
+    "fdph": -120,
+    "kind": "daily",
+    "line": -3.5,
+    "model": -5.11,
+    "pa": -105,
+    "ph": -115,
+    "src": "DK",
+    "total": 50.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "09:30",
+  "week": 9
+ },
+ "2026_09_CLE_NO": {
+  "away": "CLE",
+  "date": "2026-11-08",
+  "home": "NO",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 2.5,
+    "fdpa": -104,
+    "fdph": -118,
+    "kind": "daily",
+    "line": 2.5,
+    "model": 3.96,
+    "pa": -105,
+    "ph": -115,
+    "src": "DK",
+    "total": 43.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 9
+ },
+ "2026_09_DAL_IND": {
+  "away": "DAL",
+  "date": "2026-11-08",
+  "home": "IND",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -5.5,
+    "fdpa": -110,
+    "fdph": -110,
+    "kind": "daily",
+    "line": -5.5,
+    "model": -1.95,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 52.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 9
+ },
+ "2026_09_DEN_CAR": {
+  "away": "DEN",
+  "date": "2026-11-08",
+  "home": "CAR",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -2.5,
+    "fdpa": -118,
+    "fdph": -104,
+    "kind": "daily",
+    "line": -2.5,
+    "model": -2.02,
+    "pa": -115,
+    "ph": -105,
+    "src": "DK",
+    "total": 44.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 9
+ },
+ "2026_09_DET_MIA": {
+  "away": "DET",
+  "date": "2026-11-08",
+  "home": "MIA",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -7.0,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": -7.0,
+    "model": -8.64,
+    "pa": -105,
+    "ph": -115,
+    "src": "DK",
+    "total": 49.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 9
+ },
+ "2026_09_GB_NE": {
+  "away": "GB",
+  "date": "2026-11-08",
+  "home": "NE",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 2.5,
+    "fdpa": -110,
+    "fdph": -110,
+    "kind": "daily",
+    "line": 2.5,
+    "model": 4.23,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 47.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 9
+ },
+ "2026_09_HOU_LAC": {
+  "away": "HOU",
+  "date": "2026-11-08",
+  "home": "LAC",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -3.5,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": -3.5,
+    "model": -3.03,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 42.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:05",
+  "week": 9
+ },
+ "2026_09_JAX_BAL": {
+  "away": "JAX",
+  "date": "2026-11-05",
+  "home": "BAL",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -8.5,
+    "fdpa": -104,
+    "fdph": -118,
+    "kind": "daily",
+    "line": -7.5,
+    "model": -7.64,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 43.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:15",
+  "week": 9
+ },
+ "2026_09_LA_WAS": {
+  "away": "LA",
+  "date": "2026-11-08",
+  "home": "WAS",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -5.5,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": -5.5,
+    "model": -6.33,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 48.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 9
+ },
+ "2026_09_LV_SF": {
+  "away": "LV",
+  "date": "2026-11-08",
+  "home": "SF",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 9.5,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": 8.5,
+    "model": 12.09,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 50.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:05",
+  "week": 9
+ },
+ "2026_09_NYG_PHI": {
+  "away": "NYG",
+  "date": "2026-11-08",
+  "home": "PHI",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": -2.5,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": -2.5,
+    "model": 3.15,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 40.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 9
+ },
+ "2026_09_NYJ_KC": {
+  "away": "NYJ",
+  "date": "2026-11-08",
+  "home": "KC",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 9.5,
+    "fdpa": -110,
+    "fdph": -110,
+    "kind": "daily",
+    "line": 10.0,
+    "model": 10.05,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 46.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 9
+ },
+ "2026_09_TB_CHI": {
+  "away": "TB",
+  "date": "2026-11-08",
+  "home": "CHI",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-01",
+    "fd": 6.5,
+    "fdpa": -118,
+    "fdph": -104,
+    "kind": "daily",
+    "line": 6.0,
+    "model": 3.99,
+    "pa": -110,
+    "ph": -110,
+    "src": "DK",
+    "total": 46.5,
+    "ts": "2026-11-02T00:54Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:20",
+  "week": 9
  }
 }
