@@ -16,6 +16,8 @@ only the points where the main line or a price changed.
 
 Needs env var ODDSPAPI_KEY (GitHub secret). Without it this does nothing.
 Run with --probe to print the raw shape of the API responses for one game.
+Run with --backfill to pull finished games from the line log (week 5 on) that
+have no Circa / Pinnacle history yet (about one request per game, one time).
 Run with --now to pull every game that has not kicked off yet, right away
 (about one request per game). The pull shortly before kickoff still happens.
 """
@@ -42,6 +44,7 @@ def team_abbr(name):
 
 PROBE = "--probe" in sys.argv
 NOW = "--now" in sys.argv        # pull every upcoming game right away (manual "pull now" run)
+BACKFILL = "--backfill" in sys.argv   # one-time: pull finished games tracked in the line log that have no history yet
 
 
 def api(path, **params):
@@ -155,7 +158,9 @@ def timeline(book_hist, cat, kickoff):
         cands = []
         for m_ in {k[0] for k in cur}:
             p1, p2 = cur.get((m_, 0)), cur.get((m_, 1))
-            if p1 and p2:
+            # only near-even prices count as a main line (about -125 / +105 or closer);
+            # a lopsided alternate line is never the posted spread
+            if p1 and p2 and abs(float(p1) - float(p2)) <= 0.45:
                 cands.append((abs(float(p1) - float(p2)), m_))
         if not cands:
             continue
@@ -170,7 +175,19 @@ def timeline(book_hist, cat, kickoff):
             out[-1] = pt                      # same minute: keep the latest
         else:
             out.append(pt)
-    return out
+    return despike(out)
+
+
+def despike(pts):
+    """Drop one-off blips: a point 2+ points away from both neighbors while the neighbors agree."""
+    keep = []
+    for i, p in enumerate(pts):
+        if 0 < i < len(pts) - 1:
+            a, b = pts[i - 1][1], pts[i + 1][1]
+            if abs(a - b) <= 1 and abs(p[1] - a) >= 2 and abs(p[1] - b) >= 2:
+                continue
+        keep.append(p)
+    return keep
 
 
 def orient(tl, dk_line, home_is_p1):
@@ -216,6 +233,17 @@ def main(now=None):
                                       else due(store.get(g["id"], {}), kick, now))
         if kind:
             todo.append((g, kick, kind))
+    if BACKFILL:
+        log = line_log.load(os.path.join(OUT, "line_log.json"))
+        for gid, e in sorted(log.items()):
+            if e.get("result") is None or not e.get("snaps") or "final" in store.get(gid, {}).get("pulled", {}):
+                continue
+            kick = line_log.kickoff_et(e["date"], e["time"])
+            if kick >= now:
+                continue
+            todo.append(({"id": gid, "home": e["home"], "away": e["away"], "date": e["date"], "time": e["time"],
+                          "line": e["snaps"][-1]["line"]}, kick, "final"))
+        print(f"backfill: {len(todo)} finished games without history")
     if PROBE:
         upcoming = [t for t in todo if t[1] > now]
         todo = (upcoming or todo)[:1]
@@ -223,17 +251,21 @@ def main(now=None):
         print("Circa / Pinnacle: nothing due this run")
         return
     # find OddsPapi fixture ids for the games we need (one request covers up to 10 days)
-    dates = sorted(g["date"] for g, _, _ in todo)
-    d0 = datetime.date.fromisoformat(dates[0]) - datetime.timedelta(days=1)
-    # schedule dates are Eastern, OddsPapi uses UTC, and its "to" date may stop at midnight, so pad 2 days
-    d1 = min(datetime.date.fromisoformat(dates[-1]) + datetime.timedelta(days=2), d0 + datetime.timedelta(days=9))
-    fx = as_list(api("fixtures", sportId=SPORT, **{"from": d0.isoformat(), "to": d1.isoformat()}))
+    dates = sorted({datetime.date.fromisoformat(g["date"]) for g, _, _ in todo})
+    fx, i = [], 0
+    while i < len(dates):
+        d0 = dates[i] - datetime.timedelta(days=1)
+        # schedule dates are Eastern, OddsPapi uses UTC, and its "to" date may stop at midnight, so pad 2 days
+        last = max(d for d in dates if d <= d0 + datetime.timedelta(days=7))
+        d1 = last + datetime.timedelta(days=2)
+        fx += as_list(api("fixtures", sportId=SPORT, **{"from": d0.isoformat(), "to": d1.isoformat()}))
+        i = next((j for j, d in enumerate(dates) if d > last), len(dates))
     if PROBE:
         tours = {}
         for f in fx:
             tours[f.get("tournamentName")] = tours.get(f.get("tournamentName"), 0) + 1
         nfl = [f for f in fx if "nfl" in (f.get("tournamentName") or "").lower()]
-        print(f"PROBE fixtures {d0}..{d1}: {len(fx)} total; by tournament: {tours}")
+        print(f"PROBE fixtures {dates[0]}..: {len(fx)} total; by tournament: {tours}")
         print("PROBE NFL games found:", [(f.get("participant2Name"), "@", f.get("participant1Name"), f.get("startTime"), f.get("hasOdds")) for f in nfl])
         print("PROBE NFL fixture sample:", json.dumps(nfl[:1], default=str)[:1500])
     fixtures = {}
@@ -242,14 +274,18 @@ def main(now=None):
             continue
         p1, p2 = team_abbr(f.get("participant1Name")), team_abbr(f.get("participant2Name"))
         if p1 and p2:
-            fixtures[frozenset((p1, p2))] = (f, p1)
+            fixtures.setdefault(frozenset((p1, p2)), []).append((f, p1))
     cat = spread_catalog()
     if not cat:
         print("no spread markets found in the OddsPapi catalog; stopping")
         return
     n_ok = 0
     for g, kick, kind in todo:
-        hit = fixtures.get(frozenset((g["home"], g["away"])))
+        hit = None
+        for f_, p1_ in fixtures.get(frozenset((g["home"], g["away"])), []):
+            st = parse_ts(f_.get("startTime"))
+            if st is None or abs((st - kick).total_seconds()) < 36 * 3600:
+                hit = (f_, p1_); break
         if not hit:
             print(f"no OddsPapi fixture for {g['away']}@{g['home']}")
             if not PROBE:   # mark it tried, so a missing game never eats requests run after run

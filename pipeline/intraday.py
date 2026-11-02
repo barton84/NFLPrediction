@@ -2,7 +2,7 @@
 
 Runs 8 times a day from .github/workflows/line_checks.yml with the same Odds API
 key as the morning run (ODDS_API_KEY). Each run costs 1 credit. It:
-  1. pulls current DraftKings, FanDuel and Caesars spreads (still 1 credit),
+  1. pulls current DraftKings, FanDuel, Caesars and BetMGM spreads (still 1 credit),
   2. adds a timestamped "check" snapshot to site/data/line_log.json for every
      game the morning run is already tracking and that has not kicked off,
   3. updates that game in site/data/model.json: line, prices, edge, cover

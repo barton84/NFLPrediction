@@ -21,7 +21,7 @@ import json, os, datetime
 from zoneinfo import ZoneInfo
 
 ET = ZoneInfo("America/New_York")
-BOOK_CODES = ("fd", "cz")   # matches fetch_odds.EXTRA_BOOKS
+BOOK_CODES = ("fd", "cz", "mgm")   # matches fetch_odds.EXTRA_BOOKS
 SNAP_KEYS = ("day", "ts", "kind", "line", "src", "model", "total", "ph", "pa") + tuple(
     k for c in BOOK_CODES for k in (c, c + "ph", c + "pa"))
 CT = ZoneInfo("America/Chicago")

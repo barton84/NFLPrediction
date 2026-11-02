@@ -22,7 +22,7 @@
 :root{
   --bg:#f3f5f8; --panel:#ffffff; --panel-2:#eaeef3; --line:#d4dbe4;
   --ink:#121a26; --muted:#5a6676; --accent:#d4561a; --accent-ink:#ffffff; --accent-soft:#fbe6da;
-  --fd:#1f6fd1; --cz:#8a5a00; --circa:#7b4fd6; --pin:#0f8a7e; --good:#1d7a4c; --good-soft:#dcf1e5; --bad:#b4322c; --bad-soft:#f8dedc; --warn:#a86a00;
+  --fd:#1f6fd1; --cz:#8a5a00; --mgm:#b8326e; --circa:#7b4fd6; --pin:#0f8a7e; --good:#1d7a4c; --good-soft:#dcf1e5; --bad:#b4322c; --bad-soft:#f8dedc; --warn:#a86a00;
   --f-display:"Saira Condensed","Arial Narrow",Arial,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-data:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -30,11 +30,11 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0f141c; --panel:#161d28; --panel-2:#1d2633; --line:#2a3443;
   --ink:#e6ebf2; --muted:#93a0b2; --accent:#f07a3c; --accent-ink:#1a0e06; --accent-soft:#3a2418;
-  --fd:#5aa2f0; --cz:#d9b25c; --circa:#a98bf5; --pin:#3fc1b0; --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}}
+  --fd:#5aa2f0; --cz:#d9b25c; --mgm:#f07aac; --circa:#a98bf5; --pin:#3fc1b0; --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0f141c; --panel:#161d28; --panel-2:#1d2633; --line:#2a3443;
   --ink:#e6ebf2; --muted:#93a0b2; --accent:#f07a3c; --accent-ink:#1a0e06; --accent-soft:#3a2418;
-  --fd:#5aa2f0; --cz:#d9b25c; --circa:#a98bf5; --pin:#3fc1b0; --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}
+  --fd:#5aa2f0; --cz:#d9b25c; --mgm:#f07aac; --circa:#a98bf5; --pin:#3fc1b0; --good:#4cc68a; --good-soft:#15301f; --bad:#f06a62; --bad-soft:#3a1a19; --warn:#e3a53a; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5}
 .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 60px;display:grid;gap:22px}
@@ -65,6 +65,10 @@ td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
 td.num,th.num{text-align:right}
 tr.flag td:first-child{box-shadow:inset 4px 0 0 var(--accent)}
 tr.flag{background:var(--accent-soft)}
+tr.rowlink{cursor:pointer}
+tr.rowlink:hover td{background:var(--panel-2)}
+tr.flag.rowlink:hover td{background:color-mix(in srgb, var(--accent-soft) 70%, var(--accent) 12%)}
+tr.rowlink:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 tr.soft td:first-child{box-shadow:inset 4px 0 0 var(--line)}
 .pick{font-weight:600}
 .pill{display:inline-block;font-family:var(--f-data);font-size:.72rem;padding:2px 8px;border-radius:999px;font-weight:600}
@@ -95,6 +99,17 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 .big .note{font-size:.8rem;color:var(--muted)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 @media (min-width:900px){.mgrid{grid-template-columns:1fr 1fr}}
+.inj-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+.ir-team h4{margin:0 0 6px;font-size:.95rem}
+.ir-qb{font-size:.88rem;padding:8px 10px;border-radius:6px;background:var(--panel-2);margin-bottom:6px}
+.ir-qb.hit{background:var(--bad-soft)}
+.ir-qb b{font-weight:600}
+.ir-list{display:grid;gap:0}
+.ir-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:7px 2px;border-top:1px solid var(--line);font-size:.88rem;background:none}
+.ir-row .pos{color:var(--muted);font-size:.8rem}
+.st{font-family:var(--f-data);font-size:.72rem;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.st.out{background:var(--bad-soft);color:var(--bad)} .st.doubtful{background:var(--accent-soft);color:var(--accent)} .st.questionable{background:var(--panel-2);color:var(--ink);border:1px solid var(--line)}
+@media (max-width:640px){.inj-grid{grid-template-columns:1fr}}
 .tc{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:8px;padding:14px 16px;display:grid;gap:4px;max-width:640px;width:100%;margin:0 auto;box-sizing:border-box}
 .tc-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px}
 .tc-head .tm b{font-family:var(--f-display);font-size:1.45rem;line-height:1.1;display:block}
@@ -301,6 +316,11 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
         <div class="big"><span class="k">Model edge</span><span class="v" id="o-edge">-</span><span class="note" id="o-edge-note"></span></div>
         <div class="big"><span class="k" id="o-cover-k">Cover chance</span><span class="v" id="o-cover">-</span><span class="note" id="o-cover-note"></span></div>
         <div class="big"><span class="k">Total</span><span class="v" id="o-total">-</span><span class="note" id="o-total-note"></span></div>
+      </div>
+      <div class="sub-card" id="inj-card" hidden>
+        <h3>Injury report <span class="src" id="injr-src"></span></h3>
+        <div class="inj-grid" id="injr-body"></div>
+        <div class="sub" id="injr-note"></div>
       </div>
       <div class="sub-card" id="move-card">
         <h3>Line movement <span class="src" id="move-src"></span></h3>
@@ -565,7 +585,7 @@ function renderHeader(){
   if (m.lines_checked && new Date(m.lines_checked) > built){
     const lc = new Date(m.lines_checked), lh = (Date.now()-lc.getTime())/3.6e6;
     const lago = lh < 1 ? Math.max(1, Math.round(lh*60))+" min ago" : lh < 48 ? Math.round(lh)+" hr ago" : Math.round(lh/24)+" days ago";
-    $("meta-line").innerHTML += ` · <span title="DraftKings, FanDuel and Caesars spreads are rechecked about 8 times a day between model updates. Last check ${lc.toLocaleString("en-US",{timeZone:"America/Chicago", hour:"numeric", minute:"2-digit"})} CT.">Lines checked ${lago}</span>`;
+    $("meta-line").innerHTML += ` · <span title="DraftKings, FanDuel, Caesars and BetMGM spreads are rechecked about 8 times a day between model updates. Last check ${lc.toLocaleString("en-US",{timeZone:"America/Chicago", hour:"numeric", minute:"2-digit"})} CT.">Lines checked ${lago}</span>`;
   }
   const w = D.season_weeks.reduce((a,x)=>({w:a.w+x.wins,l:a.l+x.losses}),{w:0,l:0});
   const flagged = D.this_week.filter(g=>g.result==null && g.line!=null && Math.abs(spreadState(g).edge) >= threshold).length;
@@ -658,6 +678,7 @@ function renderBoardOther(w){
     $("away").value = a; $("home").value = hm; $("neutral").checked = neu==="1";
     syncWxInputs(); renderInj(); renderMatchup(); show("game");
   });
+  linkRows($("board-tbl"));
   $("board-tbl").querySelectorAll("th[data-sort]").forEach(th=>th.onclick=()=>{
     const k = th.dataset.sort; boardSort = boardSort.key===k ? {key:k, dir:-boardSort.dir} : {key:k, dir: k==="edge" ? -1 : 1}; renderBoard();
   });
@@ -666,6 +687,17 @@ function renderBoardOther(w){
 function sortHead(key, label){
   const on = boardSort.key===key, arr = on ? (boardSort.dir>0?"▴":"▾") : "↕";
   return `<th class="sortable ${on?"on":""}" data-sort="${key}" scope="col" aria-sort="${on?(boardSort.dir>0?"ascending":"descending"):"none"}">${label} <span class="arr">${arr}</span></th>`;
+}
+// the whole row opens the game, same as its "Open" button
+function linkRows(tbl){
+  tbl.querySelectorAll("tbody tr").forEach(tr=>{
+    const btn = tr.querySelector("[data-open],[data-custom]");
+    if (!btn) return;
+    tr.classList.add("rowlink"); tr.tabIndex = 0;
+    tr.setAttribute("aria-label", "Open " + tr.querySelector("td").textContent.trim().split(/\s+/).slice(0,3).join(" "));
+    tr.onclick = e => { if (!e.target.closest("button")) btn.click(); };
+    tr.onkeydown = e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); btn.click(); } };
+  });
 }
 function renderBoard(){
   if (boardWeek!=null && boardWeek!==D.meta.this_week) return renderBoardOther(boardWeek);
@@ -714,6 +746,7 @@ function renderBoard(){
   }
   $("board-tbl").innerHTML = h + "</tbody>";
   $("board-tbl").querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ loadGame(b.dataset.open); show("game"); });
+  linkRows($("board-tbl"));
   $("board-tbl").querySelectorAll("th[data-sort]").forEach(th=>th.onclick=()=>{
     const k = th.dataset.sort;
     boardSort = boardSort.key===k ? {key:k, dir:-boardSort.dir} : {key:k, dir: k==="edge" ? -1 : 1};
@@ -789,6 +822,38 @@ function readWxInputs(){
   const diff = {}; for (const k in cur) if (cur[k]!==auto[k]) diff[k]=cur[k];
   wxEdits[key] = diff;
 }
+// ---------- INJURY REPORT (Game Detail, read only) ----------
+function renderInjReport(g){
+  const card = $("inj-card");
+  if (!g || !g.inj){ card.hidden = true; return; }
+  card.hidden = false;
+  const has = g.inj.home && g.inj.home.report;
+  $("injr-src").textContent = has ? "official report" : "not posted yet";
+  const stPill = st => `<span class="st ${st.toLowerCase()}">${st}</span>`;
+  // the injury's own effect: QB rating with the injury minus with the scheduled starter, times the QB weight
+  const qbPts = side => { const r = g.inj[side]; return (W.qb || 0) * ((r.qb_delta || 0) - (r.qb_delta_sched || 0)); };
+  const team = side => {
+    const r = g.inj[side], q = r.qb || {}, abbr = g[side], name = D.teams[abbr] ? D.teams[abbr].name : abbr;
+    let qb;
+    if (q.status){
+      const pts = qbPts(side);
+      qb = `<div class="ir-qb hit"><b>QB ${esc(q.name)}</b> ${stPill(q.status)}<br>${q.status==="Out" ? `${esc(q.backup || "The backup")} is expected to start.` : `${Math.round((q.play_prob ?? 0)*100)}% chance he plays; ${esc(q.backup || "the backup")} if not.`} ${Math.abs(pts) < 0.05 ? "No change to the model's number." : `The model ${pts<0?"takes":"adds"} ${Math.abs(pts).toFixed(1)} pts ${pts<0?"off":"to"} ${abbr} for this.`}</div>`;
+    } else if (q.replaced){
+      qb = `<div class="ir-qb hit"><b>QB ${esc(q.name)}</b> starts. Usual starter ${esc(q.replaced.name)} is ${esc(q.replaced.status.toLowerCase())}.</div>`;
+    } else {
+      qb = `<div class="ir-qb"><b>QB ${esc(q.name || "-")}</b> is not on the report.</div>`;
+    }
+    const pl = (r.players || []);
+    const list = pl.length ? pl.map(p=>`<div class="ir-row"><span>${esc(p.name)} <span class="pos">${esc(p.pos)}</span></span>${stPill(p.status)}</div>`).join("")
+                           : `<div class="sub" style="padding:6px 0;border-top:1px solid var(--line)">No other starters on the report.</div>`;
+    return `<div class="ir-team"><h4>${esc(name)}</h4>${qb}<div class="ir-list">${list}</div></div>`;
+  };
+  $("injr-body").innerHTML = team("away") + team("home");
+  $("injr-note").textContent = has
+    ? "Starters on the official NFL injury report, refreshed every morning. A starting QB on the report moves the model automatically, weighted by his chance to play (his backup is rated for the rest). Other starters are listed for context and are not in the model's number."
+    : "The first official report of the week comes out Wednesday. Until then this shows the scheduled starting QBs.";
+}
+
 // ---------- TEAM CARD (Game Detail) ----------
 function renderTeamCard(away, home, g){
   const el = $("team-card"), TS = D.team_stats || {}, A = TS[away], H = TS[home];
@@ -831,6 +896,7 @@ function renderMatchup(){
   const g = sel.game;
   $("g-title").textContent = `${away} @ ${home}`;
   renderTeamCard(away, home, g);
+  renderInjReport(g);
   // spread
   let sp, tt;
   if (g){ sp = spreadState(g); tt = totalState(g); }
@@ -900,7 +966,7 @@ function renderLadder(g, sp){
 
 // extra books on the line movement chart (DraftKings is the main line)
 // fd/cz come from the line checks; circa/pin come from data/sharp_lines.json (sharp: true)
-const MV_BOOKS = [{k:"fd", name:"FanDuel", color:"var(--fd)", off:3}, {k:"cz", name:"Caesars", color:"var(--cz)", off:-3},
+const MV_BOOKS = [{k:"fd", name:"FanDuel", color:"var(--fd)", off:3}, {k:"cz", name:"Caesars", color:"var(--cz)", off:-3}, {k:"mgm", name:"BetMGM", color:"var(--mgm)"},
   {k:"circa", name:"Circa", color:"var(--circa)", off:6, sharp:true}, {k:"pin", name:"Pinnacle", color:"var(--pin)", off:-6, sharp:true}];
 let mvOn = null;   // which books the chart shows; remembered per device
 function mvSaved(){ if (!mvOn){ const v = store.get("mvBooks", null); mvOn = new Set(Array.isArray(v) && v.length ? v : ["dk", ...MV_BOOKS.map(b=>b.k)]); } return mvOn; }
@@ -930,7 +996,9 @@ function renderMovement(g, pre = "move"){
     const ser = b.sharp ? (sh[b.k] || []).map(p=>({t: tOf({ts: p.t}), line: p.line, ph: p.ph, pa: p.pa}))
                         : pts.filter(p=>p[b.k]!=null).map(p=>({t: p.t, line: p[b.k], ph: p[b.k+"ph"], pa: p[b.k+"pa"]}));
     ser.sort((a,c)=>a.t-c.t);
-    return {...b, pts: ser, last: ser[ser.length-1]};
+    // drop one-off blips (a point 2+ away from both neighbors while they agree), e.g. a brief alternate line
+    const clean = ser.filter((p,i)=> i===0 || i===ser.length-1 || !(Math.abs(ser[i-1].line-ser[i+1].line)<=1 && Math.abs(p.line-ser[i-1].line)>=2 && Math.abs(p.line-ser[i+1].line)>=2));
+    return {...b, pts: clean, last: clean[clean.length-1]};
   }).filter(b=>b.pts.length);
   const on = mvSaved(), avail = [{k:"dk", name:"DraftKings", color:"var(--accent)"}, ...allBooks];
   if (!avail.some(b=>on.has(b.k))) avail.forEach(b=>on.add(b.k));   // never show an empty chart
@@ -951,7 +1019,7 @@ function renderMovement(g, pre = "move"){
   const cell = (v, p, bold) => `<td class="mono">${v==null?"-":`${bold?"<b>":""}${fmtSpread(v)}${bold?"</b>":""} <span class="sub">${fmtPrice(p)}</span>`}</td>`;
   const sw = c => `<i class="sw" style="background:${c}"></i>`;
   let th = `<thead><tr><th></th><th>${g.away}</th><th>${g.home}</th></tr></thead><tbody>
-    <tr><td class="sub">DK first seen, ${firstDay}</td>${cell(first.line, first.pa)}${cell(-first.line, first.ph)}</tr>
+    <tr><td class="sub">DK first seen<br>${firstDay}</td>${cell(first.line, first.pa)}${cell(-first.line, first.ph)}</tr>
     ${showDK ? `<tr><td>${sw("var(--accent)")}DraftKings</td>${cell(last.line, last.pa, 1)}${cell(-last.line, last.ph, 1)}</tr>` : ""}`;
   books.forEach(b=>{ const l = b.last; th += `<tr><td>${sw(b.color)}${b.name}</td>${cell(l.line, l.pa, 1)}${cell(-l.line, l.ph, 1)}</tr>`; });
   $(pre+"-head").innerHTML = th + "</tbody>";
@@ -1215,7 +1283,7 @@ function renderHow(){
     <h3>What updates and what stays fixed</h3>
     <ul>
       <li><b>Every morning:</b> team ratings (after each week's games), QB adj (projected starters and the injury report), DraftKings lines, and weather forecasts.</li>
-      <li><b>About 8 times a day:</b> DraftKings, FanDuel and Caesars spreads are rechecked. The DraftKings line and edge update, and all three books are added to the line movement chart. The model's own numbers only change on the morning update.</li>
+      <li><b>About 8 times a day:</b> DraftKings, FanDuel, Caesars and BetMGM spreads are rechecked. The DraftKings line and edge update, and every book is added to the line movement chart. The model's own numbers only change on the morning update.</li>
       <li><b>Circa and Pinnacle:</b> their full line history is pulled from OddsPapi on Wednesday and again shortly before each kickoff, so every move shows on the chart even though it is only pulled twice.</li>
       <li><b>Once a year, before Week 1:</b> each team's win total, which sets where its rating starts.</li>
       <li><b>Fixed all season:</b> the weights in both equations. They're fitted only on completed seasons and saved to a file, so they change only when we retrain on purpose, normally once a year after the season. Each retrain gets a new model version so the closing line value section can show whether it helped.</li>

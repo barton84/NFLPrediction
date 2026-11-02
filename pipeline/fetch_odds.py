@@ -24,7 +24,7 @@ NAME_TO_ABBR = {
 }
 
 # Extra books shown on the line movement chart: Odds API key -> short code used in the data
-EXTRA_BOOKS = {"fanduel": "fd", "williamhill_us": "cz"}   # williamhill_us = Caesars
+EXTRA_BOOKS = {"fanduel": "fd", "williamhill_us": "cz", "betmgm": "mgm"}   # williamhill_us = Caesars
 
 
 def fetch(key_env="ODDS_API_KEY", markets="spreads,totals"):

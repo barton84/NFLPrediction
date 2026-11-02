@@ -94,9 +94,8 @@ def main(fetch=True):
 
     # ---------- which weeks are "last" and "this" ----------
     cur = df[df.season == season]
-    done_frac = cur.groupby("week").apply(lambda x: x.result.notna().mean(), include_groups=False)
-    last_week = int(done_frac[done_frac >= 0.5].index.max()) if (done_frac >= 0.5).any() else 0
-    this_week = last_week + 1
+    this_week = current_week(cur)
+    last_week = this_week - 1
     if os.environ.get("FORCE_WEEK"):   # testing only: rebuild as if an earlier week were upcoming
         this_week = int(os.environ["FORCE_WEEK"]); last_week = this_week - 1
 
@@ -475,6 +474,19 @@ def main(fetch=True):
     with open(os.path.join(OUT, "model.json"), "w") as f:
         json.dump(_clean(out), f, separators=(",", ":"), default=lambda o: None, allow_nan=False)
     print(f"wrote model.json: season {season} this_week {this_week} last_week {last_week}; weights", {k: round(v, 3) for k, v in W.items()})
+
+
+def current_week(cur, today=None):
+    """The week on the site. A week runs Tuesday through Monday: it stays current until its
+    last game day (usually Monday night) has passed, so the new week starts on Tuesday.
+    A game counts as still to come if it has no result and its date (Eastern) is today or later
+    in Central time; a postponed game from an earlier day never holds the week back."""
+    from zoneinfo import ZoneInfo
+    today = today or datetime.datetime.now(ZoneInfo("America/Chicago")).date().isoformat()
+    upcoming = cur[cur.result.isna() & (cur.gameday >= today)]
+    if len(upcoming):
+        return int(upcoming.week.min())
+    return int(cur.week.max()) + 1 if cur.result.notna().all() else int(cur[cur.result.isna()].week.min())
 
 
 def _safe_team_stats(season):
