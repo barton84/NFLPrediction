@@ -28,6 +28,10 @@ on:
         description: "Pull Circa / Pinnacle for every upcoming game now (about 1 request per game)"
         type: boolean
         default: false
+      backfill:
+        description: "One time: pull Circa / Pinnacle history for finished games from week 5 on (about 45 requests)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -69,7 +73,7 @@ jobs:
         continue-on-error: true
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
-        run: python pipeline/sharp_lines.py ${{ inputs.pull_now && '--now' || '' }}
+        run: python pipeline/sharp_lines.py ${{ inputs.pull_now && '--now' || '' }} ${{ inputs.backfill && '--backfill' || '' }}
 
       - name: Commit updated lines
         if: ${{ !inputs.probe }}
