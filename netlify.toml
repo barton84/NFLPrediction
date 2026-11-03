@@ -1,8 +1,12 @@
-# Static site: the GitHub Action rebuilds site/data/model.json and commits it,
-# which triggers a Netlify deploy. No build step needed on Netlify.
+# Static site, no build step. The GitHub Actions save fresh data to site/data/ many
+# times a day; the page reads those files straight from GitHub, so Netlify only needs
+# to deploy when the site itself changes. Each production deploy costs Netlify credits.
 [build]
   publish = "site"
   command = ""
+  # Skip the deploy when a push only changed data files (exit 0 = skip).
+  # Anything else under site/ (or this file) still deploys as usual.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- site netlify.toml ':(exclude)site/data'"
 
 [[headers]]
   for = "/data/*"

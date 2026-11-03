@@ -449,6 +449,22 @@ th.sortable.on .arr{opacity:1;color:var(--accent)}
 <script>
 (function(){
 const $ = id => document.getElementById(id);
+// Data files are read straight from the GitHub repo, so the workflows' data saves show up
+// without a Netlify deploy (each deploy costs Netlify credits). The copy deployed with the
+// site is the fallback if GitHub can't be reached. Local testing reads the local copy.
+const DATA_REMOTE = "https://raw.githubusercontent.com/barton84/NFLPrediction/main/site/data/";
+const DATA_LOCAL = /^(localhost|127\.|$)/.test(location.hostname);
+async function getData(name){
+  if (!DATA_LOCAL){
+    try{
+      const r = await fetch(DATA_REMOTE + name + "?t=" + Math.floor(Date.now() / 60000), {cache:"no-store"});
+      if (r.ok) return await r.json();
+    }catch(e){}
+  }
+  const r = await fetch("data/" + name, {cache:"no-cache"});
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
 let SHARP = {};
 let D, W0, W = {}, threshold = 5, market = "spread", resMarket = "spread", sortKey = "power", sortDir = -1;
 let sel = {away:null, home:null, game:null};
@@ -1102,7 +1118,7 @@ function renderMovement(g, pre = "move"){
 // ---------- RESULTS ----------
 // ---------- RESULTS: line movement for finished weeks ----------
 let LOG = null, LOGP = null, resGame = null;
-function loadLog(){ if (!LOGP) LOGP = fetch("data/line_log.json", {cache:"no-cache"}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>(LOG=j)); return LOGP; }
+function loadLog(){ if (!LOGP) LOGP = getData("line_log.json").catch(()=>({})).then(j=>(LOG=j)); return LOGP; }
 function resMoveGame(id){
   const e = LOG && LOG[id]; if (!e || !e.snaps || !e.snaps.length) return null;
   const f = e.snaps[0], l = e.snaps[e.snaps.length-1];
@@ -1364,11 +1380,9 @@ $("how-dlg").addEventListener("click", e=>{ if(e.target===$("how-dlg")) $("how-d
 
 async function boot(){
   try{
-    const r = await fetch("data/model.json", {cache:"no-cache"});
-    if(!r.ok) throw new Error("HTTP "+r.status);
-    D = await r.json();
+    D = await getData("model.json");
     // Circa and Pinnacle history is optional and lives in its own file
-    try{ const r2 = await fetch("data/sharp_lines.json", {cache:"no-cache"}); if (r2.ok) SHARP = await r2.json(); }catch(e){}
+    try{ SHARP = await getData("sharp_lines.json"); }catch(e){}
   }catch(e){ $("err").hidden=false; $("err").textContent = "Could not load data/model.json. Run the pipeline first. ("+e.message+")"; return; }
   W0 = {hfa:D.weights.hfa, margin:D.weights.margin, sr:D.weights.sr, qb:D.weights.qb, rest:D.weights.rest};
   initProb(); initSliders();
