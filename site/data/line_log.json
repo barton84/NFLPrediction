@@ -9016,8 +9016,10 @@
  },
  "2026_09_ARI_SEA": {
   "away": "ARI",
+  "close_consensus": 8.5,
   "date": "2026-11-08",
   "home": "SEA",
+  "result": 14.0,
   "season": 2026,
   "snaps": [
    {
@@ -11309,6 +11311,27 @@
     "total": 43.5,
     "ts": "2026-11-09T13:10Z",
     "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-09",
+    "fd": -3.0,
+    "fdpa": -120,
+    "fdph": 100,
+    "kind": "daily",
+    "line": -3.5,
+    "mgm": -3.5,
+    "mgmpa": -105,
+    "mgmph": -115,
+    "model": -1.75,
+    "pa": -105,
+    "ph": -115,
+    "src": "DK",
+    "total": 45.5,
+    "ts": "2026-11-09T23:00Z",
+    "version": "v2.1"
    }
   ],
   "time": "20:15",
@@ -12342,8 +12365,10 @@
  },
  "2026_09_CLE_NO": {
   "away": "CLE",
+  "close_consensus": 4.5,
   "date": "2026-11-08",
   "home": "NO",
+  "result": 1.0,
   "season": 2026,
   "snaps": [
    {
@@ -13366,8 +13391,10 @@
  },
  "2026_09_DAL_IND": {
   "away": "DAL",
+  "close_consensus": -4.5,
   "date": "2026-11-08",
   "home": "IND",
+  "result": -4.0,
   "season": 2026,
   "snaps": [
    {
@@ -14390,8 +14417,10 @@
  },
  "2026_09_DEN_CAR": {
   "away": "DEN",
+  "close_consensus": -3.0,
   "date": "2026-11-08",
   "home": "CAR",
+  "result": -5.0,
   "season": 2026,
   "snaps": [
    {
@@ -15414,8 +15443,10 @@
  },
  "2026_09_DET_MIA": {
   "away": "DET",
+  "close_consensus": -6.5,
   "date": "2026-11-08",
   "home": "MIA",
+  "result": -10.0,
   "season": 2026,
   "snaps": [
    {
@@ -16438,8 +16469,10 @@
  },
  "2026_09_GB_NE": {
   "away": "GB",
+  "close_consensus": 3.0,
   "date": "2026-11-08",
   "home": "NE",
+  "result": -18.0,
   "season": 2026,
   "snaps": [
    {
@@ -17525,8 +17558,10 @@
  },
  "2026_09_HOU_LAC": {
   "away": "HOU",
+  "close_consensus": -5.5,
   "date": "2026-11-08",
   "home": "LAC",
+  "result": -22.0,
   "season": 2026,
   "snaps": [
    {
@@ -19155,8 +19190,10 @@
  },
  "2026_09_LA_WAS": {
   "away": "LA",
+  "close_consensus": -4.5,
   "date": "2026-11-08",
   "home": "WAS",
+  "result": -7.0,
   "season": 2026,
   "snaps": [
    {
@@ -20161,8 +20198,10 @@
  },
  "2026_09_LV_SF": {
   "away": "LV",
+  "close_consensus": 8.5,
   "date": "2026-11-08",
   "home": "SF",
+  "result": 21.0,
   "season": 2026,
   "snaps": [
    {
@@ -21227,8 +21266,10 @@
  },
  "2026_09_NYG_PHI": {
   "away": "NYG",
+  "close_consensus": -3.0,
   "date": "2026-11-08",
   "home": "PHI",
+  "result": -8.0,
   "season": 2026,
   "snaps": [
    {
@@ -22233,8 +22274,10 @@
  },
  "2026_09_NYJ_KC": {
   "away": "NYJ",
+  "close_consensus": 9.5,
   "date": "2026-11-08",
   "home": "KC",
+  "result": 23.0,
   "season": 2026,
   "snaps": [
    {
@@ -23257,8 +23300,10 @@
  },
  "2026_09_TB_CHI": {
   "away": "TB",
+  "close_consensus": 6.5,
   "date": "2026-11-08",
   "home": "CHI",
+  "result": 3.0,
   "season": 2026,
   "snaps": [
    {
