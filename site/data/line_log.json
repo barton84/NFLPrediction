@@ -11267,6 +11267,27 @@
     "total": 43.5,
     "ts": "2026-11-09T06:58Z",
     "version": "v2.1"
+   },
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-09",
+    "fd": -3.0,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "check",
+    "line": -3.0,
+    "mgm": -3.5,
+    "mgmpa": -102,
+    "mgmph": -118,
+    "model": -1.75,
+    "pa": -120,
+    "ph": 100,
+    "src": "DK",
+    "total": 43.5,
+    "ts": "2026-11-09T10:08Z",
+    "version": "v2.1"
    }
   ],
   "time": "20:15",
