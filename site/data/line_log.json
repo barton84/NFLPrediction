@@ -39787,8 +39787,10 @@
  },
  "2026_11_CIN_WAS": {
   "away": "CIN",
+  "close_consensus": -6.0,
   "date": "2026-11-23",
   "home": "WAS",
+  "result": 2.0,
   "season": 2026,
   "snaps": [
    {
@@ -50246,5 +50248,501 @@
   ],
   "time": "13:00",
   "week": 11
+ },
+ "2026_12_ATL_MIN": {
+  "away": "ATL",
+  "date": "2026-11-29",
+  "home": "MIN",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 7.0,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": 7.0,
+    "mgm": 7.0,
+    "mgmpa": -115,
+    "mgmph": -102,
+    "model": 6.84,
+    "pa": -120,
+    "ph": 100,
+    "src": "DK",
+    "total": 41.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 12
+ },
+ "2026_12_BAL_HOU": {
+  "away": "BAL",
+  "date": "2026-11-29",
+  "home": "HOU",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 6.5,
+    "fdpa": -105,
+    "fdph": -115,
+    "kind": "daily",
+    "line": 7.0,
+    "mgm": 7.0,
+    "mgmpa": -115,
+    "mgmph": -105,
+    "model": 6.25,
+    "pa": -113,
+    "ph": -106,
+    "src": "DK",
+    "total": 47.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 12
+ },
+ "2026_12_CAR_TB": {
+  "away": "CAR",
+  "date": "2026-11-30",
+  "home": "TB",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 3.0,
+    "fdpa": -120,
+    "fdph": 100,
+    "kind": "daily",
+    "line": 3.0,
+    "mgm": 3.0,
+    "mgmpa": -118,
+    "mgmph": -102,
+    "model": 5.55,
+    "pa": -115,
+    "ph": -105,
+    "src": "DK",
+    "total": 43.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:15",
+  "week": 12
+ },
+ "2026_12_CHI_DET": {
+  "away": "CHI",
+  "date": "2026-11-26",
+  "home": "DET",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": -2.5,
+    "fdpa": -112,
+    "fdph": -108,
+    "kind": "daily",
+    "line": -2.5,
+    "mgm": -2.5,
+    "mgmpa": -110,
+    "mgmph": -108,
+    "model": 1.15,
+    "pa": -114,
+    "ph": -106,
+    "src": "DK",
+    "total": 55.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 12
+ },
+ "2026_12_DEN_PIT": {
+  "away": "DEN",
+  "date": "2026-11-27",
+  "home": "PIT",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": -2.5,
+    "fdpa": -120,
+    "fdph": 100,
+    "kind": "daily",
+    "line": -3.0,
+    "mgm": -3.0,
+    "mgmpa": -102,
+    "mgmph": -118,
+    "model": -1.49,
+    "pa": -102,
+    "ph": -117,
+    "src": "DK",
+    "total": 37.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "15:00",
+  "week": 12
+ },
+ "2026_12_GB_LA": {
+  "away": "GB",
+  "date": "2026-11-25",
+  "home": "LA",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 2.5,
+    "fdpa": -108,
+    "fdph": -112,
+    "kind": "daily",
+    "line": 2.5,
+    "mgm": 2.5,
+    "mgmpa": -110,
+    "mgmph": -108,
+    "model": 7.23,
+    "pa": -110,
+    "ph": -109,
+    "src": "DK",
+    "total": 43.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:00",
+  "week": 12
+ },
+ "2026_12_KC_BUF": {
+  "away": "KC",
+  "date": "2026-11-26",
+  "home": "BUF",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 2.5,
+    "fdpa": 100,
+    "fdph": -120,
+    "kind": "daily",
+    "line": 3.0,
+    "mgm": 3.0,
+    "mgmpa": -118,
+    "mgmph": -102,
+    "model": 2.25,
+    "pa": -120,
+    "ph": 100,
+    "src": "DK",
+    "total": 47.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:20",
+  "week": 12
+ },
+ "2026_12_LV_CLE": {
+  "away": "LV",
+  "date": "2026-11-29",
+  "home": "CLE",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 4.5,
+    "fdpa": -105,
+    "fdph": -115,
+    "kind": "daily",
+    "line": 4.5,
+    "mgm": 4.5,
+    "mgmpa": -110,
+    "mgmph": -108,
+    "model": 7.17,
+    "pa": -114,
+    "ph": -105,
+    "src": "DK",
+    "total": 40.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "20:20",
+  "week": 12
+ },
+ "2026_12_NE_LAC": {
+  "away": "NE",
+  "date": "2026-11-29",
+  "home": "LAC",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 1.5,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": 1.5,
+    "mgm": 1.0,
+    "mgmpa": -112,
+    "mgmph": -105,
+    "model": -4.37,
+    "pa": -122,
+    "ph": 102,
+    "src": "DK",
+    "total": 35.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:05",
+  "week": 12
+ },
+ "2026_12_NO_CIN": {
+  "away": "NO",
+  "date": "2026-11-29",
+  "home": "CIN",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 9.5,
+    "fdpa": 100,
+    "fdph": -120,
+    "kind": "daily",
+    "line": 10.0,
+    "mgm": 10.0,
+    "mgmpa": -110,
+    "mgmph": -108,
+    "model": 10.24,
+    "pa": -112,
+    "ph": -107,
+    "src": "DK",
+    "total": 50.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 12
+ },
+ "2026_12_NYG_IND": {
+  "away": "NYG",
+  "date": "2026-11-29",
+  "home": "IND",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": -6.5,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": -6.5,
+    "mgm": -6.5,
+    "mgmpa": -112,
+    "mgmph": -105,
+    "model": -1.86,
+    "pa": -115,
+    "ph": -104,
+    "src": "DK",
+    "total": 41.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 12
+ },
+ "2026_12_NYJ_MIA": {
+  "away": "NYJ",
+  "date": "2026-11-29",
+  "home": "MIA",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": -3.5,
+    "fdpa": -120,
+    "fdph": 100,
+    "kind": "daily",
+    "line": -3.5,
+    "mgm": -4.0,
+    "mgmpa": -105,
+    "mgmph": -112,
+    "model": -3.75,
+    "pa": -117,
+    "ph": -103,
+    "src": "DK",
+    "total": 40.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 12
+ },
+ "2026_12_PHI_DAL": {
+  "away": "PHI",
+  "date": "2026-11-26",
+  "home": "DAL",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 8.5,
+    "fdpa": -110,
+    "fdph": -110,
+    "kind": "daily",
+    "line": 8.5,
+    "mgm": 8.5,
+    "mgmpa": -110,
+    "mgmph": -108,
+    "model": 8.14,
+    "pa": -108,
+    "ph": -111,
+    "src": "DK",
+    "total": 47.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:30",
+  "week": 12
+ },
+ "2026_12_SEA_SF": {
+  "away": "SEA",
+  "date": "2026-11-29",
+  "home": "SF",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 3.0,
+    "fdpa": -105,
+    "fdph": -115,
+    "kind": "daily",
+    "line": 3.5,
+    "mgm": 3.0,
+    "mgmpa": -102,
+    "mgmph": -118,
+    "model": 2.31,
+    "pa": -118,
+    "ph": -101,
+    "src": "DK",
+    "total": 45.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 12
+ },
+ "2026_12_TEN_JAX": {
+  "away": "TEN",
+  "date": "2026-11-29",
+  "home": "JAX",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": 14.5,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": 14.5,
+    "mgm": 14.5,
+    "mgmpa": -110,
+    "mgmph": -108,
+    "model": 16.23,
+    "pa": -116,
+    "ph": -104,
+    "src": "DK",
+    "total": 47.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "13:00",
+  "week": 12
+ },
+ "2026_12_WAS_ARI": {
+  "away": "WAS",
+  "date": "2026-11-29",
+  "home": "ARI",
+  "season": 2026,
+  "snaps": [
+   {
+    "cz": null,
+    "czpa": null,
+    "czph": null,
+    "day": "2026-11-24",
+    "fd": -7.0,
+    "fdpa": -115,
+    "fdph": -105,
+    "kind": "daily",
+    "line": -7.0,
+    "mgm": -7.0,
+    "mgmpa": -110,
+    "mgmph": -108,
+    "model": -3.2,
+    "pa": -109,
+    "ph": -110,
+    "src": "DK",
+    "total": 41.5,
+    "ts": "2026-11-24T23:02Z",
+    "version": "v2.1"
+   }
+  ],
+  "time": "16:25",
+  "week": 12
  }
 }
