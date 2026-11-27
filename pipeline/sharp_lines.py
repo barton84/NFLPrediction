@@ -2,9 +2,12 @@
 
 OddsPapi's historical-odds endpoint returns every price change for a game, so
 we do not need to poll. Each game is pulled twice:
-  * "early": the first line check on Wednesday (opener and early moves)
-  * "final": the first line check within 100 minutes of kickoff (or just after
-    it, if GitHub ran late); snapshots after kickoff are dropped
+  * "early": the first line check within about 4 days of kickoff (Wednesday
+    morning for a Sunday game), retried on each run until it succeeds
+  * "final": the first line check within 100 minutes of kickoff (or up to 18
+    hours after, if GitHub ran late); snapshots after kickoff are dropped
+If OddsPapi is down or a request fails, nothing is recorded for that game and
+the next run tries again; one bad game never stops the others.
 One call per game covers both books (the endpoint takes up to 3). With the
 fixtures lookup that is roughly 165 requests a month.
 
@@ -58,14 +61,20 @@ def api(path, **params):
             return data
         except urllib.error.HTTPError as e:
             body = e.read().decode("utf-8", "ignore")[:300]
-            if e.code == 429 and attempt < 3:
+            if (e.code == 429 or e.code >= 500) and attempt < 3:
                 try:
                     wait = json.loads(body).get("retryMs", 2000) / 1000
                 except Exception:
-                    wait = 2
+                    wait = 2 * (attempt + 1)
                 time.sleep(wait + 0.5)
                 continue
             print(f"oddspapi {path} failed: HTTP {e.code} {body}")
+            return None
+        except Exception as e:   # timeout, dropped connection, outage page instead of JSON
+            if attempt < 3:
+                time.sleep(3 * (attempt + 1))
+                continue
+            print(f"oddspapi {path} failed: {type(e).__name__}: {e}")
             return None
     return None
 
@@ -211,9 +220,11 @@ def orient(tl, dk_line, home_is_p1):
 def due(entry, kickoff, now):
     """Which pull this game needs now, if any."""
     pulled = entry.get("pulled", {})
-    if "final" not in pulled and kickoff - datetime.timedelta(minutes=100) <= now <= kickoff + datetime.timedelta(hours=6):
+    if "final" not in pulled and kickoff - datetime.timedelta(minutes=100) <= now <= kickoff + datetime.timedelta(hours=18):
         return "final"
-    if "early" not in pulled and "final" not in pulled and now.astimezone(CT).weekday() == 2 and now < kickoff:
+    # early pull: once it is within about 4 days of kickoff (Wednesday morning for a Sunday game),
+    # on every run until one succeeds, so one bad day at OddsPapi does not leave the week blank
+    if "early" not in pulled and "final" not in pulled and kickoff - datetime.timedelta(days=4, hours=12) <= now < kickoff:
         return "early"
     return None
 
@@ -252,13 +263,15 @@ def main(now=None):
         return
     # find OddsPapi fixture ids for the games we need (one request covers up to 10 days)
     dates = sorted({datetime.date.fromisoformat(g["date"]) for g, _, _ in todo})
-    fx, i = [], 0
+    fx, i, fx_failed = [], 0, False
     while i < len(dates):
         d0 = dates[i] - datetime.timedelta(days=1)
         # schedule dates are Eastern, OddsPapi uses UTC, and its "to" date may stop at midnight, so pad 2 days
-        last = max(d for d in dates if d <= d0 + datetime.timedelta(days=7))
+        last = max(d for d in dates if d <= d0 + datetime.timedelta(days=6))
         d1 = last + datetime.timedelta(days=2)
-        fx += as_list(api("fixtures", sportId=SPORT, **{"from": d0.isoformat(), "to": d1.isoformat()}))
+        got = api("fixtures", sportId=SPORT, **{"from": d0.isoformat(), "to": d1.isoformat()})
+        fx_failed |= got is None
+        fx += as_list(got)
         i = next((j for j, d in enumerate(dates) if d > last), len(dates))
     if PROBE:
         tours = {}
@@ -280,38 +293,51 @@ def main(now=None):
         print("no spread markets found in the OddsPapi catalog; stopping")
         return
     n_ok = 0
+    n_err = 0
     for g, kick, kind in todo:
-        hit = None
-        for f_, p1_ in fixtures.get(frozenset((g["home"], g["away"])), []):
-            st = parse_ts(f_.get("startTime"))
-            if st is None or abs((st - kick).total_seconds()) < 36 * 3600:
-                hit = (f_, p1_); break
-        if not hit:
-            print(f"no OddsPapi fixture for {g['away']}@{g['home']}")
-            if not PROBE:   # mark it tried, so a missing game never eats requests run after run
-                store.setdefault(g["id"], {"pulled": {}, "books": {}})["pulled"][kind] = "no fixture"
-            continue
-        f, p1 = hit
-        raw = api("historical-odds", fixtureId=f["fixtureId"], bookmakers=",".join(BOOKS))
-        if raw is None:
-            continue
-        if PROBE:
-            print("PROBE historical keys:", list(raw.keys()) if isinstance(raw, dict) else type(raw))
-            print("PROBE historical sample:", json.dumps(raw, default=str)[:3000])
-        books_raw = raw.get("bookmakers", raw) if isinstance(raw, dict) else {}
-        entry = store.setdefault(g["id"], {"pulled": {}, "books": {}})
-        for slug, code in BOOKS.items():
-            tl = timeline(books_raw.get(slug) or {}, cat, kick)
-            pts = orient(tl, g.get("line"), home_is_p1=(p1 == g["home"]))
-            if pts:
-                entry["books"][code] = pts
-            print(f"{g['away']}@{g['home']} {code}: {len(pts)} points" + (f", latest {pts[-1]}" if pts else ""))
-        entry["pulled"][kind] = now.strftime("%Y-%m-%dT%H:%MZ")
-        n_ok += 1
+        try:
+            hit = None
+            for f_, p1_ in fixtures.get(frozenset((g["home"], g["away"])), []):
+                st = parse_ts(f_.get("startTime"))
+                if st is None or abs((st - kick).total_seconds()) < 36 * 3600:
+                    hit = (f_, p1_); break
+            if not hit:
+                if fx_failed:   # OddsPapi did not answer: try again next run, record nothing
+                    print(f"{g['away']}@{g['home']}: game list unavailable, will retry next run")
+                    continue
+                print(f"no OddsPapi fixture for {g['away']}@{g['home']}")
+                if not PROBE:   # mark it tried, so a missing game never eats requests run after run
+                    store.setdefault(g["id"], {"pulled": {}, "books": {}})["pulled"][kind] = "no fixture"
+                continue
+            f, p1 = hit
+            raw = api("historical-odds", fixtureId=f["fixtureId"], bookmakers=",".join(BOOKS))
+            if raw is None:
+                print(f"{g['away']}@{g['home']}: history unavailable, will retry next run")
+                continue
+            if PROBE:
+                print("PROBE historical keys:", list(raw.keys()) if isinstance(raw, dict) else type(raw))
+                print("PROBE historical sample:", json.dumps(raw, default=str)[:3000])
+            books_raw = raw.get("bookmakers", raw) if isinstance(raw, dict) else {}
+            got = {}
+            for slug, code in BOOKS.items():
+                tl = timeline(books_raw.get(slug) or {}, cat, kick)
+                pts = orient(tl, g.get("line"), home_is_p1=(p1 == g["home"]))
+                if pts:
+                    got[code] = pts
+                print(f"{g['away']}@{g['home']} {code}: {len(pts)} points" + (f", latest {pts[-1]}" if pts else ""))
+            entry = store.setdefault(g["id"], {"pulled": {}, "books": {}})
+            entry["books"].update(got)
+            entry["pulled"][kind] = now.strftime("%Y-%m-%dT%H:%MZ")
+            n_ok += 1
+        except Exception as e:   # bad data for one game: log it, keep going with the others
+            n_err += 1
+            import traceback
+            print(f"{g['away']}@{g['home']}: skipped after an error, will retry next run")
+            traceback.print_exc()
     if not PROBE:
         with open(path, "w") as fh:
             json.dump(store, fh, separators=(",", ":"), sort_keys=True)
-    print(f"Circa / Pinnacle: pulled {n_ok} of {len(todo)} games due")
+    print(f"Circa / Pinnacle: pulled {n_ok} of {len(todo)} games due" + (f", {n_err} skipped after errors" if n_err else ""))
 
 
 if __name__ == "__main__":
