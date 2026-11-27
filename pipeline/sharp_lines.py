@@ -1,15 +1,15 @@
 """Circa and Pinnacle line history from OddsPapi (free plan: 250 requests a month).
 
-OddsPapi's historical-odds endpoint returns every price change for a game, so
-we do not need to poll. Each game is pulled twice:
-  * "early": the first line check within about 4 days of kickoff (Wednesday
-    morning for a Sunday game), retried on each run until it succeeds
-  * "final": the first line check within 100 minutes of kickoff (or up to 18
-    hours after, if GitHub ran late); snapshots after kickoff are dropped
+OddsPapi's historical-odds endpoint returns every price change for a game, from
+the opener to kickoff. On the free plan it only serves games that are over
+(since late November 2026), so each game is pulled once, after it ends:
+  * "final": the first line check from 4 hours after kickoff, up to 7 days
+    after; snapshots after kickoff are dropped, so this is the full pre-game
+    history, closing line included
 If OddsPapi is down or a request fails, nothing is recorded for that game and
 the next run tries again; one bad game never stops the others.
 One call per game covers both books (the endpoint takes up to 3). With the
-fixtures lookup that is roughly 165 requests a month.
+fixtures lookup that is roughly 75 requests a month.
 
 Output: site/data/sharp_lines.json
   {game_id: {"pulled": {"early": ts, "final": ts},
@@ -46,11 +46,15 @@ def team_abbr(name):
 
 
 PROBE = "--probe" in sys.argv
-NOW = "--now" in sys.argv        # pull every upcoming game right away (manual "pull now" run)
+NOW = "--now" in sys.argv        # kept for the workflow checkbox; finished games are pulled on every run anyway
 BACKFILL = "--backfill" in sys.argv   # one-time: pull finished games tracked in the line log that have no history yet
 
 
+RESTRICTED = False   # set when OddsPapi refuses history for a game that has not finished
+
+
 def api(path, **params):
+    global RESTRICTED
     params["apiKey"] = os.environ["ODDSPAPI_KEY"]
     url = f"{API}/{path}?{urllib.parse.urlencode(params)}"
     for attempt in range(4):
@@ -68,6 +72,8 @@ def api(path, **params):
                     wait = 2 * (attempt + 1)
                 time.sleep(wait + 0.5)
                 continue
+            if e.code == 403 and "RESTRICTED" in body:
+                RESTRICTED = True
             print(f"oddspapi {path} failed: HTTP {e.code} {body}")
             return None
         except Exception as e:   # timeout, dropped connection, outage page instead of JSON
@@ -218,14 +224,11 @@ def orient(tl, dk_line, home_is_p1):
 
 # ---------- main ----------
 def due(entry, kickoff, now):
-    """Which pull this game needs now, if any."""
-    pulled = entry.get("pulled", {})
-    if "final" not in pulled and kickoff - datetime.timedelta(minutes=100) <= now <= kickoff + datetime.timedelta(hours=18):
+    """Which pull this game needs now, if any. Only finished games: the free plan refuses
+    history for games that have not ended. Four hours after kickoff covers overtime."""
+    if "final" not in entry.get("pulled", {}) and \
+            kickoff + datetime.timedelta(hours=4) <= now <= kickoff + datetime.timedelta(days=7):
         return "final"
-    # early pull: once it is within about 4 days of kickoff (Wednesday morning for a Sunday game),
-    # on every run until one succeeds, so one bad day at OddsPapi does not leave the week blank
-    if "early" not in pulled and "final" not in pulled and kickoff - datetime.timedelta(days=4, hours=12) <= now < kickoff:
-        return "early"
     return None
 
 
@@ -240,8 +243,7 @@ def main(now=None):
     todo = []
     for g in D.get("this_week", []):
         kick = line_log.kickoff_et(g["date"], g["time"])
-        kind = "final" if PROBE else ("early" if NOW and now < kick and "final" not in store.get(g["id"], {}).get("pulled", {})
-                                      else due(store.get(g["id"], {}), kick, now))
+        kind = "final" if PROBE else due(store.get(g["id"], {}), kick, now)
         if kind:
             todo.append((g, kick, kind))
     if BACKFILL:
@@ -310,6 +312,9 @@ def main(now=None):
                     store.setdefault(g["id"], {"pulled": {}, "books": {}})["pulled"][kind] = "no fixture"
                 continue
             f, p1 = hit
+            if RESTRICTED:
+                print(f"{g['away']}@{g['home']}: skipped, OddsPapi refused history this run")
+                continue
             raw = api("historical-odds", fixtureId=f["fixtureId"], bookmakers=",".join(BOOKS))
             if raw is None:
                 print(f"{g['away']}@{g['home']}: history unavailable, will retry next run")

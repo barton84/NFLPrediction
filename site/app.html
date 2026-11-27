@@ -1097,7 +1097,7 @@ function renderMovement(g, pre = "move"){
   const diff = others.filter(b=>Math.abs(b.last.line - ll.line) >= 0.01).map(b=>`${b.name} has ${g.home} ${fmtSpread(-b.last.line)}`);
   const andList = a => a.length > 2 ? a.slice(0,-1).join(", ") + " and " + a[a.length-1] : a.join(" and ");
   const bookNote = !others.length ? "" : (same.length ? ` ${andList(same)} ${same.length>1?"have":"has"} the same number as ${lead.name}.` : "") + (diff.length ? ` ${diff.join(", ")}.` : "");
-  const tail = bookNote + ` Last checked ${when(last.t)} CT.${showDK?" Open dots are checks with no change.":""}${books.length + showDK > 1 ? " Lines that run side by side are at the same number." : ""}${books.some(b=>b.sharp)?" Circa and Pinnacle update Wednesday and shortly before kickoff, with every move in between.":""} Tap a dot for the time and price.`;
+  const tail = bookNote + ` Last checked ${when(last.t)} CT.${showDK?" Open dots are checks with no change.":""}${books.length + showDK > 1 ? " Lines that run side by side are at the same number." : ""}${books.some(b=>b.sharp) ? " Circa and Pinnacle show every move from the opener to kickoff." : (g.result==null ? " Circa and Pinnacle are added after the game ends: OddsPapi's free plan only shares their line history for finished games." : "")} Tap a dot for the time and price.`;
   $(pre+"-note").innerHTML = (Math.abs(ll.line - lf.line) < 0.01
     ? `${lead.name} is back where it started on ${leadDay}${nMoves?` after ${nMoves} move${nMoves===1?"":"s"}`:", no movement"}.`
     : `${lead.name} has moved <b>${Math.abs(ll.line-lf.line).toFixed(1)} points ${toward>0?"toward":"away from"} the model</b> since ${leadDay} (the model's side was ${sideTeam}).`) + tail;
@@ -1288,7 +1288,7 @@ function renderHow(){
     <ul>
       <li><b>Every morning:</b> team ratings (after each week's games), QB adj (projected starters and the injury report), DraftKings lines, and weather forecasts.</li>
       <li><b>About 8 times a day:</b> DraftKings, FanDuel, Caesars and BetMGM spreads are rechecked. The DraftKings line and edge update, and every book is added to the line movement chart. The model's own numbers only change on the morning update.</li>
-      <li><b>Circa and Pinnacle:</b> their full line history is pulled from OddsPapi on Wednesday and again shortly before each kickoff, so every move shows on the chart even though it is only pulled twice.</li>
+      <li><b>Circa and Pinnacle:</b> their full line history, from the opener to kickoff, is pulled from OddsPapi once each game is over (their free plan only shares history for finished games). It shows on Results, and on Game Detail for games already played.</li>
       <li><b>Once a year, before Week 1:</b> each team's win total, which sets where its rating starts.</li>
       <li><b>Fixed all season:</b> the weights in both equations. They're fitted only on completed seasons and saved to a file, so they change only when we retrain on purpose, normally once a year after the season. Each retrain gets a new model version so the closing line value section can show whether it helped.</li>
     </ul>`;
